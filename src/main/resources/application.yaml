@@ -1,12 +1,20 @@
 server:
-  port: ${PORT:9010}
+  port: ${bestball.port:9010}
   env: ${environment:dev}
 
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
-    username: sa
-    password: password
+    url: ${datasource.url:jdbc:h2:mem:testdb}
+    driverClassName: ${datasource.driver:org.h2.Driver}
+    username: ${datasource.username:sa}
+    password: ${datasource.password:password}
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create
+    show-sql: false
+    database-platform: ${datasource.platform:org.hibernate.dialect.H2Dialect}
+
+golf:
+  pga:
+    update:
+      rate: ${pga.update.rate:5000}

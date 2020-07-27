@@ -1,14 +1,21 @@
 package crocker.golf.bestball.config;
 
 import crocker.golf.bestball.core.controllers.UserController;
+import crocker.golf.bestball.core.replay.PgaUpdateScheduler;
+import crocker.golf.bestball.core.service.PgaUpdateService;
+import crocker.golf.bestball.core.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
+@Import({DatabaseConfig.class})
 @PropertySource(value = {"classpath:application.yaml"}, ignoreResourceNotFound = true)
 public class BestballConfig {
     private static final Logger logger = LoggerFactory.getLogger(BestballConfig.class);
@@ -17,9 +24,25 @@ public class BestballConfig {
     private String environment;
 
     @Bean
-    public UserController userController() {
+    public UserService userService(PasswordEncoder passwordEncoder) {
         logger.info("Loading environment {}", environment);
-
-        return new UserController();
+        return new UserService(passwordEncoder);
     }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+
+    @Bean
+    public PgaUpdateScheduler pgaUpdateScheduler(PgaUpdateService pgaUpdateService) {
+        return new PgaUpdateScheduler(pgaUpdateService);
+    }
+
+    @Bean
+    public PgaUpdateService pgaUpdateService() {
+        return new PgaUpdateService();
+    }
+
 }
