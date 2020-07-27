@@ -1,25 +1,71 @@
 package crocker.golf.bestball.core.service;
 
-import crocker.golf.bestball.domain.User;
+import crocker.golf.bestball.core.mapper.UserMapper;
+import crocker.golf.bestball.core.repository.UserRepository;
+import crocker.golf.bestball.domain.UserCredentials;
+import crocker.golf.bestball.domain.UserCredentialsDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsPasswordService;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-public class UserService {
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
+public class UserService implements UserDetailsService, UserDetailsPasswordService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void register() {
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = User.builder()
+        UserCredentials userCredentials = userRepository.findByUsername(username);
+        return userMapper.convertUserToUserDetails(userCredentials);
+    }
+
+    @Override
+    public UserDetails updatePassword(UserDetails userDetails, String newPassword) {
+
+        UserCredentials userCredentials = userRepository.findByUsername(userDetails.getUsername());
+        userCredentials.setPassword(newPassword);
+
+        return userMapper.convertUserToUserDetails(userCredentials);
+    }
+
+    public void register(UserCredentialsDto userCredentialsDto) {
+
+        UserCredentials userCredentials = UserCredentials.builder()
+                .userId(UUID.randomUUID())
+                .enabled(true)
+                .userName(userCredentialsDto.getUsername())
+                .email(userCredentialsDto.getEmail())
+                .firstName(userCredentialsDto.getFirstName())
+                .lastName(userCredentialsDto.getLastName())
+                .password(passwordEncoder.encode(userCredentialsDto.getPassword()))
+                .roles(getNewUserRoles())
                 .build();
 
-        logger.info("User registered successfully.");
+        userRepository.save(userCredentials);
+        logger.info("UserCredentials registered successfully.");
+    }
+
+    private Set<String> getNewUserRoles() {
+        HashSet<String> roles = new HashSet<>();
+        roles.add("USER");
+        return roles;
     }
 }

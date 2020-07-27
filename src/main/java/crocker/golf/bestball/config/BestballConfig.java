@@ -1,7 +1,10 @@
 package crocker.golf.bestball.config;
 
 import crocker.golf.bestball.core.controllers.UserController;
+import crocker.golf.bestball.core.dao.UserDao;
+import crocker.golf.bestball.core.mapper.UserMapper;
 import crocker.golf.bestball.core.replay.PgaUpdateScheduler;
+import crocker.golf.bestball.core.repository.UserRepository;
 import crocker.golf.bestball.core.service.PgaUpdateService;
 import crocker.golf.bestball.core.service.UserService;
 import org.slf4j.Logger;
@@ -24,16 +27,25 @@ public class BestballConfig {
     private String environment;
 
     @Bean
-    public UserService userService(PasswordEncoder passwordEncoder) {
+    public UserService userService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         logger.info("Loading environment {}", environment);
-        return new UserService(passwordEncoder);
+        return new UserService(userRepository, userMapper, passwordEncoder);
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public UserRepository userRepository(UserDao userDao) {
+        return new UserRepository(userDao);
     }
 
+    @Bean
+    public UserDao userDao() {
+        return new UserDao();
+    }
+
+    @Bean
+    public UserMapper userMapper() {
+        return new UserMapper();
+    }
 
     @Bean
     public PgaUpdateScheduler pgaUpdateScheduler(PgaUpdateService pgaUpdateService) {
