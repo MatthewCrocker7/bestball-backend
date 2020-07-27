@@ -1,5 +1,5 @@
 server:
-  port: ${bestball.port:9010}
+  port: ${PORT:9010}
   env: ${environment:dev}
 
 spring:
