@@ -1,9 +1,10 @@
-package crocker.golf.bestball.core.service;
+package crocker.golf.bestball.core.service.user;
 
 import crocker.golf.bestball.core.mapper.UserMapper;
 import crocker.golf.bestball.core.repository.UserRepository;
-import crocker.golf.bestball.domain.UserCredentials;
-import crocker.golf.bestball.domain.UserCredentialsDto;
+import crocker.golf.bestball.domain.user.UserCredentials;
+import crocker.golf.bestball.domain.user.UserCredentialsDto;
+import crocker.golf.bestball.domain.exceptions.user.RegistrationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,11 +23,13 @@ public class UserService implements UserDetailsService, UserDetailsPasswordServi
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private UserRegistrationValidator userRegistrationValidator;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, UserRegistrationValidator userRegistrationValidator, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.userRegistrationValidator = userRegistrationValidator;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -46,12 +49,13 @@ public class UserService implements UserDetailsService, UserDetailsPasswordServi
         return userMapper.convertUserToUserDetails(userCredentials);
     }
 
-    public void register(UserCredentialsDto userCredentialsDto) {
+    public void register(UserCredentialsDto userCredentialsDto) throws RegistrationException {
+        userRegistrationValidator.validateNewUser(userCredentialsDto);
 
         UserCredentials userCredentials = UserCredentials.builder()
                 .userId(UUID.randomUUID())
                 .enabled(true)
-                .userName(userCredentialsDto.getUsername())
+                .userName(userCredentialsDto.getUserName())
                 .email(userCredentialsDto.getEmail())
                 .firstName(userCredentialsDto.getFirstName())
                 .lastName(userCredentialsDto.getLastName())
@@ -67,5 +71,9 @@ public class UserService implements UserDetailsService, UserDetailsPasswordServi
         HashSet<String> roles = new HashSet<>();
         roles.add("USER");
         return roles;
+    }
+
+    private void validateNewUserCredentials() {
+
     }
 }

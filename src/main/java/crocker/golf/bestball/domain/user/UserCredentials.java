@@ -1,4 +1,4 @@
-package crocker.golf.bestball.domain;
+package crocker.golf.bestball.domain.user;
 
 import lombok.*;
 

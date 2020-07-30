@@ -1,12 +1,12 @@
 package crocker.golf.bestball.config;
 
-import crocker.golf.bestball.core.controllers.UserController;
 import crocker.golf.bestball.core.dao.UserDao;
 import crocker.golf.bestball.core.mapper.UserMapper;
 import crocker.golf.bestball.core.replay.PgaUpdateScheduler;
 import crocker.golf.bestball.core.repository.UserRepository;
 import crocker.golf.bestball.core.service.PgaUpdateService;
-import crocker.golf.bestball.core.service.UserService;
+import crocker.golf.bestball.core.service.user.UserRegistrationValidator;
+import crocker.golf.bestball.core.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
@@ -27,9 +26,10 @@ public class BestballConfig {
     private String environment;
 
     @Bean
-    public UserService userService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+    public UserService userService(UserRepository userRepository, UserMapper userMapper,
+                                   UserRegistrationValidator userRegistrationValidator, PasswordEncoder passwordEncoder) {
         logger.info("Loading environment {}", environment);
-        return new UserService(userRepository, userMapper, passwordEncoder);
+        return new UserService(userRepository, userMapper, userRegistrationValidator, passwordEncoder);
     }
 
     @Bean
@@ -45,6 +45,11 @@ public class BestballConfig {
     @Bean
     public UserMapper userMapper() {
         return new UserMapper();
+    }
+
+    @Bean
+    public UserRegistrationValidator userRegistrationValidator(UserRepository userRepository) {
+        return new UserRegistrationValidator(userRepository);
     }
 
     @Bean

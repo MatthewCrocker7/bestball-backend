@@ -1,7 +1,7 @@
 package crocker.golf.bestball.core.repository;
 
 import crocker.golf.bestball.core.dao.UserDao;
-import crocker.golf.bestball.domain.UserCredentials;
+import crocker.golf.bestball.domain.user.UserCredentials;
 
 public class UserRepository {
 
@@ -17,5 +17,9 @@ public class UserRepository {
 
     public UserCredentials findByUsername(String username) {
         return userDao.findByUserName(username);
+    }
+
+    public UserCredentials findByEmail(String email) {
+        return userDao.findByEmail(email);
     }
 }
