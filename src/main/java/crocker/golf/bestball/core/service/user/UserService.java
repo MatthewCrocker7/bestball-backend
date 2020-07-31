@@ -54,24 +54,26 @@ public class UserService implements UserDetailsService, UserDetailsPasswordServi
 
         UserCredentials userCredentials = UserCredentials.builder()
                 .userId(UUID.randomUUID())
-                .enabled(true)
+                .enabled(false)
                 .userName(userCredentialsDto.getUserName())
                 .email(userCredentialsDto.getEmail())
                 .firstName(userCredentialsDto.getFirstName())
                 .lastName(userCredentialsDto.getLastName())
                 .password(passwordEncoder.encode(userCredentialsDto.getPassword()))
-                .roles(getNewUserRoles())
                 .build();
 
         userRepository.save(userCredentials);
         logger.info("UserCredentials registered successfully.");
     }
 
+    /*
     private Set<String> getNewUserRoles() {
         HashSet<String> roles = new HashSet<>();
         roles.add("USER");
         return roles;
     }
+
+     */
 
     private void validateNewUserCredentials() {
 

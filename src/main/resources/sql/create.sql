@@ -7,8 +7,7 @@ CREATE TABLE USERS (
     PASSWORD                VARCHAR(255) NOT NULL,
     FIRST_NAME              VARCHAR(255) NOT NULL,
     LAST_NAME               VARCHAR(255) NOT NULL,
-    ENABLED                 boolean,
-    ROLES                   blob
+    ENABLED                 boolean
 );
 
 -- INSERT INTO USERS (first_name, last_name, email, user_name) VALUES

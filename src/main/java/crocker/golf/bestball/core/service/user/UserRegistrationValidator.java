@@ -51,7 +51,7 @@ public class UserRegistrationValidator {
             exceptions.put("email", new EmailNotValidException("Please provide a valid email"));
         }
 
-        UserCredentials userCredentials = userRepository.findByEmail(userCredentialsDto.getUserName());
+        UserCredentials userCredentials = userRepository.findByEmail(userCredentialsDto.getEmail());
         if (userCredentials != null) {
             exceptions.put("email", new EmailNotUniqueException("That email is already used by a different user"));
         }

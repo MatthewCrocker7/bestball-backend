@@ -18,5 +18,4 @@ public class UserCredentials {
     private String firstName;
     private String lastName;
     private boolean enabled;
-    private Set<String> roles;
 }

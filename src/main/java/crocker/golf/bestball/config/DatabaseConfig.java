@@ -6,21 +6,14 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-import org.springframework.jdbc.datasource.init.DatabasePopulator;
-import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @Configuration
 public class DatabaseConfig {
@@ -29,6 +22,9 @@ public class DatabaseConfig {
 
     @Value("${spring.datasource.url}")
     private String dbUrl;
+
+    @Value("${server.env}")
+    private String environment;
 
     @Bean
     public UserRepository userRepository(UserDao userDao) {
@@ -42,11 +38,27 @@ public class DatabaseConfig {
 
 
     @Profile("!local")
-    public BasicDataSource dataSource() {
-        logger.info("Database url {}", dbUrl);
+    @Bean("postgresDataSource")
+    public BasicDataSource postgresDataSource()  throws URISyntaxException {
 
         BasicDataSource basicDataSource = new BasicDataSource();
-        basicDataSource.setUrl(dbUrl);
+        String datasourceUrl;
+
+        if(environment.equals("uat")) {
+            URI uri = new URI(dbUrl);
+
+            String username = uri.getUserInfo().split(":")[0];
+            String password = uri.getUserInfo().split(":")[1];
+            basicDataSource.setUsername(username);
+            basicDataSource.setPassword(password);
+
+            datasourceUrl = "jdbc:postgresql://" + uri.getHost() + ':' + uri.getPort() + uri.getPath() + "?sslmode=require";
+        } else {
+            datasourceUrl = dbUrl;
+        }
+
+        basicDataSource.setUrl(datasourceUrl);
+        logger.info("Datasource configured with following connection: {}", datasourceUrl);
 
         return basicDataSource;
     }
