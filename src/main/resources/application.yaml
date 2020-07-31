@@ -7,10 +7,9 @@ spring:
     url: ${datasource.url:jdbc:h2:mem:testdb}
     driverClassName: ${datasource.driver:org.h2.Driver}
     username: ${datasource.username:sa}
-    password: ${datasource.password:password}
+    password: ${datasource.password:}
+    data: ${datasource.data:}
   jpa:
-    hibernate:
-      ddl-auto: create
     show-sql: false
     database-platform: ${datasource.platform:org.hibernate.dialect.H2Dialect}
 

@@ -33,16 +33,6 @@ public class BestballConfig {
     }
 
     @Bean
-    public UserRepository userRepository(UserDao userDao) {
-        return new UserRepository(userDao);
-    }
-
-    @Bean
-    public UserDao userDao() {
-        return new UserDao();
-    }
-
-    @Bean
     public UserMapper userMapper() {
         return new UserMapper();
     }
