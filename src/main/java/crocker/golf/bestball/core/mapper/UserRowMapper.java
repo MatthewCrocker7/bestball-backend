@@ -1,5 +1,6 @@
-package crocker.golf.bestball.domain.user;
+package crocker.golf.bestball.core.mapper;
 
+import crocker.golf.bestball.domain.user.UserCredentials;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

@@ -13,8 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -26,10 +24,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         logger.info("Setting up security levels.");
-        http.headers().frameOptions().sameOrigin();
-
-        http.csrf().disable()
-                .authorizeRequests().anyRequest().permitAll();
+       //http.headers().frameOptions().sameOrigin();
+        //.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+        http
+            .cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
+            .and()
+            .csrf().disable()
+            .authorizeRequests()
+            .antMatchers("/api/user/register/**").permitAll()
+            .anyRequest().authenticated()
+            .and().httpBasic();
     }
 
     @Bean
@@ -44,20 +48,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
-    }
-
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowCredentials(true);
-        configuration.addAllowedOrigin("*");
-        configuration.addAllowedHeader("*");
-        configuration.addAllowedMethod("GET");
-        configuration.addAllowedMethod("PUT");
-        configuration.addAllowedMethod("POST");
-        source.registerCorsConfiguration("/**", configuration);
-
-        return new CorsFilter(source);
     }
 }

@@ -2,6 +2,8 @@ package crocker.golf.bestball.core.service.user;
 
 import crocker.golf.bestball.core.mapper.UserMapper;
 import crocker.golf.bestball.core.repository.UserRepository;
+import crocker.golf.bestball.domain.exceptions.user.PasswordNotMatchException;
+import crocker.golf.bestball.domain.exceptions.user.UserNotExistException;
 import crocker.golf.bestball.domain.user.UserCredentials;
 import crocker.golf.bestball.domain.user.UserCredentialsDto;
 import crocker.golf.bestball.domain.exceptions.user.RegistrationException;
@@ -34,9 +36,9 @@ public class UserService implements UserDetailsService, UserDetailsPasswordServi
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        UserCredentials userCredentials = userRepository.findByUsername(username);
+        UserCredentials userCredentials = userRepository.findByEmail(email);
         return userMapper.convertUserToUserDetails(userCredentials);
     }
 
@@ -66,16 +68,20 @@ public class UserService implements UserDetailsService, UserDetailsPasswordServi
         logger.info("UserCredentials registered successfully.");
     }
 
-    /*
-    private Set<String> getNewUserRoles() {
-        HashSet<String> roles = new HashSet<>();
-        roles.add("USER");
-        return roles;
-    }
+    public void login(UserCredentialsDto userCredentialsDto) throws UserNotExistException, PasswordNotMatchException {
+        String email = userCredentialsDto.getEmail();
+        String loginPassword = userCredentialsDto.getPassword();
 
-     */
+        UserCredentials userCredentials = userRepository.findByEmail(email);
 
-    private void validateNewUserCredentials() {
+        if(userCredentials == null) {
+            throw new UserNotExistException("An account with the given email does not exist.");
+        }
 
+        if(passwordEncoder.matches(loginPassword, userCredentials.getPassword())) {
+            logger.info("Authentication success for {}", userCredentials.getUserName());
+        } else {
+            throw new PasswordNotMatchException("Incorrect password");
+        }
     }
 }

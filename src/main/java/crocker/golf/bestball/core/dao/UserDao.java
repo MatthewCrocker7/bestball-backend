@@ -2,7 +2,7 @@ package crocker.golf.bestball.core.dao;
 
 import crocker.golf.bestball.domain.user.UserCredentials;
 
-import crocker.golf.bestball.domain.user.UserRowMapper;
+import crocker.golf.bestball.core.mapper.UserRowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
