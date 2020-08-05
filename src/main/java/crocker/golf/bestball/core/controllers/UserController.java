@@ -55,7 +55,9 @@ public class UserController {
             logger.error("Failed to login because password was incorrect");
             return new ResponseEntity<>(e, null, HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
-            logger.error("Failed to login user because of server error.");
+            logger.error(e.getMessage());
+            logger.error(e.toString());
+            logger.error(e.getLocalizedMessage());
             return new ResponseEntity<>(e, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         // User submits this request from login page. Backend should return an object
