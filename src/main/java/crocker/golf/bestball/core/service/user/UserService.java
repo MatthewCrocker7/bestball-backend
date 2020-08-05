@@ -37,6 +37,7 @@ public class UserService implements UserDetailsService, UserDetailsPasswordServi
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        logger.info("spring security loadUserByUsername for UserDetails");
 
         UserCredentials userCredentials = userRepository.findByEmail(email);
 
