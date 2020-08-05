@@ -14,15 +14,17 @@ public class UserDao {
 
     private JdbcTemplate jdbcTemplate;
 
-    private final String SAVE_USER = "INSERT INTO USERS " +
-            "(USER_ID, USER_NAME, EMAIL, PASSWORD, FIRST_NAME, LAST_NAME, ENABLED) " +
-            "VALUES(?, ?, ?, ?, ?, ?, ?);";
+    private final String USER_SCHEMA = "USER_CREDENTIALS";
 
-    private final String GET_USER_BY_USER_NAME = "SELECT * FROM USERS WHERE " +
-            "USER_NAME = ?;";
+    private final String SAVE_USER = "INSERT INTO " + USER_SCHEMA +
+            " (USER_ID, USER_NAME, EMAIL, PASSWORD, FIRST_NAME, LAST_NAME, ENABLED)" +
+            " VALUES(?, ?, ?, ?, ?, ?, ?);";
 
-    private final String GET_USER_BY_EMAIL = "SELECT * FROM USERS WHERE " +
-            "EMAIL = ?;";
+    private final String GET_USER_BY_USER_NAME = "SELECT * FROM " + USER_SCHEMA +
+            " WHERE USER_NAME = ?;";
+
+    private final String GET_USER_BY_EMAIL = "SELECT * FROM " + USER_SCHEMA +
+            " WHERE EMAIL = ?;";
 
     public UserDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

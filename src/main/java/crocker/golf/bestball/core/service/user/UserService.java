@@ -39,6 +39,11 @@ public class UserService implements UserDetailsService, UserDetailsPasswordServi
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
         UserCredentials userCredentials = userRepository.findByEmail(email);
+
+        if (userCredentials == null) {
+            logger.error("user not found");
+        }
+
         return userMapper.convertUserToUserDetails(userCredentials);
     }
 
