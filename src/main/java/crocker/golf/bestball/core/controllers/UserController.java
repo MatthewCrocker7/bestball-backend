@@ -63,9 +63,10 @@ public class UserController {
         // Additional requests from main frontend would than be authenticated by comparing userCredentials with clientContext on backend
     }
 
-    @PostMapping("/auth")
-    public ResponseEntity auth() {
-        logger.info("test!!!!!!!");
+    @PostMapping("/logout")
+    public ResponseEntity logout() {
+        logger.info("Received request to logout user.");
+        // do I need to clear a client context here?
         return new ResponseEntity<>(null, null, HttpStatus.OK);
     }
 

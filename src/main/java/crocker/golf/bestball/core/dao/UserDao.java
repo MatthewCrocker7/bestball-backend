@@ -61,6 +61,10 @@ public class UserDao {
         try {
             return jdbcTemplate.queryForObject(query, params, new UserRowMapper());
         } catch (EmptyResultDataAccessException e) {
+            logger.info("User not found");
+            return null;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
             return null;
         }
     }

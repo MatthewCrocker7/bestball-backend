@@ -12,7 +12,7 @@ public class UserRowMapper implements RowMapper<UserCredentials> {
     @Override
     public UserCredentials mapRow(ResultSet rs, int rowNum) throws SQLException {
         return UserCredentials.builder()
-                .userId(rs.getObject("USER_ID", UUID.class))
+                .userId((UUID)rs.getObject("USER_ID"))
                 .userName(rs.getString("USER_NAME"))
                 .email(rs.getString("EMAIL"))
                 .password(rs.getString("PASSWORD"))
