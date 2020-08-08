@@ -24,14 +24,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         logger.info("Setting up security levels.");
-       //http.headers().frameOptions().sameOrigin();
+        http.headers().frameOptions().sameOrigin();
         //.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
         http
             .cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
             .and()
             .csrf().disable()
             .authorizeRequests()
-            .antMatchers("/api/user/register/**").permitAll()
+            .antMatchers("/api/user/register/**", "/h2-console/**").permitAll()
             .anyRequest().authenticated()
             .and().httpBasic();
     }

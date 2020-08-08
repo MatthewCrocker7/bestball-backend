@@ -1,11 +1,14 @@
 package crocker.golf.bestball.config;
 
+import crocker.golf.bestball.core.dao.PgaDao;
 import crocker.golf.bestball.core.dao.UserDao;
+import crocker.golf.bestball.core.repository.PgaRepository;
 import crocker.golf.bestball.core.repository.UserRepository;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -16,6 +19,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @Configuration
+@EnableCaching
 public class DatabaseConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(DatabaseConfig.class);
@@ -25,17 +29,6 @@ public class DatabaseConfig {
 
     @Value("${server.env}")
     private String environment;
-
-    @Bean
-    public UserRepository userRepository(UserDao userDao) {
-        return new UserRepository(userDao);
-    }
-
-    @Bean
-    public UserDao userDao(JdbcTemplate jdbcTemplate) {
-        return new UserDao(jdbcTemplate);
-    }
-
 
     @Profile("!local")
     @Bean("postgresDataSource")
@@ -66,5 +59,25 @@ public class DatabaseConfig {
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
+    }
+
+    @Bean
+    public UserRepository userRepository(UserDao userDao) {
+        return new UserRepository(userDao);
+    }
+
+    @Bean
+    public UserDao userDao(JdbcTemplate jdbcTemplate) {
+        return new UserDao(jdbcTemplate);
+    }
+
+    @Bean
+    public PgaRepository pgaRepository(PgaDao pgaDao) {
+        return new PgaRepository(pgaDao);
+    }
+
+    @Bean
+    public PgaDao pgaDao(JdbcTemplate jdbcTemplate) {
+        return new PgaDao(jdbcTemplate);
     }
 }

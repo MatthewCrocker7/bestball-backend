@@ -16,4 +16,9 @@ spring:
 golf:
   pga:
     update:
-      rate: ${pga.update.rate:5000}
+      rate:
+        rankings: ${pga.update.rate.rankings:60000}
+        schedule: ${pga.update.rate.schedule:60000}
+        tournament: ${pga.update.rate.tournament:60000}
+  api:
+    key: ${pga.api.key:f98dc8be2021416fad32beaa8a1929ec}

@@ -1,10 +1,12 @@
 package crocker.golf.bestball.config;
 
-import crocker.golf.bestball.core.dao.UserDao;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import crocker.golf.bestball.core.mapper.UserMapper;
-import crocker.golf.bestball.core.replay.PgaUpdateScheduler;
+import crocker.golf.bestball.core.repository.PgaRepository;
+import crocker.golf.bestball.core.rest.SportsDataService;
+import crocker.golf.bestball.core.scheduler.PgaUpdateScheduler;
 import crocker.golf.bestball.core.repository.UserRepository;
-import crocker.golf.bestball.core.service.PgaUpdateService;
+import crocker.golf.bestball.core.service.pga.PgaUpdateService;
 import crocker.golf.bestball.core.service.user.UserRegistrationValidator;
 import crocker.golf.bestball.core.service.user.UserService;
 import org.slf4j.Logger;
@@ -14,7 +16,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @Import({DatabaseConfig.class})
@@ -48,8 +52,19 @@ public class BestballConfig {
     }
 
     @Bean
-    public PgaUpdateService pgaUpdateService() {
-        return new PgaUpdateService();
+    public PgaUpdateService pgaUpdateService(SportsDataService sportsDataService, PgaRepository pgaRepository) {
+        return new PgaUpdateService(sportsDataService, pgaRepository);
+    }
+
+    @Bean
+    public SportsDataService sportsDataService(RestTemplate restTemplate, @Value("${golf.api.key}") String apiKey) {
+        ObjectMapper mapper = new ObjectMapper();
+        return new SportsDataService(restTemplate, mapper, apiKey);
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
 }
