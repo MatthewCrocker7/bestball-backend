@@ -1,11 +1,12 @@
 package crocker.golf.bestball.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import crocker.golf.bestball.core.mapper.UserMapper;
 import crocker.golf.bestball.core.repository.PgaRepository;
-import crocker.golf.bestball.core.rest.SportsDataService;
+import crocker.golf.bestball.core.rest.sports.data.SportsDataService;
 import crocker.golf.bestball.core.scheduler.PgaUpdateScheduler;
 import crocker.golf.bestball.core.repository.UserRepository;
+import crocker.golf.bestball.core.service.game.GameService;
+import crocker.golf.bestball.core.service.game.GameValidator;
 import crocker.golf.bestball.core.service.pga.PgaUpdateService;
 import crocker.golf.bestball.core.service.user.UserRegistrationValidator;
 import crocker.golf.bestball.core.service.user.UserService;
@@ -16,12 +17,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.client.RestTemplate;
 
 @Configuration
-@Import({DatabaseConfig.class})
+@Import({DatabaseConfig.class, RestConfig.class})
 @PropertySource(value = {"classpath:application.yaml"}, ignoreResourceNotFound = true)
 public class BestballConfig {
     private static final Logger logger = LoggerFactory.getLogger(BestballConfig.class);
@@ -47,6 +46,16 @@ public class BestballConfig {
     }
 
     @Bean
+    public GameService gameService(GameValidator gameValidator, UserRepository userRepository, UserMapper userMapper) {
+        return new GameService(gameValidator, userRepository, userMapper);
+    }
+
+    @Bean
+    public GameValidator gameValidator() {
+        return new GameValidator();
+    }
+
+    @Bean
     public PgaUpdateScheduler pgaUpdateScheduler(PgaUpdateService pgaUpdateService) {
         return new PgaUpdateScheduler(pgaUpdateService);
     }
@@ -54,17 +63,6 @@ public class BestballConfig {
     @Bean
     public PgaUpdateService pgaUpdateService(SportsDataService sportsDataService, PgaRepository pgaRepository) {
         return new PgaUpdateService(sportsDataService, pgaRepository);
-    }
-
-    @Bean
-    public SportsDataService sportsDataService(RestTemplate restTemplate, @Value("${golf.api.key}") String apiKey) {
-        ObjectMapper mapper = new ObjectMapper();
-        return new SportsDataService(restTemplate, mapper, apiKey);
-    }
-
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
     }
 
 }

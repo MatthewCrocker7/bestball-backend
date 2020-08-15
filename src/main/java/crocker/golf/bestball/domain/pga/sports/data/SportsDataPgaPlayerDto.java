@@ -1,4 +1,4 @@
-package crocker.golf.bestball.domain.pga;
+package crocker.golf.bestball.domain.pga.sports.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,16 +10,16 @@ import java.io.Serializable;
 @Setter
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PgaPlayerDto {
+public class SportsDataPgaPlayerDto {
 
     @JsonProperty("PlayerSeasonID")
-    private Integer playerSeasonID;
+    private Integer playerSeasonId;
 
     @JsonProperty("Season")
     private Integer season;
 
     @JsonProperty("PlayerID")
-    private Integer playerID;
+    private Integer playerId;
 
     @JsonProperty("Name")
     private String name;
@@ -45,7 +45,7 @@ public class PgaPlayerDto {
     @JsonProperty("PointsGained")
     private Double pointsGained;
 
-    public PgaPlayerDto() {
+    public SportsDataPgaPlayerDto() {
         super();
     }
 }

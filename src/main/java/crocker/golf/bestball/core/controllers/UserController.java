@@ -3,6 +3,7 @@ package crocker.golf.bestball.core.controllers;
 import crocker.golf.bestball.core.service.user.UserService;
 import crocker.golf.bestball.domain.exceptions.user.PasswordNotMatchException;
 import crocker.golf.bestball.domain.exceptions.user.UserNotExistException;
+import crocker.golf.bestball.domain.user.UserCredentials;
 import crocker.golf.bestball.domain.user.UserCredentialsDto;
 import crocker.golf.bestball.domain.exceptions.user.RegistrationException;
 import org.slf4j.Logger;

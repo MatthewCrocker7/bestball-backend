@@ -23,7 +23,7 @@ public class PgaUpdateScheduler {
     }
 
     @Scheduled(fixedDelayString = "${golf.pga.update.rate.schedule}")
-    public void updateSeasonSchedule() {
+    public void updateSeasonSchedule() throws ExternalAPIException {
         logger.info("Updating season schedule");
         pgaUpdateService.processUpdateSeasonSchedule();
     }

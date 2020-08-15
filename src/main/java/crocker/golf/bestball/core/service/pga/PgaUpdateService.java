@@ -1,15 +1,18 @@
 package crocker.golf.bestball.core.service.pga;
 
 import crocker.golf.bestball.core.repository.PgaRepository;
-import crocker.golf.bestball.core.rest.SportsDataService;
+import crocker.golf.bestball.core.rest.sports.data.SportsDataService;
+import crocker.golf.bestball.domain.enums.TournamentState;
 import crocker.golf.bestball.domain.exceptions.ExternalAPIException;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
-import crocker.golf.bestball.domain.pga.WorldGolfRankings;
+import crocker.golf.bestball.domain.pga.Tournament;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class PgaUpdateService {
@@ -39,8 +42,12 @@ public class PgaUpdateService {
         logger.info("World golf rankings updated with top {} players", pgaPlayers.size());
     }
 
-    public void processUpdateSeasonSchedule() {
+    public void processUpdateSeasonSchedule() throws ExternalAPIException {
         logger.info("Calling api for current season schedule");
+
+        List<Tournament> tournaments = sportsDataService.getSeasonSchedule();
+
+        // save tournaments
     }
 
     public void processUpdateCurrentTournament() {
@@ -48,10 +55,5 @@ public class PgaUpdateService {
         // call api for leaderboard
         // then call api X number of times for each player on board
 
-    }
-
-    private Map<Integer, PgaPlayer> mapPlayerListToRankings(List<PgaPlayer> pgaPlayers) {
-        return pgaPlayers.stream()
-                .collect(Collectors.toMap(PgaPlayer::getRank, player -> player));
     }
 }
