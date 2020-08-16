@@ -1,6 +1,6 @@
 package crocker.golf.bestball.domain.game;
 
-import crocker.golf.bestball.domain.enums.DraftState;
+import crocker.golf.bestball.domain.enums.game.DraftState;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
 import lombok.Builder;
 

@@ -1,11 +1,14 @@
 package crocker.golf.bestball.core.rest.sports.data;
 
 import crocker.golf.bestball.core.rest.SportsApiService;
+import crocker.golf.bestball.core.util.TimeHelper;
 import crocker.golf.bestball.domain.exceptions.ExternalAPIException;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
 import crocker.golf.bestball.domain.pga.sports.data.SportsDataPgaPlayerDto;
 import crocker.golf.bestball.domain.pga.Tournament;
 import crocker.golf.bestball.domain.pga.sports.data.SportsDataTournamentDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
@@ -16,6 +19,8 @@ import java.time.ZoneId;
 import java.util.List;
 
 public class SportsDataService implements SportsApiService {
+
+    private static final Logger logger = LoggerFactory.getLogger(SportsDataService.class);
 
     private RestTemplate restTemplate;
     private SportsDataResponseHelper responseHelper;
@@ -32,7 +37,7 @@ public class SportsDataService implements SportsApiService {
     public SportsDataService(RestTemplate restTemplate, SportsDataResponseHelper responseHelper, String apiKey) {
         this.restTemplate = restTemplate;
         this.responseHelper = responseHelper;
-        this.apiKey = apiKey;
+        this.apiKey = "?key=" + apiKey;
     }
 
     public List<PgaPlayer> getWorldRankings() throws ExternalAPIException {
@@ -64,20 +69,12 @@ public class SportsDataService implements SportsApiService {
     }
 
     private String buildRankingsUrl() {
-        int year = getCurrentYear();
-        return BASE_URL + MessageFormat.format(RANKINGS_URL, Integer.toString(year)) + addApiKey();
+        int year = TimeHelper.getCurrentSeason();
+        return BASE_URL + MessageFormat.format(RANKINGS_URL, Integer.toString(year)) + apiKey;
     }
 
     private String buildScheduleUrl() {
-        int year = getCurrentYear();
-        return BASE_URL + MessageFormat.format(SCHEDULE_URL, Integer.toString(year)) + addApiKey();
-    }
-
-    private String addApiKey() {
-        return "?key=" + apiKey;
-    }
-
-    private int getCurrentYear() {
-        return Year.now(ZoneId.of("America/Chicago")).getValue();
+        int year = TimeHelper.getCurrentSeason();
+        return BASE_URL + MessageFormat.format(SCHEDULE_URL, Integer.toString(year)) + apiKey;
     }
 }

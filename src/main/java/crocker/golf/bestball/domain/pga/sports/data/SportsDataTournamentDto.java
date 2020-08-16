@@ -22,7 +22,7 @@ public class SportsDataTournamentDto {
     @JsonProperty("EndDate")
     private LocalDateTime endDate;
 
-    @JsonProperty("StarrtDateTime")
+    @JsonProperty("StartDateTime")
     private LocalDateTime startDateTime;
 
     @JsonProperty("IsOver")

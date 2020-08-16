@@ -1,4 +1,4 @@
-package crocker.golf.bestball.domain.enums;
+package crocker.golf.bestball.domain.enums.game;
 
 public enum DraftState {
     NOT_STARTED,

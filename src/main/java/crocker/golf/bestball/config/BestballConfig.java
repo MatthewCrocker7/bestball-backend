@@ -2,6 +2,7 @@ package crocker.golf.bestball.config;
 
 import crocker.golf.bestball.core.mapper.UserMapper;
 import crocker.golf.bestball.core.repository.PgaRepository;
+import crocker.golf.bestball.core.rest.SportsApiService;
 import crocker.golf.bestball.core.rest.sports.data.SportsDataService;
 import crocker.golf.bestball.core.scheduler.PgaUpdateScheduler;
 import crocker.golf.bestball.core.repository.UserRepository;
@@ -61,8 +62,8 @@ public class BestballConfig {
     }
 
     @Bean
-    public PgaUpdateService pgaUpdateService(SportsDataService sportsDataService, PgaRepository pgaRepository) {
-        return new PgaUpdateService(sportsDataService, pgaRepository);
+    public PgaUpdateService pgaUpdateService(SportsApiService sportsApiService, PgaRepository pgaRepository) {
+        return new PgaUpdateService(sportsApiService, pgaRepository);
     }
 
 }

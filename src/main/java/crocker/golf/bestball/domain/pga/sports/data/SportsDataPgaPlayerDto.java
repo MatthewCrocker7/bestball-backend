@@ -45,7 +45,5 @@ public class SportsDataPgaPlayerDto {
     @JsonProperty("PointsGained")
     private Double pointsGained;
 
-    public SportsDataPgaPlayerDto() {
-        super();
-    }
+    public SportsDataPgaPlayerDto(){ super(); }
 }

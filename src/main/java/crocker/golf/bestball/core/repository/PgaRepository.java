@@ -20,6 +20,10 @@ public class PgaRepository {
         pgaDao.updateWorldRankings(pgaPlayers);
     }
 
+    public void updateSeasonSchedule(List<Tournament> tournaments) {
+        pgaDao.updateSeasonSchedule(tournaments);
+    }
+
     @Cacheable("worldRankings")
     public List<PgaPlayer> getWorldRankings() {
         return pgaDao.getWorldRankings();

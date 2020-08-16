@@ -2,8 +2,8 @@ package crocker.golf.bestball.core.service.game;
 
 import crocker.golf.bestball.core.mapper.UserMapper;
 import crocker.golf.bestball.core.repository.UserRepository;
-import crocker.golf.bestball.domain.enums.DraftState;
-import crocker.golf.bestball.domain.enums.GameState;
+import crocker.golf.bestball.domain.enums.game.DraftState;
+import crocker.golf.bestball.domain.enums.game.GameState;
 import crocker.golf.bestball.domain.game.Draft;
 import crocker.golf.bestball.domain.game.Game;
 import crocker.golf.bestball.domain.game.GameDto;

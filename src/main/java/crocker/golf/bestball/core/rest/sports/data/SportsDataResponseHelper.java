@@ -1,6 +1,6 @@
 package crocker.golf.bestball.core.rest.sports.data;
 
-import crocker.golf.bestball.domain.enums.TournamentState;
+import crocker.golf.bestball.domain.enums.pga.TournamentState;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
 import crocker.golf.bestball.domain.pga.sports.data.SportsDataPgaPlayerDto;
 import crocker.golf.bestball.domain.pga.Tournament;
@@ -8,6 +8,9 @@ import crocker.golf.bestball.domain.pga.sports.data.SportsDataTournamentDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,11 +23,10 @@ public class SportsDataResponseHelper {
     public List<PgaPlayer> mapResponseToRankings(List<SportsDataPgaPlayerDto> list) {
         return list.stream()
                 .filter(SportsDataResponseHelper::filterPgaPlayerDto)
-                .map(sportsDataPgaPlayerDto ->
+                .map(pgaPlayerDto ->
                     PgaPlayer.builder()
-                        .playerId(sportsDataPgaPlayerDto.getPlayerId())
-                        .playerName(sportsDataPgaPlayerDto.getName())
-                        .rank(getWorldGolfRank(sportsDataPgaPlayerDto))
+                        .playerName(pgaPlayerDto.getName())
+                        .rank(getWorldGolfRank(pgaPlayerDto))
                         .build()
                 ).collect(Collectors.toList());
     }
@@ -33,12 +35,11 @@ public class SportsDataResponseHelper {
         return list.stream()
                 .map(sportsDataTournamentDto ->
                     Tournament.builder()
-                        .sportsDataTournamentId(sportsDataTournamentDto.getTournamentId())
                         .sportsRadarTournamentId(sportsDataTournamentDto.getSportRadarTournamentID())
                         .tournamentState(getTournamentState(sportsDataTournamentDto))
                         .name(sportsDataTournamentDto.getName())
-                        .startDate(sportsDataTournamentDto.getStartDate())
-                        .endDate(sportsDataTournamentDto.getEndDate())
+                        .startDate(getStartDate(sportsDataTournamentDto))
+                        .endDate(sportsDataTournamentDto.getEndDate().toLocalDate())
                         .build()
                 ).collect(Collectors.toList());
     }
@@ -65,6 +66,10 @@ public class SportsDataResponseHelper {
         boolean isComplete = sportsDataTournamentDto.isOver();
         boolean isCancelled = sportsDataTournamentDto.isCanceled();
 
+        if (sportsDataTournamentDto.getEndDate().isBefore(LocalDateTime.now(ZoneId.of("UTC")))) {
+            isComplete = true;
+        }
+
         if (isComplete) {
             return TournamentState.COMPLETE;
         } else if (inProgress) {
@@ -74,5 +79,9 @@ public class SportsDataResponseHelper {
         } else {
             return TournamentState.NOT_STARTED;
         }
+    }
+
+    private ZonedDateTime getStartDate(SportsDataTournamentDto tournamentDto) {
+        return tournamentDto.getStartDate().atZone(ZoneId.of("UTC"));
     }
 }

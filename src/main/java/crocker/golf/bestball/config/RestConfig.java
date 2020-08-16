@@ -1,8 +1,12 @@
 package crocker.golf.bestball.config;
 
+import crocker.golf.bestball.core.rest.SportsApiService;
 import crocker.golf.bestball.core.rest.sports.data.SportsDataResponseHelper;
 import crocker.golf.bestball.core.rest.sports.data.SportsDataService;
+import crocker.golf.bestball.core.rest.sports.radar.SportsRadarResponseHelper;
+import crocker.golf.bestball.core.rest.sports.radar.SportsRadarService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -13,8 +17,15 @@ import org.springframework.web.client.RestTemplate;
 public class RestConfig {
 
     @Bean
-    public SportsDataService sportsDataService(RestTemplate restTemplate, SportsDataResponseHelper sportsDataResponseHelper, @Value("${golf.api.key}") String apiKey) {
+    @ConditionalOnProperty(name = "golf.api.toggle.sports-data-enabled", havingValue = "true")
+    public SportsApiService sportsDataService(RestTemplate restTemplate, SportsDataResponseHelper sportsDataResponseHelper, @Value("${golf.api.key.sports.data}") String apiKey) {
         return new SportsDataService(restTemplate, sportsDataResponseHelper, apiKey);
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "golf.api.toggle.sports-data-enabled", havingValue = "false")
+    public SportsApiService sportsRadarService(RestTemplate restTemplate, SportsRadarResponseHelper sportsRadarResponseHelper, @Value("${golf.api.key.sports.radar}") String apiKey) {
+        return new SportsRadarService(restTemplate, sportsRadarResponseHelper, apiKey);
     }
 
     @Bean
@@ -25,5 +36,10 @@ public class RestConfig {
     @Bean
     public SportsDataResponseHelper sportsDataResponseHelper() {
         return new SportsDataResponseHelper();
+    }
+
+    @Bean
+    public SportsRadarResponseHelper sportsRadarResponseHelper() {
+        return new SportsRadarResponseHelper();
     }
 }

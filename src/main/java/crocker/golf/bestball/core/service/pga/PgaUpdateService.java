@@ -1,29 +1,24 @@
 package crocker.golf.bestball.core.service.pga;
 
 import crocker.golf.bestball.core.repository.PgaRepository;
-import crocker.golf.bestball.core.rest.sports.data.SportsDataService;
-import crocker.golf.bestball.domain.enums.TournamentState;
+import crocker.golf.bestball.core.rest.SportsApiService;
 import crocker.golf.bestball.domain.exceptions.ExternalAPIException;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
 import crocker.golf.bestball.domain.pga.Tournament;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class PgaUpdateService {
 
     private static final Logger logger = LoggerFactory.getLogger(PgaUpdateService.class);
 
-    private SportsDataService sportsDataService;
+    private SportsApiService sportsApiService;
     private PgaRepository pgaRepository;
 
-    public PgaUpdateService(SportsDataService sportsDataService, PgaRepository pgaRepository) {
-        this.sportsDataService = sportsDataService;
+    public PgaUpdateService(SportsApiService sportsApiService, PgaRepository pgaRepository) {
+        this.sportsApiService = sportsApiService;
         this.pgaRepository = pgaRepository;
     }
 
@@ -35,7 +30,7 @@ public class PgaUpdateService {
     public void processUpdateWorldRankings() throws ExternalAPIException {
         logger.info("Calling api for world golf rankings");
 
-        List<PgaPlayer> pgaPlayers = sportsDataService.getWorldRankings();
+        List<PgaPlayer> pgaPlayers = sportsApiService.getWorldRankings();
 
         pgaRepository.updateWorldRankings(pgaPlayers);
 
@@ -45,9 +40,9 @@ public class PgaUpdateService {
     public void processUpdateSeasonSchedule() throws ExternalAPIException {
         logger.info("Calling api for current season schedule");
 
-        List<Tournament> tournaments = sportsDataService.getSeasonSchedule();
+        List<Tournament> tournaments = sportsApiService.getSeasonSchedule();
 
-        // save tournaments
+        pgaRepository.updateSeasonSchedule(tournaments);
     }
 
     public void processUpdateCurrentTournament() {

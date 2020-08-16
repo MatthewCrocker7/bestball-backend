@@ -1,14 +1,13 @@
 package crocker.golf.bestball.core.service.pga;
 
 import crocker.golf.bestball.core.repository.PgaRepository;
-import crocker.golf.bestball.domain.enums.TournamentState;
+import crocker.golf.bestball.domain.enums.pga.TournamentState;
 import crocker.golf.bestball.domain.pga.Tournament;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +27,6 @@ public class PgaInfoService {
 
         return tournaments.stream()
                 .filter(tournament -> tournament.getTournamentState() == TournamentState.NOT_STARTED)
-                .filter(tournament -> tournament.getStartDate().isAfter(LocalDateTime.now(ZoneId.of("America/Chicago"))))
                 .sorted(Comparator.comparing(Tournament::getStartDate))
                 .collect(Collectors.toList());
     }
