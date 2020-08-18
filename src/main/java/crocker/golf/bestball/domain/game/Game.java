@@ -1,6 +1,7 @@
 package crocker.golf.bestball.domain.game;
 
 import crocker.golf.bestball.domain.enums.game.GameState;
+import crocker.golf.bestball.domain.enums.game.GameType;
 import crocker.golf.bestball.domain.pga.Tournament;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,9 +17,11 @@ public class Game {
     private UUID gameId;
     private GameState gameState;
     private Integer gameVersion;
-    private Draft draft;
+    private GameType gameType;
 
+    private UUID draftId;
     private Tournament tournament;
-    private List<Team> teams;
+
+    private Integer numPlayers;
     private BigDecimal moneyPot;
 }

@@ -16,7 +16,7 @@ public class PgaController {
 
     private PgaInfoService pgaInfoService;
 
-    public void PgaController(PgaInfoService pgaInfoService) {
+    public PgaController(PgaInfoService pgaInfoService) {
         this.pgaInfoService = pgaInfoService;
     }
 
@@ -24,6 +24,6 @@ public class PgaController {
     public ResponseEntity getUpcomingTournaments() {
         List<Tournament> tournaments = pgaInfoService.getUpcomingTournaments();
 
-        return new ResponseEntity<>(null, null, HttpStatus.OK);
+        return new ResponseEntity<>(tournaments, null, HttpStatus.OK);
     }
 }

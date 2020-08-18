@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -38,7 +39,7 @@ public class SportsRadarResponseHelper {
                 .filter(tournamentDto -> getEventType(tournamentDto) == EventType.STROKE)
                 .map(tournamentDto ->
                     Tournament.builder()
-                        .sportsRadarTournamentId(UUID.fromString(tournamentDto.getTournamentId()))
+                        .tournamentId(UUID.fromString(tournamentDto.getTournamentId()))
                         .eventType(getEventType(tournamentDto))
                         .season(scheduleDto.getSeasonDto().getYear())
                         .tournamentState(getTournamentState(tournamentDto))
@@ -76,11 +77,12 @@ public class SportsRadarResponseHelper {
         }
     }
 
-    private ZonedDateTime getStartDate(SportsRadarTournamentDto tournamentDto) {
-        ZoneId courseTimeZone = ZoneId.of(tournamentDto.getCourseTimezone());
+    private LocalDateTime getStartDate(SportsRadarTournamentDto tournamentDto) {
+        // ZoneId courseTimeZone = ZoneId.of(tournamentDto.getCourseTimezone());
         LocalDate startDate  = tournamentDto.getStartDate();
+        return startDate.atStartOfDay();
 
-        ZonedDateTime courseStartDateTime = startDate.atStartOfDay(courseTimeZone);
-        return courseStartDateTime.withZoneSameInstant(ZoneId.of("UTC"));
+        // ZonedDateTime courseStartDateTime = startDate.atStartOfDay(courseTimeZone);
+        // return courseStartDateTime.withZoneSameInstant(ZoneId.of("UTC"));
     }
 }

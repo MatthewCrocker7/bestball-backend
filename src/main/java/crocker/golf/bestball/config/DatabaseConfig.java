@@ -1,7 +1,9 @@
 package crocker.golf.bestball.config;
 
+import crocker.golf.bestball.core.dao.GameDao;
 import crocker.golf.bestball.core.dao.PgaDao;
 import crocker.golf.bestball.core.dao.UserDao;
+import crocker.golf.bestball.core.repository.GameRepository;
 import crocker.golf.bestball.core.repository.PgaRepository;
 import crocker.golf.bestball.core.repository.UserRepository;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -80,4 +82,10 @@ public class DatabaseConfig {
     public PgaDao pgaDao(JdbcTemplate jdbcTemplate) {
         return new PgaDao(jdbcTemplate);
     }
+
+    @Bean
+    public GameRepository gameRepository(GameDao gameDao) { return new GameRepository(gameDao); }
+
+    @Bean
+    public GameDao gameDao(JdbcTemplate jdbcTemplate) { return new GameDao(jdbcTemplate); }
 }

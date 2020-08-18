@@ -1,5 +1,6 @@
 package crocker.golf.bestball.core.dao;
 
+import crocker.golf.bestball.core.mapper.TournamentRowMapper;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
 import crocker.golf.bestball.domain.pga.Tournament;
 import org.slf4j.Logger;
@@ -30,6 +31,12 @@ public class PgaDao {
             " (TOURNAMENT_ID, EVENT_TYPE, SEASON, STATE, NAME, START_DATE, END_DATE)" +
             " VALUES(?, ?, ?, ?, ?, ?, ?);";
 
+    private final String GET_SCHEDULE_BY_SEASON = "SELECT * FROM " + SEASON_SCHEDULE +
+            " WHERE SEASON=?;";
+
+    private final String GET_TOURNAMENT_BY_ID = "SELECT * FROM " + SEASON_SCHEDULE +
+            " WHERE TOURNAMENT_ID=?;";
+
 
     public PgaDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -57,10 +64,18 @@ public class PgaDao {
         return Collections.emptyList();
     }
 
-    public List<Tournament> getSeasonSchedule() { return Collections.emptyList(); }
+    public List<Tournament> getTournamentsBySeason(int year) {
+        Object[] params = new Object[]{year};
+        return jdbcTemplate.query(GET_SCHEDULE_BY_SEASON, params, new TournamentRowMapper());
+    }
+
+    public Tournament getTournamentById(String tournamentId) {
+        Object[] params = new Object[]{tournamentId};
+        return jdbcTemplate.queryForObject(GET_TOURNAMENT_BY_ID, params, new TournamentRowMapper());
+    }
 
     private List<Object[]> getPlayerParams(List<PgaPlayer> pgaPlayers) {
-        return  pgaPlayers.stream().map(pgaPlayer -> new Object[] {
+        return pgaPlayers.stream().map(pgaPlayer -> new Object[] {
                 pgaPlayer.getPlayerId(),
                 pgaPlayer.getRank(),
                 pgaPlayer.getPlayerName()
@@ -69,7 +84,7 @@ public class PgaDao {
 
     private List<Object[]> getTournamentParams(List<Tournament> tournaments) {
         return tournaments.stream().map(tournament -> new Object[] {
-                tournament.getSportsRadarTournamentId(),
+                tournament.getTournamentId(),
                 tournament.getEventType().name(),
                 tournament.getSeason(),
                 tournament.getTournamentState().name(),

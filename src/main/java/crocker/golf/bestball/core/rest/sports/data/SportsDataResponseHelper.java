@@ -35,7 +35,7 @@ public class SportsDataResponseHelper {
         return list.stream()
                 .map(sportsDataTournamentDto ->
                     Tournament.builder()
-                        .sportsRadarTournamentId(sportsDataTournamentDto.getSportRadarTournamentID())
+                        .tournamentId(sportsDataTournamentDto.getSportRadarTournamentID())
                         .tournamentState(getTournamentState(sportsDataTournamentDto))
                         .name(sportsDataTournamentDto.getName())
                         .startDate(getStartDate(sportsDataTournamentDto))
@@ -81,7 +81,8 @@ public class SportsDataResponseHelper {
         }
     }
 
-    private ZonedDateTime getStartDate(SportsDataTournamentDto tournamentDto) {
-        return tournamentDto.getStartDate().atZone(ZoneId.of("UTC"));
+    private LocalDateTime getStartDate(SportsDataTournamentDto tournamentDto) {
+        // return tournamentDto.getStartDate().atZone(ZoneId.of("UTC"));
+        return tournamentDto.getStartDate();
     }
 }

@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -17,13 +18,13 @@ import java.time.ZoneId;
 @NoArgsConstructor
 public class GameDto {
 
+    private UUID gameId;
     private String email;
     private String gameType;
     private LocalDate draftDate;
     private LocalTime draftTime;
-    private ZoneId timeZone;
 
     private BigDecimal buyIn;
-    private BigDecimal numPlayers;
-    private Tournament tournament; // might be better to just pass tournament id through game DTO
+    private Integer numPlayers;
+    private String tournamentId;
 }

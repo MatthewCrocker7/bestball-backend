@@ -36,4 +36,11 @@ public class GameController {
             return new ResponseEntity<>(e, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PostMapping("/joinGame")
+    public ResponseEntity joinGame(@RequestBody GameDto gameDto) {
+        gameService.joinGame(gameDto);
+
+        return new ResponseEntity(null, null, HttpStatus.OK);
+    }
 }

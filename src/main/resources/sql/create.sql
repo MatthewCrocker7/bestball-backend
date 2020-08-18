@@ -23,7 +23,30 @@ CREATE TABLE SEASON_SCHEDULE (
     STATE               VARCHAR(255)        NOT NULL,
     NAME                VARCHAR(255)        NOT NULL,
     START_DATE          TIMESTAMP           NOT NULL,
-    END_DATE            TIMESTAMP           NOT NULL
+    END_DATE            DATE                NOT NULL
+);
+
+CREATE TABLE GAMES (
+    GAME_ID                 UUID PRIMARY KEY    NOT NULL,
+    GAME_STATE              VARCHAR(255)        NOT NULL,
+    GAME_VERSION            NUMERIC             NOT NULL,
+    GAME_TYPE               VARCHAR(255)        NOT NULL,
+    DRAFT_ID                UUID                NOT NULL,
+    TOURNAMENT_ID           UUID                NOT NULL,
+    NUM_PLAYERS             NUMERIC             NOT NULL,
+    MONEY_POT               NUMERIC             NOT NULL
+);
+
+CREATE TABLE TEAMS (
+    TEAM_ID                 UUID PRIMARY KEY    NOT NULL,
+    USER_ID                 UUID                NOT NULL,
+    GAME_ID                 UUID                NOT NULL,
+    PLAYER_ONE_ID           UUID                NOT NULL,
+    PLAYER_TWO_ID           UUID                NOT NULL,
+    PLAYER_THREE_ID         UUID                NOT NULL,
+    PLAYER_FOUR_ID          UUID                NOT NULL,
+    TO_PAR                  NUMERIC,
+    TOTAL_SCORE             NUMERIC
 );
 
 -- INSERT INTO USERS (first_name, last_name, email, user_name) VALUES

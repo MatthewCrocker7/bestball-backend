@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
@@ -13,12 +14,12 @@ import java.util.UUID;
 @Getter
 public class Tournament {
 
-    private UUID sportsRadarTournamentId;
+    private UUID tournamentId;
     private EventType eventType;
     private Integer season;
     private TournamentState tournamentState;
     private String name;
-    private ZonedDateTime startDate;
+    private LocalDateTime startDate;
     private LocalDate endDate;
 
 }

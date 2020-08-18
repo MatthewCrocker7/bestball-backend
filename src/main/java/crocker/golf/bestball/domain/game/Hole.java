@@ -4,7 +4,7 @@ import crocker.golf.bestball.domain.enums.ScoreType;
 
 public class Hole {
 
-    private int par;
-    private int toPar;
+    private Integer score;
+    private Integer toPar;
     private ScoreType scoreType;
 }

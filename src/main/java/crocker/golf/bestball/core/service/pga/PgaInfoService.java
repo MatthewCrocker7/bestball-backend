@@ -1,6 +1,7 @@
 package crocker.golf.bestball.core.service.pga;
 
 import crocker.golf.bestball.core.repository.PgaRepository;
+import crocker.golf.bestball.core.util.TimeHelper;
 import crocker.golf.bestball.domain.enums.pga.TournamentState;
 import crocker.golf.bestball.domain.pga.Tournament;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ public class PgaInfoService {
     }
 
     public List<Tournament> getUpcomingTournaments() {
-        List<Tournament> tournaments = pgaRepository.getCurrentSeasonTournaments();
+        List<Tournament> tournaments = pgaRepository.getTournamentsBySeason(TimeHelper.getCurrentSeason());
 
         return tournaments.stream()
                 .filter(tournament -> tournament.getTournamentState() == TournamentState.NOT_STARTED)
