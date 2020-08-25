@@ -1,4 +1,4 @@
-package crocker.golf.bestball.domain.game;
+package crocker.golf.bestball.domain.game.draft;
 
 import crocker.golf.bestball.domain.enums.game.DraftState;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
@@ -16,6 +16,7 @@ public class Draft {
 
     private UUID draftId;
     private DraftState draftState;
+    private Integer draftVersion;
 
     private LocalDateTime startTime;
     private ZoneId timeZone;

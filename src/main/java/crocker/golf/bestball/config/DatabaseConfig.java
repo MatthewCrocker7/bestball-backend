@@ -1,8 +1,10 @@
 package crocker.golf.bestball.config;
 
+import crocker.golf.bestball.core.dao.DraftDao;
 import crocker.golf.bestball.core.dao.GameDao;
 import crocker.golf.bestball.core.dao.PgaDao;
 import crocker.golf.bestball.core.dao.UserDao;
+import crocker.golf.bestball.core.repository.DraftRepository;
 import crocker.golf.bestball.core.repository.GameRepository;
 import crocker.golf.bestball.core.repository.PgaRepository;
 import crocker.golf.bestball.core.repository.UserRepository;
@@ -88,4 +90,10 @@ public class DatabaseConfig {
 
     @Bean
     public GameDao gameDao(JdbcTemplate jdbcTemplate) { return new GameDao(jdbcTemplate); }
+
+    @Bean
+    public DraftRepository draftRepository(DraftDao draftDao) { return new DraftRepository(draftDao); }
+
+    @Bean
+    public DraftDao draftDao(JdbcTemplate jdbcTemplate) { return new DraftDao(jdbcTemplate); }
 }

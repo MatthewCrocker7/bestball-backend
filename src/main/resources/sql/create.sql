@@ -49,6 +49,18 @@ CREATE TABLE TEAMS (
     TOTAL_SCORE             NUMERIC
 );
 
+CREATE TABLE DRAFTS (
+    DRAFT_ID                UUID PRIMARY KEY   NOT NULL,
+    DRAFT_STATE             VARCHAR(100)        NOT NULL,
+    DRAFT_VERSION           NUMERIC             NOT NULL
+);
+
+CREATE TABLE DRAFT_SCHEDULES (
+    DRAFT_ID                UUID PRIMARY KEY    NOT NULL,
+    RELEASE_STATUS          VARCHAR(100)        NOT NULL,
+    RELEASE_TIME            TIMESTAMP           NOT NULL
+);
+
 -- INSERT INTO USERS (first_name, last_name, email, user_name) VALUES
 -- ('Matthew', 'Crocker', 'matthewcroc@gmail.com', 'matthewcrocker7'),
 -- ('Nicole', 'Tranchita', 'tranchita.nicole@gmail.com', 'nicciT');

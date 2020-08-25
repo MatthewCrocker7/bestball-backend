@@ -1,5 +1,6 @@
 package crocker.golf.bestball.core.service.game;
 
+import crocker.golf.bestball.core.draft.DraftManager;
 import crocker.golf.bestball.core.mapper.UserMapper;
 import crocker.golf.bestball.core.repository.GameRepository;
 import crocker.golf.bestball.core.repository.PgaRepository;
@@ -8,11 +9,10 @@ import crocker.golf.bestball.domain.enums.game.DraftState;
 import crocker.golf.bestball.domain.enums.game.GameState;
 import crocker.golf.bestball.domain.enums.game.GameType;
 import crocker.golf.bestball.domain.enums.game.TeamRole;
-import crocker.golf.bestball.domain.game.Draft;
+import crocker.golf.bestball.domain.game.draft.Draft;
 import crocker.golf.bestball.domain.game.Game;
 import crocker.golf.bestball.domain.game.GameDto;
 import crocker.golf.bestball.domain.game.Team;
-import crocker.golf.bestball.domain.game.round.TeamRound;
 import crocker.golf.bestball.domain.pga.Tournament;
 import crocker.golf.bestball.domain.user.UserCredentials;
 import org.slf4j.Logger;
@@ -20,9 +20,6 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 public class GameService {
@@ -32,17 +29,17 @@ public class GameService {
     private GameValidator gameValidator;
     private GameRepository gameRepository;
     private UserRepository userRepository;
-    private UserMapper userMapper;
     private PgaRepository pgaRepository;
+    private DraftManager draftManager;
 
     private BigDecimal feeMultiplier;
 
-    public GameService(GameValidator gameValidator, GameRepository gameRepository, UserRepository userRepository, UserMapper userMapper, PgaRepository pgaRepository) {
+    public GameService(GameValidator gameValidator, GameRepository gameRepository, UserRepository userRepository, PgaRepository pgaRepository, DraftManager draftManager) {
         this.gameValidator = gameValidator;
         this.gameRepository = gameRepository;
         this.userRepository = userRepository;
-        this.userMapper = userMapper;
         this.pgaRepository = pgaRepository;
+        this.draftManager = draftManager;
 
         feeMultiplier = new BigDecimal(0.01);
     }
@@ -51,7 +48,7 @@ public class GameService {
 
         gameValidator.validateNewGame(gameDto);
 
-        Draft draft = getNewDraft(gameDto);
+        Draft draft = createNewDraft(gameDto);
 
         Game game = Game.builder()
                 .gameId(UUID.randomUUID())
@@ -65,11 +62,10 @@ public class GameService {
                 .build();
 
         gameRepository.saveNewGame(game);
-        gameRepository.saveNewDraft(draft);
         logger.info("New game created {}", game.getGameId());
 
-        makeCreatorTeam(gameDto, game);
-        // save user one
+        Team team = makeCreatorTeam(gameDto, game);
+        gameRepository.saveNewTeam(team);
     }
 
     public void joinGame(GameDto gameDto) {
@@ -83,12 +79,14 @@ public class GameService {
                 .gameId(game.getGameId())
                 .teamRole(TeamRole.PARTICIPANT)
                 .build();
+
+        gameRepository.saveNewTeam(team);
     }
 
-    private void makeCreatorTeam(GameDto gameDto, Game game) {
+    private Team makeCreatorTeam(GameDto gameDto, Game game) {
         UserCredentials userCredentials = userRepository.findByEmail(gameDto.getEmail());
 
-        Team team = Team.builder()
+        return Team.builder()
                 .teamId(UUID.randomUUID())
                 .userId(userCredentials.getUserId())
                 .draftId(game.getDraftId())
@@ -97,12 +95,16 @@ public class GameService {
                 .build();
     }
 
-    private Draft getNewDraft(GameDto gameDto) {
-        return Draft.builder()
+    private Draft createNewDraft(GameDto gameDto) {
+        Draft draft = Draft.builder()
                 .draftId(UUID.randomUUID())
                 .startTime(LocalDateTime.of(gameDto.getDraftDate(), gameDto.getDraftTime()))
                 .draftState(DraftState.NOT_STARTED)
+                .draftVersion(1)
                 .build();
+
+        draftManager.scheduleDraft(draft);
+        return draft;
     }
 
     private Tournament getTournament(GameDto gameDto) {

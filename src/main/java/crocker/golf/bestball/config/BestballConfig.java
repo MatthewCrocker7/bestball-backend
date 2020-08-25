@@ -1,5 +1,6 @@
 package crocker.golf.bestball.config;
 
+import crocker.golf.bestball.core.draft.DraftManager;
 import crocker.golf.bestball.core.mapper.UserMapper;
 import crocker.golf.bestball.core.repository.GameRepository;
 import crocker.golf.bestball.core.repository.PgaRepository;
@@ -22,7 +23,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-@Import({DatabaseConfig.class, RestConfig.class})
+@Import({DatabaseConfig.class, RestConfig.class, DraftConfig.class})
 @PropertySource(value = {"classpath:application.yaml"}, ignoreResourceNotFound = true)
 public class BestballConfig {
     private static final Logger logger = LoggerFactory.getLogger(BestballConfig.class);
@@ -48,8 +49,8 @@ public class BestballConfig {
     }
 
     @Bean
-    public GameService gameService(GameValidator gameValidator, GameRepository gameRepository, UserRepository userRepository, UserMapper userMapper, PgaRepository pgaRepository) {
-        return new GameService(gameValidator, gameRepository, userRepository, userMapper, pgaRepository);
+    public GameService gameService(GameValidator gameValidator, GameRepository gameRepository, UserRepository userRepository, PgaRepository pgaRepository, DraftManager draftManager) {
+        return new GameService(gameValidator, gameRepository, userRepository, pgaRepository, draftManager);
     }
 
     @Bean

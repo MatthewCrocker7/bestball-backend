@@ -1,9 +1,10 @@
 package crocker.golf.bestball.core.repository;
 
 import crocker.golf.bestball.core.dao.GameDao;
-import crocker.golf.bestball.domain.game.Draft;
+import crocker.golf.bestball.domain.game.draft.Draft;
 import crocker.golf.bestball.domain.game.Game;
 import crocker.golf.bestball.domain.game.GameDto;
+import crocker.golf.bestball.domain.game.Team;
 
 public class GameRepository {
 
@@ -18,6 +19,8 @@ public class GameRepository {
     }
 
     public void saveNewDraft(Draft draft) {}
+
+    public void saveNewTeam(Team team) {}
 
     public Game getGameById(GameDto gameDto) { return gameDao.getGameById(gameDto); }
 
