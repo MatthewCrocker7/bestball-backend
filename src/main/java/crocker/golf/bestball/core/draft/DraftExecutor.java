@@ -15,6 +15,7 @@ public class DraftExecutor {
     }
 
     public void execute(DraftSchedule draftSchedule) {
-        logger.info("Initiating draft");
+        logger.info("Executing draft {} at {}", draftSchedule.getDraftId(), draftSchedule.getReleaseTime());
+        draftScheduler.getTaskMap().remove(draftSchedule.getDraftId());
     }
 }

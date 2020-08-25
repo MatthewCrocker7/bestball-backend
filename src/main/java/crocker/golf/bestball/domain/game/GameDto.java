@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Data
@@ -21,8 +22,7 @@ public class GameDto {
     private UUID gameId;
     private String email;
     private String gameType;
-    private LocalDate draftDate;
-    private LocalTime draftTime;
+    private ZonedDateTime draftDate;
 
     private BigDecimal buyIn;
     private Integer numPlayers;

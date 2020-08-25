@@ -22,6 +22,11 @@ public class DraftTasklet implements Runnable {
 
     @Override
     public void run() {
-
+        try {
+            logger.info("Running draft tasklet for {} at {}", draftSchedule.getDraftId(), draftSchedule.getReleaseTime());
+            draftExecutor.execute(draftSchedule);
+        } catch (Throwable t) {
+            logger.error(t.getMessage(), t);
+        }
     }
 }

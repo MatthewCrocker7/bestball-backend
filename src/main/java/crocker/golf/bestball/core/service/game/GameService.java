@@ -5,6 +5,7 @@ import crocker.golf.bestball.core.mapper.UserMapper;
 import crocker.golf.bestball.core.repository.GameRepository;
 import crocker.golf.bestball.core.repository.PgaRepository;
 import crocker.golf.bestball.core.repository.UserRepository;
+import crocker.golf.bestball.core.util.TimeHelper;
 import crocker.golf.bestball.domain.enums.game.DraftState;
 import crocker.golf.bestball.domain.enums.game.GameState;
 import crocker.golf.bestball.domain.enums.game.GameType;
@@ -19,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.util.UUID;
 
 public class GameService {
@@ -96,9 +97,12 @@ public class GameService {
     }
 
     private Draft createNewDraft(GameDto gameDto) {
+        ZonedDateTime date = gameDto.getDraftDate();
+        LocalDateTime localStartDate = TimeHelper.getLocalDateTime(date);
+
         Draft draft = Draft.builder()
                 .draftId(UUID.randomUUID())
-                .startTime(LocalDateTime.of(gameDto.getDraftDate(), gameDto.getDraftTime()))
+                .startTime(localStartDate)
                 .draftState(DraftState.NOT_STARTED)
                 .draftVersion(1)
                 .build();
