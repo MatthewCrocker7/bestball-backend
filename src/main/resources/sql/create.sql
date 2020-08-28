@@ -50,9 +50,10 @@ CREATE TABLE TEAMS (
 );
 
 CREATE TABLE DRAFTS (
-    DRAFT_ID                UUID PRIMARY KEY   NOT NULL,
+    DRAFT_ID                UUID                NOT NULL,
+    DRAFT_VERSION           NUMERIC             NOT NULL,
     DRAFT_STATE             VARCHAR(100)        NOT NULL,
-    DRAFT_VERSION           NUMERIC             NOT NULL
+    PRIMARY KEY (DRAFT_ID, DRAFT_VERSION)
 );
 
 CREATE TABLE DRAFT_SCHEDULES (

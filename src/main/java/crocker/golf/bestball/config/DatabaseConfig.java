@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import javax.sql.DataSource;
 import java.net.URI;
@@ -66,6 +67,9 @@ public class DatabaseConfig {
     }
 
     @Bean
+    public NamedParameterJdbcTemplate namedParamJdbcTemplate(DataSource dataSource) {return new NamedParameterJdbcTemplate(dataSource); }
+
+    @Bean
     public UserRepository userRepository(UserDao userDao) {
         return new UserRepository(userDao);
     }
@@ -95,5 +99,5 @@ public class DatabaseConfig {
     public DraftRepository draftRepository(DraftDao draftDao) { return new DraftRepository(draftDao); }
 
     @Bean
-    public DraftDao draftDao(JdbcTemplate jdbcTemplate) { return new DraftDao(jdbcTemplate); }
+    public DraftDao draftDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) { return new DraftDao(namedParameterJdbcTemplate); }
 }

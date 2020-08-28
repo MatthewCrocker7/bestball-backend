@@ -6,6 +6,7 @@ import crocker.golf.bestball.domain.game.draft.DraftSchedule;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 public class DraftRepository {
 
@@ -21,6 +22,14 @@ public class DraftRepository {
 
     public void saveDraftSchedule(DraftSchedule draftSchedule) {
         draftDao.saveDraftSchedule(draftSchedule);
+    }
+
+    public void updateReleaseStatus(DraftSchedule draftSchedule) {
+        draftDao.updateReleaseStatus(draftSchedule);
+    }
+
+    public Draft getLatestDraftById(UUID draftId) {
+        return draftDao.getLatestDraftById(draftId);
     }
 
     public List<DraftSchedule> getDraftSchedules() { return Collections.emptyList(); }

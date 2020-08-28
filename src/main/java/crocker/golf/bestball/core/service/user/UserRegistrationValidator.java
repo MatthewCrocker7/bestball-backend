@@ -88,7 +88,7 @@ public class UserRegistrationValidator {
 
         String password = userCredentialsDto.getPassword();
 
-        if(password.length() < 8 || password.length() > 64) {
+        if(password.length() < 1 || password.length() > 64) {
             exceptions.put("password", new PasswordNotValidException("Password must be between 8 to 64 characters long"));
         }
 

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 
 public class TimeHelper {
 
@@ -14,7 +15,7 @@ public class TimeHelper {
     }
 
     public static LocalDateTime getLocalDateTime(ZonedDateTime date) {
-        return date.withZoneSameInstant(TIME_ZONE).toLocalDateTime();
+        return date.withZoneSameInstant(TIME_ZONE).toLocalDateTime().truncatedTo(ChronoUnit.MINUTES);
     }
 
     public static ZonedDateTime getZonedDateTime(LocalDateTime date) {

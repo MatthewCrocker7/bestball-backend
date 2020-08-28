@@ -27,8 +27,8 @@ public class DraftConfig {
     }
 
     @Bean
-    public DraftExecutor draftExecutor(DraftScheduler draftScheduler) {
-        return new DraftExecutor(draftScheduler);
+    public DraftExecutor draftExecutor(DraftScheduler draftScheduler, DraftRepository draftRepository) {
+        return new DraftExecutor(draftScheduler, draftRepository);
     }
 
     @Bean(initMethod = "warmUpDraftSchedules")
