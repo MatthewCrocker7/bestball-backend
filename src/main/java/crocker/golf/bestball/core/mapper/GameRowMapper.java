@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.RowMapper;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class GameRowMapper implements RowMapper<Game> {
@@ -24,7 +25,16 @@ public class GameRowMapper implements RowMapper<Game> {
                 .gameType(GameType.valueOf(rs.getString("GAME_TYPE")))
                 .draftId((UUID)rs.getObject("DRAFT_ID"))
                 .numPlayers(rs.getInt("NUM_PLAYERS"))
+                .buyIn((BigDecimal)rs.getObject("BUY_IN"))
                 .moneyPot((BigDecimal)rs.getObject("MONEY_POT"))
+                .tournament(buildTournament(rs))
+                .build();
+    }
+
+    private Tournament buildTournament(ResultSet rs) throws SQLException {
+        return Tournament.builder()
+                .name(rs.getString("TOURNAMENT_NAME"))
+                .startDate(rs.getTimestamp("TOURNAMENT_START_DATE").toLocalDateTime())
                 .build();
     }
 }

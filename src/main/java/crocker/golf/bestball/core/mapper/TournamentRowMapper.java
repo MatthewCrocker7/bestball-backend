@@ -20,11 +20,11 @@ public class TournamentRowMapper implements RowMapper<Tournament> {
         return Tournament.builder()
                 .tournamentId((UUID)rs.getObject("TOURNAMENT_ID"))
                 .eventType(EventType.valueOf(rs.getString("EVENT_TYPE")))
-                .season(rs.getInt("SEASON"))
-                .tournamentState(TournamentState.valueOf(rs.getString("STATE")))
-                .name(rs.getString("NAME"))
-                .startDate(rs.getTimestamp("START_DATE").toLocalDateTime())
-                .endDate(rs.getDate("END_DATE").toLocalDate())
+                .season(rs.getInt("PGA_SEASON"))
+                .tournamentState(TournamentState.valueOf(rs.getString("TOURNAMENT_STATE")))
+                .name(rs.getString("TOURNAMENT_NAME"))
+                .startDate(rs.getTimestamp("TOURNAMENT_START_DATE").toLocalDateTime())
+                .endDate(rs.getDate("TOURNAMENT_END_DATE").toLocalDate())
                 .build();
     }
 }

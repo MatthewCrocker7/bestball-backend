@@ -59,6 +59,7 @@ public class GameService {
                 .draftId(draft.getDraftId())
                 .tournament(getTournament(gameDto))
                 .numPlayers(gameDto.getNumPlayers())
+                .buyIn(gameDto.getBuyIn())
                 .moneyPot(calculatePot(gameDto))
                 .build();
 
@@ -71,7 +72,7 @@ public class GameService {
 
     public void joinGame(GameDto gameDto) {
         UserCredentials userCredentials = userRepository.findByEmail(gameDto.getEmail());
-        Game game = gameRepository.getGameById(gameDto);
+        Game game = gameRepository.getLatestGameById(gameDto.getGameId());
 
         Team team = Team.builder()
                 .teamId(UUID.randomUUID())
@@ -98,7 +99,7 @@ public class GameService {
 
     private Draft createNewDraft(GameDto gameDto) {
         ZonedDateTime date = gameDto.getDraftDate();
-        LocalDateTime localStartDate = TimeHelper.getLocalDateTime(date);
+        LocalDateTime localStartDate = TimeHelper.getExactReleaseTime(date);
 
         Draft draft = Draft.builder()
                 .draftId(UUID.randomUUID())

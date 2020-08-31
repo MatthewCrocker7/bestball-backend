@@ -23,5 +23,6 @@ public class Game {
     private Tournament tournament;
 
     private Integer numPlayers;
+    private BigDecimal buyIn;
     private BigDecimal moneyPot;
 }

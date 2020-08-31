@@ -2,13 +2,16 @@ package crocker.golf.bestball.config;
 
 import crocker.golf.bestball.core.draft.DraftManager;
 import crocker.golf.bestball.core.mapper.UserMapper;
+import crocker.golf.bestball.core.repository.DraftRepository;
 import crocker.golf.bestball.core.repository.GameRepository;
 import crocker.golf.bestball.core.repository.PgaRepository;
 import crocker.golf.bestball.core.rest.SportsApiService;
 import crocker.golf.bestball.core.scheduler.PgaUpdateScheduler;
 import crocker.golf.bestball.core.repository.UserRepository;
+import crocker.golf.bestball.core.service.game.DraftService;
 import crocker.golf.bestball.core.service.game.GameService;
 import crocker.golf.bestball.core.service.game.GameValidator;
+import crocker.golf.bestball.core.service.game.InfoService;
 import crocker.golf.bestball.core.service.pga.PgaInfoService;
 import crocker.golf.bestball.core.service.pga.PgaUpdateService;
 import crocker.golf.bestball.core.service.user.UserRegistrationValidator;
@@ -71,6 +74,16 @@ public class BestballConfig {
     @Bean
     public PgaInfoService pgaInfoService(PgaRepository pgaRepository) {
         return new PgaInfoService(pgaRepository);
+    }
+
+    @Bean
+    public DraftService draftService(DraftRepository draftRepository, GameRepository gameRepository, UserRepository userRepository) {
+        return new DraftService(draftRepository, gameRepository, userRepository);
+    }
+
+    @Bean
+    public InfoService infoService(DraftRepository draftRepository, GameRepository gameRepository, UserRepository userRepository) {
+        return new InfoService(draftRepository, gameRepository, userRepository);
     }
 
 }

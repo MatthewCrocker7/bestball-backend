@@ -18,8 +18,8 @@ public class DraftDao {
     private final String DRAFT_SCHEDULES = "DRAFT_SCHEDULES";
 
     private final String SAVE_NEW_DRAFT = "INSERT INTO " + DRAFTS +
-            " (DRAFT_ID, DRAFT_STATE, DRAFT_VERSION)" +
-            " VALUES(:draftId, :draftState, :draftVersion);";
+            " (DRAFT_ID, DRAFT_STATE, DRAFT_VERSION, DRAFT_TIME)" +
+            " VALUES(:draftId, :draftState, :draftVersion, :draftTime);";
 
     private final String SAVE_NEW_DRAFT_SCHEDULE = "INSERT INTO " + DRAFT_SCHEDULES +
             " (DRAFT_ID, RELEASE_STATUS, RELEASE_TIME)" +
@@ -65,6 +65,7 @@ public class DraftDao {
         params.addValue("draftId", draft.getDraftId());
         params.addValue("draftState", draft.getDraftState().name());
         params.addValue("draftVersion", draft.getDraftVersion());
+        params.addValue("draftTime", draft.getStartTime());
 
         return params;
     }

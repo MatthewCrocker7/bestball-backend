@@ -14,7 +14,7 @@ public class TimeHelper {
         return Year.now(TIME_ZONE).getValue();
     }
 
-    public static LocalDateTime getLocalDateTime(ZonedDateTime date) {
+    public static LocalDateTime getExactReleaseTime(ZonedDateTime date) {
         return date.withZoneSameInstant(TIME_ZONE).toLocalDateTime().truncatedTo(ChronoUnit.MINUTES);
     }
 

@@ -20,6 +20,7 @@ public class DraftRowMapper implements RowMapper<Draft> {
                 .draftId((UUID)rs.getObject("DRAFT_ID"))
                 .draftState(DraftState.valueOf(rs.getString("DRAFT_STATE")))
                 .draftVersion(rs.getInt("DRAFT_VERSION"))
+                .startTime(rs.getTimestamp("DRAFT_TIME").toLocalDateTime())
                 .build();
     }
 }

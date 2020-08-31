@@ -42,11 +42,8 @@ public class DraftExecutor {
                 .draftId(draft.getDraftId())
                 .draftVersion(draft.getDraftVersion() + 1)
                 .draftState(DraftState.IN_PROGRESS)
-                .pgaPlayers(pgaRepository.getWorldRankings())
-
+                .startTime(draft.getStartTime())
                 .build();
-
-
 
         return updatedDraft;
     }

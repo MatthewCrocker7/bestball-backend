@@ -3,11 +3,13 @@ package crocker.golf.bestball.domain.game;
 import crocker.golf.bestball.domain.enums.game.TeamRole;
 import crocker.golf.bestball.domain.game.round.Round;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.util.List;
 import java.util.UUID;
 
 @Builder
+@Getter
 public class Team {
 
     private UUID teamId;

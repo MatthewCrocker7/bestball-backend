@@ -28,11 +28,12 @@ public class PgaDao {
             " VALUES(?, ?, ?);";
 
     private final String UPDATE_SCHEDULE = "INSERT INTO " + SEASON_SCHEDULE +
-            " (TOURNAMENT_ID, EVENT_TYPE, SEASON, STATE, NAME, START_DATE, END_DATE)" +
+            " (TOURNAMENT_ID, EVENT_TYPE, PGA_SEASON, TOURNAMENT_STATE, TOURNAMENT_NAME," +
+            " TOURNAMENT_START_DATE, TOURNAMENT_END_DATE)" +
             " VALUES(?, ?, ?, ?, ?, ?, ?);";
 
     private final String GET_SCHEDULE_BY_SEASON = "SELECT * FROM " + SEASON_SCHEDULE +
-            " WHERE SEASON=?;";
+            " WHERE PGA_SEASON=?;";
 
     private final String GET_TOURNAMENT_BY_ID = "SELECT * FROM " + SEASON_SCHEDULE +
             " WHERE TOURNAMENT_ID=?;";
@@ -47,6 +48,7 @@ public class PgaDao {
 
         List<Object[]> params = getPlayerParams(pgaPlayers);
 
+        //TODO: Remove delete scripts. Use namedParameterJdbc and use on conflict update
         jdbcTemplate.execute(DELETE_RANKINGS);
         jdbcTemplate.batchUpdate(UPDATE_RANKINGS, params);
     }
