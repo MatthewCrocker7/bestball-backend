@@ -34,22 +34,24 @@ CREATE TABLE GAMES (
     DRAFT_ID                UUID                NOT NULL,
     TOURNAMENT_ID           UUID                NOT NULL,
     NUM_PLAYERS             NUMERIC             NOT NULL,
-    BUY_IN                  NUMERIC             NOT NULL
+    BUY_IN                  NUMERIC             NOT NULL,
     MONEY_POT               NUMERIC             NOT NULL
 );
 
 CREATE TABLE TEAMS (
-    TEAM_ID                 UUID PRIMARY KEY    NOT NULL,
+    TEAM_ID                 UUID                NOT NULL,
     USER_ID                 UUID                NOT NULL,
     GAME_ID                 UUID                NOT NULL,
     DRAFT_ID                UUID                NOT NULL,
     TEAM_ROLE               VARCHAR(100)        NOT NULL,
+    DRAFT_PICK              NUMERIC,
     PLAYER_ONE_ID           UUID,
     PLAYER_TWO_ID           UUID,
     PLAYER_THREE_ID         UUID,
     PLAYER_FOUR_ID          UUID,
     TO_PAR                  NUMERIC,
-    TOTAL_SCORE             NUMERIC
+    TOTAL_SCORE             NUMERIC,
+    PRIMARY KEY (TEAM_ID, USER_ID, GAME_ID, DRAFT_ID)
 );
 
 CREATE TABLE DRAFTS (
@@ -57,6 +59,7 @@ CREATE TABLE DRAFTS (
     DRAFT_VERSION           NUMERIC             NOT NULL,
     DRAFT_STATE             VARCHAR(100)        NOT NULL,
     DRAFT_TIME              TIMESTAMP           NOT NULL,
+    CURRENT_PICK            NUMERIC             NOT NULL,
     PRIMARY KEY (DRAFT_ID, DRAFT_VERSION)
 );
 
@@ -66,12 +69,23 @@ CREATE TABLE DRAFT_SCHEDULES (
     RELEASE_TIME            TIMESTAMP           NOT NULL
 );
 
-CREATE TABLE DRAFT_PARTICIPANTS (
+--TABLE DRAFT_PGA_PLAYERS SHOULD BE HAVE ITS ENTRIES DELETED WHEN DRAFT_STATUS = COMPLETE
+--RUN SCHEDULED JOB TO CLEAN UP TABLE
+CREATE TABLE DRAFT_PGA_PLAYERS (
     DRAFT_ID                UUID                NOT NULL,
-    USER_ID                 UUID                NOT NULL,
-    PRIMARY KEY (DRAFT_ID, USER_ID)
+    PLAYER_ID               UUID                NOT NULL,
+    PLAYER_RANK             NUMERIC             NOT NULL,
+    PLAYER_NAME             VARCHAR(255)        NOT NULL,
+    DRAFTED                 BOOLEAN             NOT NULL,
+    PRIMARY KEY (DRAFT_ID, PLAYER_ID)
 );
 
--- INSERT INTO USERS (first_name, last_name, email, user_name) VALUES
--- ('Matthew', 'Crocker', 'matthewcroc@gmail.com', 'matthewcrocker7'),
--- ('Nicole', 'Tranchita', 'tranchita.nicole@gmail.com', 'nicciT');
+--TABLE DRAFT_ORDER SHOULD BE HAVE ITS ENTRIES DELETED WHEN DRAFT_STATUS = COMPLETE
+--RUN SCHEDULED JOB TO CLEAN UP TABLE
+CREATE TABLE DRAFT_ORDER (
+    DRAFT_ID                UUID                NOT NULL,
+    USER_ID                 UUID                NOT NULL,
+    PICK_NUMBER             NUMERIC             NOT NULL,
+    USER_NAME               VARCHAR(255)        NOT NULL,
+    PRIMARY KEY (DRAFT_ID, USER_ID, PICK_NUMBER)
+);

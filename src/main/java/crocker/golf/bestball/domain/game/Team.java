@@ -4,12 +4,14 @@ import crocker.golf.bestball.domain.enums.game.TeamRole;
 import crocker.golf.bestball.domain.game.round.Round;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.UUID;
 
 @Builder
 @Getter
+@Setter
 public class Team {
 
     private UUID teamId;
@@ -18,6 +20,7 @@ public class Team {
     private UUID gameId;
 
     private TeamRole teamRole;
+    private Integer draftPick;
 
     private UUID playerOneId;
     private UUID playerTwoId;

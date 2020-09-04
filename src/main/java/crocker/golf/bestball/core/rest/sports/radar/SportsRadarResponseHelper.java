@@ -60,11 +60,13 @@ public class SportsRadarResponseHelper {
 
     private TournamentState getTournamentState(SportsRadarTournamentDto tournamentDto) {
 
+        ZoneId courseTimeZone;
         if (tournamentDto.getCourseTimezone() == null) {
-            logger.error("error");
+            courseTimeZone = ZoneId.of("UTC");
+        } else {
+            courseTimeZone = ZoneId.of(tournamentDto.getCourseTimezone());
         }
 
-        ZoneId courseTimeZone = ZoneId.of(tournamentDto.getCourseTimezone());
         LocalDate startDate  = tournamentDto.getStartDate();
 
         ZonedDateTime courseStartDateTime = startDate.atStartOfDay(courseTimeZone);

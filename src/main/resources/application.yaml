@@ -24,6 +24,6 @@ golf:
     key:
       sports:
         data: ${pga.api.key.sports.data:f98dc8be2021416fad32beaa8a1929ec}
-        radar: ${pga.api.key.sports.radar:bhh5cmhvvabu4jwdb72gv27q}
+        radar: ${pga.api.key.sports.radar}
     toggle:
       sports-data-enabled: ${pga.api.sports.data.enabled:false}

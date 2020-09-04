@@ -72,8 +72,8 @@ public class DatabaseConfig {
     }
 
     @Bean
-    public UserDao userDao(JdbcTemplate jdbcTemplate) {
-        return new UserDao(jdbcTemplate);
+    public UserDao userDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        return new UserDao(namedParameterJdbcTemplate);
     }
 
     @Bean
@@ -82,8 +82,8 @@ public class DatabaseConfig {
     }
 
     @Bean
-    public PgaDao pgaDao(JdbcTemplate jdbcTemplate) {
-        return new PgaDao(jdbcTemplate);
+    public PgaDao pgaDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        return new PgaDao(namedParameterJdbcTemplate);
     }
 
     @Bean

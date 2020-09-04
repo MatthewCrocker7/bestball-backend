@@ -1,4 +1,4 @@
-package crocker.golf.bestball.domain.enums;
+package crocker.golf.bestball.domain.enums.game;
 
 public enum ScoreType {
     PAR,
@@ -9,5 +9,5 @@ public enum ScoreType {
     TRIPLE_BOGEY,
     PLUS_TRIPLE,
     IN_PROGRESS,
-    TBD;
+    TBD
 }

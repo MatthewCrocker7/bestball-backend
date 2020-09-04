@@ -26,12 +26,19 @@ public class GameDao {
             " TOURNAMENT_ID, NUM_PLAYERS, BUY_IN, MONEY_POT)" +
             " VALUES(:gameId, :gameState, :gameVersion, :gameType, :draftId, :tournamentId, :numPlayers, :buyIn, :moneyPot);";
 
-    private final String GET_LATEST_GAME_BY_ID = "SELECT * FROM " + GAMES +
+    private final String GET_LATEST_GAME_BY_GAME_ID = "SELECT * FROM " + GAMES +
             " INNER JOIN " + SEASON_SCHEDULE +
             " ON " + GAMES + ".TOURNAMENT_ID = " + SEASON_SCHEDULE + ".TOURNAMENT_ID" +
             " WHERE (GAME_ID, GAME_VERSION) IN" +
             " (SELECT GAME_ID, MAX(GAME_VERSION) FROM " + GAMES +
             " WHERE GAME_ID=:gameId);";
+
+    private final String GET_LATEST_GAME_BY_DRAFT_ID = "SELECT * FROM " + GAMES +
+            " INNER JOIN " + SEASON_SCHEDULE +
+            " ON " + GAMES + ".TOURNAMENT_ID = " + SEASON_SCHEDULE + ".TOURNAMENT_ID" +
+            " WHERE (GAME_ID, GAME_VERSION) IN" +
+            " (SELECT GAME_ID, MAX(GAME_VERSION) FROM " + GAMES +
+            " WHERE DRAFT_ID=:draftId);";
 
     public GameDao(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -42,10 +49,16 @@ public class GameDao {
         jdbcTemplate.update(SAVE_NEW_GAME, params);
     }
 
-    public Game getLatestGameById(UUID gameId) {
+    public Game getLatestGameByGameId(UUID gameId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("gameId", gameId);
-        return jdbcTemplate.queryForObject(GET_LATEST_GAME_BY_ID, params, new GameRowMapper());
+        return jdbcTemplate.queryForObject(GET_LATEST_GAME_BY_GAME_ID, params, new GameRowMapper());
+    }
+
+    public Game getLatestGameByDraftId(UUID draftId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("draftId", draftId);
+        return jdbcTemplate.queryForObject(GET_LATEST_GAME_BY_DRAFT_ID, params, new GameRowMapper());
     }
 
     private MapSqlParameterSource getNewGameParams(Game game) {

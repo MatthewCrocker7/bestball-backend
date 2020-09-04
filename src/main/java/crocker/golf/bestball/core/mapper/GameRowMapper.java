@@ -33,6 +33,7 @@ public class GameRowMapper implements RowMapper<Game> {
 
     private Tournament buildTournament(ResultSet rs) throws SQLException {
         return Tournament.builder()
+                .tournamentId((UUID)rs.getObject("TOURNAMENT_ID"))
                 .name(rs.getString("TOURNAMENT_NAME"))
                 .startDate(rs.getTimestamp("TOURNAMENT_START_DATE").toLocalDateTime())
                 .build();

@@ -4,6 +4,7 @@ import crocker.golf.bestball.core.service.game.DraftService;
 import crocker.golf.bestball.core.service.game.GameService;
 import crocker.golf.bestball.domain.game.GameDto;
 import crocker.golf.bestball.domain.game.draft.Draft;
+import crocker.golf.bestball.domain.user.RequestDto;
 import crocker.golf.bestball.domain.user.UserCredentialsDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +26,12 @@ public class DraftController {
         this.draftService = draftService;
     }
 
-    @PostMapping
-    public ResponseEntity loadDraft() {
+    @PostMapping("/loadDraft")
+    public ResponseEntity loadDraft(@RequestBody RequestDto requestDto) {
         try {
-            return new ResponseEntity(null, null, HttpStatus.OK);
+            logger.info("Received request from {} to load draft {}", requestDto.getEmail(), requestDto.getDraftId());
+            Draft draft = draftService.loadDraft(requestDto);
+            return new ResponseEntity(draft, null, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

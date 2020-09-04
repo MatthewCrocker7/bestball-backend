@@ -1,11 +1,14 @@
 package crocker.golf.bestball.core.dao;
 
+import crocker.golf.bestball.core.mapper.PgaPlayerMapper;
 import crocker.golf.bestball.core.mapper.TournamentRowMapper;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
 import crocker.golf.bestball.domain.pga.Tournament;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,7 +18,7 @@ public class PgaDao {
 
     private static final Logger logger = LoggerFactory.getLogger(PgaDao.class);
 
-    private JdbcTemplate jdbcTemplate;
+    private NamedParameterJdbcTemplate jdbcTemplate;
 
     private final String WORLD_RANKINGS = "WORLD_RANKINGS";
     private final String SEASON_SCHEDULE = "SEASON_SCHEDULE";
@@ -25,76 +28,82 @@ public class PgaDao {
 
     private final String UPDATE_RANKINGS = "INSERT INTO " + WORLD_RANKINGS +
             " (PLAYER_ID, PLAYER_RANK, PLAYER_NAME)" +
-            " VALUES(?, ?, ?);";
+            " VALUES(:playerId, :playerRank, :playerName);";
 
     private final String UPDATE_SCHEDULE = "INSERT INTO " + SEASON_SCHEDULE +
             " (TOURNAMENT_ID, EVENT_TYPE, PGA_SEASON, TOURNAMENT_STATE, TOURNAMENT_NAME," +
             " TOURNAMENT_START_DATE, TOURNAMENT_END_DATE)" +
-            " VALUES(?, ?, ?, ?, ?, ?, ?);";
+            " VALUES(:tournamentId, :eventType, :season, :tournamentState, :tournamentName, :startDate, :endDate);";
+
+    private final String GET_WORLD_RANKINGS = "SELECT * FROM " + WORLD_RANKINGS;
 
     private final String GET_SCHEDULE_BY_SEASON = "SELECT * FROM " + SEASON_SCHEDULE +
-            " WHERE PGA_SEASON=?;";
+            " WHERE PGA_SEASON=:season;";
 
     private final String GET_TOURNAMENT_BY_ID = "SELECT * FROM " + SEASON_SCHEDULE +
-            " WHERE TOURNAMENT_ID=?;";
+            " WHERE TOURNAMENT_ID=:tournamentId;";
 
 
-    public PgaDao(JdbcTemplate jdbcTemplate) {
+    public PgaDao(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     public void updateWorldRankings(List<PgaPlayer> pgaPlayers) {
         logger.info("Updating world rankings");
 
-        List<Object[]> params = getPlayerParams(pgaPlayers);
+        MapSqlParameterSource[] params = getPlayerParams(pgaPlayers);
 
-        //TODO: Remove delete scripts. Use namedParameterJdbc and use on conflict update
-        jdbcTemplate.execute(DELETE_RANKINGS);
         jdbcTemplate.batchUpdate(UPDATE_RANKINGS, params);
     }
 
     public void updateSeasonSchedule(List<Tournament> tournaments) {
         logger.info("Updating season schedule");
 
-        List<Object[]> params = getTournamentParams(tournaments);
+        MapSqlParameterSource[] params = getTournamentParams(tournaments);
 
-        jdbcTemplate.execute(DELETE_SCHEDULE);
         jdbcTemplate.batchUpdate(UPDATE_SCHEDULE, params);
     }
 
     public List<PgaPlayer> getWorldRankings() {
-        return Collections.emptyList();
+        return jdbcTemplate.query(GET_WORLD_RANKINGS, new PgaPlayerMapper());
     }
 
     public List<Tournament> getTournamentsBySeason(int year) {
-        Object[] params = new Object[]{year};
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("season", year);
         return jdbcTemplate.query(GET_SCHEDULE_BY_SEASON, params, new TournamentRowMapper());
     }
 
     public Tournament getTournamentById(String tournamentId) {
-        Object[] params = new Object[]{tournamentId};
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("tournamentId", tournamentId);
         return jdbcTemplate.queryForObject(GET_TOURNAMENT_BY_ID, params, new TournamentRowMapper());
     }
 
-    private List<Object[]> getPlayerParams(List<PgaPlayer> pgaPlayers) {
-        return pgaPlayers.stream().map(pgaPlayer -> new Object[] {
-                pgaPlayer.getPlayerId(),
-                pgaPlayer.getRank(),
-                pgaPlayer.getPlayerName()
-        }).collect(Collectors.toList());
+    private MapSqlParameterSource[] getPlayerParams(List<PgaPlayer> pgaPlayers) {
+        return pgaPlayers.stream().map(pgaPlayer -> {
+            MapSqlParameterSource params = new MapSqlParameterSource();
+            params.addValue("playerId", pgaPlayer.getPlayerId());
+            params.addValue("playerRank", pgaPlayer.getRank());
+            params.addValue("playerName", pgaPlayer.getPlayerName());
+
+            return params;
+        }).toArray(MapSqlParameterSource[]::new);
     }
 
-    private List<Object[]> getTournamentParams(List<Tournament> tournaments) {
-        return tournaments.stream().map(tournament -> new Object[] {
-                tournament.getTournamentId(),
-                tournament.getEventType().name(),
-                tournament.getSeason(),
-                tournament.getTournamentState().name(),
-                tournament.getName(),
-                tournament.getStartDate(),
-                tournament.getEndDate(),
+    private MapSqlParameterSource[] getTournamentParams(List<Tournament> tournaments) {
+        return tournaments.stream().map(tournament -> {
+            MapSqlParameterSource params = new MapSqlParameterSource();
+            params.addValue("tournamentId", tournament.getTournamentId());
+            params.addValue("eventType", tournament.getEventType().name());
+            params.addValue("season", tournament.getSeason());
+            params.addValue("tournamentState", tournament.getTournamentState().name());
+            params.addValue("tournamentName", tournament.getName());
+            params.addValue("startDate", tournament.getStartDate());
+            params.addValue("endDate", tournament.getEndDate());
 
-        }).collect(Collectors.toList());
+            return params;
+        }).toArray(MapSqlParameterSource[]::new);
     }
 
 }

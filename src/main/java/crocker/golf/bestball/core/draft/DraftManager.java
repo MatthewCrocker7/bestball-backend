@@ -1,14 +1,11 @@
 package crocker.golf.bestball.core.draft;
 
 import crocker.golf.bestball.core.repository.DraftRepository;
-import crocker.golf.bestball.core.util.TimeHelper;
-import crocker.golf.bestball.domain.enums.ReleaseStatus;
+import crocker.golf.bestball.domain.enums.game.ReleaseStatus;
 import crocker.golf.bestball.domain.game.draft.Draft;
 import crocker.golf.bestball.domain.game.draft.DraftSchedule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.time.LocalDateTime;
 
 public class DraftManager {
 

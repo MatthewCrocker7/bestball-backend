@@ -4,5 +4,5 @@ public enum EventType {
     STROKE,
     MATCH,
     CUP,
-    TEAM;
+    TEAM
 }

@@ -25,6 +25,9 @@ public class TeamDao {
     private final String GET_TEAMS_BY_USER_ID = "SELECT * FROM " + TEAMS +
             " WHERE USER_ID=:userId;";
 
+    private final String GET_TEAMS_BY_DRAFT_ID = "SELECT * FROM " + TEAMS +
+            " WHERE DRAFT_ID=:draftId;";
+
     public TeamDao(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -39,6 +42,13 @@ public class TeamDao {
         params.addValue("userId", userId);
 
         return jdbcTemplate.query(GET_TEAMS_BY_USER_ID, params, new TeamRowMapper());
+    }
+
+    public List<Team> getTeamsByDraftId(UUID draftId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("draftId", draftId);
+
+        return jdbcTemplate.query(GET_TEAMS_BY_DRAFT_ID, params, new TeamRowMapper());
     }
 
     private MapSqlParameterSource getTeamParams(Team team) {

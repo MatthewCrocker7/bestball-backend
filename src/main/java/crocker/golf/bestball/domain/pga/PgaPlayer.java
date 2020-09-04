@@ -9,6 +9,6 @@ import java.util.UUID;
 @Builder
 public class PgaPlayer {
     private UUID playerId;
-    private int rank;
+    private Integer rank;
     private String playerName;
 }

@@ -6,6 +6,8 @@ import crocker.golf.bestball.core.draft.DraftScheduler;
 import crocker.golf.bestball.core.draft.DraftTasklet;
 import crocker.golf.bestball.core.repository.DraftRepository;
 import crocker.golf.bestball.core.repository.GameRepository;
+import crocker.golf.bestball.core.repository.PgaRepository;
+import crocker.golf.bestball.core.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -27,8 +29,8 @@ public class DraftConfig {
     }
 
     @Bean
-    public DraftExecutor draftExecutor(DraftScheduler draftScheduler, DraftRepository draftRepository) {
-        return new DraftExecutor(draftScheduler, draftRepository);
+    public DraftExecutor draftExecutor(DraftScheduler draftScheduler, DraftRepository draftRepository, GameRepository gameRepository, PgaRepository pgaRepository, UserRepository userRepository) {
+        return new DraftExecutor(draftScheduler, draftRepository, gameRepository, pgaRepository, userRepository);
     }
 
     @Bean(initMethod = "warmUpDraftSchedules")

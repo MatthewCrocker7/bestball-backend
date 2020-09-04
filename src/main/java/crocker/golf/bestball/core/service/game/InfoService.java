@@ -5,12 +5,9 @@ import crocker.golf.bestball.core.repository.GameRepository;
 import crocker.golf.bestball.core.repository.UserRepository;
 import crocker.golf.bestball.domain.game.Team;
 import crocker.golf.bestball.domain.game.TeamInfo;
-import crocker.golf.bestball.domain.game.draft.Draft;
-import crocker.golf.bestball.domain.user.RequestDto;
 import crocker.golf.bestball.domain.user.UserCredentials;
 import crocker.golf.bestball.domain.user.UserCredentialsDto;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +37,7 @@ public class InfoService {
         return teams.stream().map(team -> TeamInfo.builder()
             .teamId(team.getTeamId())
             .draft(draftRepository.getLatestDraftById(team.getDraftId()))
-            .game(gameRepository.getLatestGameById(team.getGameId()))
+            .game(gameRepository.getLatestGameByGameId(team.getGameId()))
             .build()
         ).collect(Collectors.toList());
     }

@@ -1,6 +1,6 @@
 package crocker.golf.bestball.domain.game.draft;
 
-import crocker.golf.bestball.domain.enums.ReleaseStatus;
+import crocker.golf.bestball.domain.enums.game.ReleaseStatus;
 import lombok.Builder;
 import lombok.Getter;
 

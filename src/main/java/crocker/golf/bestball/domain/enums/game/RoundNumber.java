@@ -1,4 +1,4 @@
-package crocker.golf.bestball.domain.enums;
+package crocker.golf.bestball.domain.enums.game;
 
 public enum RoundNumber {
     ROUND_ONE(1),
@@ -8,7 +8,7 @@ public enum RoundNumber {
 
     private int round;
 
-    private RoundNumber(int round) {
+    RoundNumber(int round) {
         this.round = round;
     }
 }

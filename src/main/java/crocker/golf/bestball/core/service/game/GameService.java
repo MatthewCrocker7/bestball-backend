@@ -1,7 +1,6 @@
 package crocker.golf.bestball.core.service.game;
 
 import crocker.golf.bestball.core.draft.DraftManager;
-import crocker.golf.bestball.core.mapper.UserMapper;
 import crocker.golf.bestball.core.repository.GameRepository;
 import crocker.golf.bestball.core.repository.PgaRepository;
 import crocker.golf.bestball.core.repository.UserRepository;
@@ -72,7 +71,7 @@ public class GameService {
 
     public void joinGame(GameDto gameDto) {
         UserCredentials userCredentials = userRepository.findByEmail(gameDto.getEmail());
-        Game game = gameRepository.getLatestGameById(gameDto.getGameId());
+        Game game = gameRepository.getLatestGameByGameId(gameDto.getGameId());
 
         Team team = Team.builder()
                 .teamId(UUID.randomUUID())
@@ -106,6 +105,7 @@ public class GameService {
                 .startTime(localStartDate)
                 .draftState(DraftState.NOT_STARTED)
                 .draftVersion(1)
+                .currentPick(1)
                 .build();
 
         draftManager.scheduleDraft(draft);

@@ -7,6 +7,7 @@ import crocker.golf.bestball.domain.game.Team;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,11 +28,20 @@ public class GameRepository {
     @CacheEvict(value = "teamsByUserId", key = "#team.getUserId()")
     public void saveNewTeam(Team team) { teamDao.saveTeam(team); }
 
-    public Game getLatestGameById(UUID gameId) { return gameDao.getLatestGameById(gameId); }
+    @CacheEvict(value = "teamsByUserId", key = "#team.getUserId()")
+    public void updateTeam(Team team) { teamDao.saveTeam(team); }
+
+    public Game getLatestGameByGameId(UUID gameId) { return gameDao.getLatestGameByGameId(gameId); }
+
+    public Game getLatestGameByDraftId(UUID draftId) { return gameDao.getLatestGameByDraftId(draftId); }
 
     @Cacheable(value = "teamsByUserId", key = "#userId")
     public List<Team> getTeamsByUserId(UUID userId) {
         return teamDao.getTeamsByUserId(userId);
+    }
+
+    public List<Team> getTeamsByDraftId(UUID draftId) {
+        return teamDao.getTeamsByDraftId(draftId);
     }
 
 }

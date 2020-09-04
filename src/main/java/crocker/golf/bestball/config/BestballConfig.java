@@ -77,8 +77,8 @@ public class BestballConfig {
     }
 
     @Bean
-    public DraftService draftService(DraftRepository draftRepository, GameRepository gameRepository, UserRepository userRepository) {
-        return new DraftService(draftRepository, gameRepository, userRepository);
+    public DraftService draftService(DraftRepository draftRepository, GameRepository gameRepository, UserRepository userRepository, PgaRepository pgaRepository) {
+        return new DraftService(draftRepository, userRepository, gameRepository, pgaRepository);
     }
 
     @Bean

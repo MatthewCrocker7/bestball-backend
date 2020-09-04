@@ -1,9 +1,7 @@
 package crocker.golf.bestball.core.mapper;
 
-import crocker.golf.bestball.domain.enums.game.DraftState;
 import crocker.golf.bestball.domain.enums.game.TeamRole;
 import crocker.golf.bestball.domain.game.Team;
-import crocker.golf.bestball.domain.game.draft.Draft;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

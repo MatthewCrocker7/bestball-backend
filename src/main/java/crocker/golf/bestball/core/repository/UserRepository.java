@@ -2,6 +2,9 @@ package crocker.golf.bestball.core.repository;
 
 import crocker.golf.bestball.core.dao.UserDao;
 import crocker.golf.bestball.domain.user.UserCredentials;
+import crocker.golf.bestball.domain.user.UserInfo;
+
+import java.util.UUID;
 
 public class UserRepository {
 
@@ -22,5 +25,9 @@ public class UserRepository {
     //TODO: Cache this
     public UserCredentials findByEmail(String email) {
         return userDao.findByEmail(email);
+    }
+
+    public UserCredentials getUserByUserId(UUID userId) {
+        return userDao.getUserByUserId(userId);
     }
 }

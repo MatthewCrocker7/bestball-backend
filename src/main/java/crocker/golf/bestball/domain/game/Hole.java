@@ -1,6 +1,6 @@
 package crocker.golf.bestball.domain.game;
 
-import crocker.golf.bestball.domain.enums.ScoreType;
+import crocker.golf.bestball.domain.enums.game.ScoreType;
 
 public class Hole {
 
