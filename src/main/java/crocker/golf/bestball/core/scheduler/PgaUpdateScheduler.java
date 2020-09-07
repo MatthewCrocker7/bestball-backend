@@ -4,6 +4,7 @@ import crocker.golf.bestball.core.service.pga.PgaUpdateService;
 import crocker.golf.bestball.domain.exceptions.ExternalAPIException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 
 public class PgaUpdateScheduler {
@@ -17,20 +18,23 @@ public class PgaUpdateScheduler {
     }
 
     @Scheduled(fixedDelayString = "${golf.pga.update.rate.rankings}")
-    public void updateWorldRankings() throws ExternalAPIException {
-        logger.info("Updating world golf rankings");
+    @Async
+    public void updateWorldRankings() throws Exception {
+        logger.info("Updating world golf rankings on thread {}", Thread.currentThread().getName());
         pgaUpdateService.processUpdateWorldRankings();
     }
 
     @Scheduled(fixedDelayString = "${golf.pga.update.rate.schedule}", initialDelay = 2000)
-    public void updateSeasonSchedule() throws ExternalAPIException {
-        logger.info("Updating season schedule");
+    @Async
+    public void updateSeasonSchedule() throws Exception {
+        logger.info("Updating season schedule on thread {}", Thread.currentThread().getName());
         pgaUpdateService.processUpdateSeasonSchedule();
     }
 
     @Scheduled(fixedDelayString = "${golf.pga.update.rate.tournament}")
+    @Async
     public void updateCurrentTournament() {
-        logger.info("Updating current tournament");
+        logger.info("Updating current tournament on thread {}", Thread.currentThread().getName());
         pgaUpdateService.processUpdateCurrentTournament();
     }
 }

@@ -18,6 +18,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -27,6 +28,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -38,7 +42,6 @@ public class SportsRadarService implements SportsApiService {
     private RestTemplate restTemplate;
     private SportsRadarResponseHelper sportsRadarResponseHelper;
 
-    private String apiKey;
     private final LinkedList<String> keys;
 
     private final String BASE_URL = "http://api.sportradar.us/golf-t2";
@@ -57,11 +60,12 @@ public class SportsRadarService implements SportsApiService {
     @Retryable(
         value = { HttpClientErrorException.class },
         maxAttempts = 100,
-        backoff = @Backoff(5000)
+        backoff = @Backoff(2000)
     )
-    public List<PgaPlayer> getWorldRankings() throws ExternalAPIException {
+    @Async
+    public Future<List<PgaPlayer>> getWorldRankings() throws ExternalAPIException {
         String url = buildRankingsUrl();
-        //TODO: return a future and make the retry async
+        logger.info("Attempting to retrieve world rankings on thread {}", Thread.currentThread().getName());
         try {
             ResponseEntity<SportsRadarWorldGolfRankingDto> responseEntity = restTemplate.exchange(url, HttpMethod.GET, null, SportsRadarWorldGolfRankingDto.class);
 
@@ -71,23 +75,24 @@ public class SportsRadarService implements SportsApiService {
 
             SportsRadarWorldGolfRankingDto sportsRadarWorldGolfRankingDto = responseEntity.getBody();
 
-            return sportsRadarResponseHelper.mapResponseToRankings(sportsRadarWorldGolfRankingDto);
+            List<PgaPlayer> pgaPlayers = sportsRadarResponseHelper.mapResponseToRankings(sportsRadarWorldGolfRankingDto);
+
+            return new AsyncResult<>(pgaPlayers);
         } catch (HttpClientErrorException e) {
-            logger.error("Api key expired. Shifting keys");
             shiftKeys();
             throw new HttpClientErrorException(HttpStatus.FORBIDDEN);
         }
-
     }
 
     @Retryable(
             value = { HttpClientErrorException.class },
             maxAttempts = 100,
-            backoff = @Backoff(5000)
+            backoff = @Backoff(2000)
     )
-    public List<Tournament> getSeasonSchedule() throws ExternalAPIException {
+    @Async
+    public Future<List<Tournament>> getSeasonSchedule() throws ExternalAPIException {
         String url = buildScheduleUrl();
-
+        logger.info("Attempting to retrieve season schedule on thread {}", Thread.currentThread().getName());
         try {
             ResponseEntity<SportsRadarScheduleDto> responseEntity = restTemplate.exchange(url, HttpMethod.GET, null, SportsRadarScheduleDto.class);
 
@@ -97,9 +102,11 @@ public class SportsRadarService implements SportsApiService {
 
             SportsRadarScheduleDto scheduleDto = responseEntity.getBody();
 
-            return sportsRadarResponseHelper.mapResponseToTournaments(scheduleDto);
+            List<Tournament> tournaments = sportsRadarResponseHelper.mapResponseToTournaments(scheduleDto);
+
+            return new AsyncResult<>(tournaments);
+
         } catch (HttpClientErrorException e) {
-            logger.error("Api key expired. Shifting keys");
             shiftKeys();
             throw new HttpClientErrorException(HttpStatus.FORBIDDEN);
         }
@@ -118,6 +125,7 @@ public class SportsRadarService implements SportsApiService {
     }
 
     private void shiftKeys() {
+        logger.error("Api key expired. Shifting keys");
         String key = keys.removeFirst();
         keys.addLast(key);
     }

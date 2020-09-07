@@ -53,7 +53,7 @@ public class DraftService {
         enrichedDraft.setAvailablePgaPlayers(getAvailablePgaPlayers(draft.getDraftId()));
         enrichedDraft.setDraftOrder(getDraftOrder(draft.getDraftId()));
 
-        return draft;
+        return enrichedDraft;
     }
 
     private List<PgaPlayer> getAvailablePgaPlayers(UUID draftId) {

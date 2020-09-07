@@ -49,19 +49,17 @@ public class PgaDao {
     }
 
     public void updateWorldRankings(List<PgaPlayer> pgaPlayers) {
-        logger.info("Updating world rankings");
-
         MapSqlParameterSource[] params = getPlayerParams(pgaPlayers);
 
         jdbcTemplate.batchUpdate(UPDATE_RANKINGS, params);
+        logger.info("World golf rankings updated");
     }
 
     public void updateSeasonSchedule(List<Tournament> tournaments) {
-        logger.info("Updating season schedule");
-
         MapSqlParameterSource[] params = getTournamentParams(tournaments);
 
         jdbcTemplate.batchUpdate(UPDATE_SCHEDULE, params);
+        logger.info("Season schedule updated");
     }
 
     public List<PgaPlayer> getWorldRankings() {

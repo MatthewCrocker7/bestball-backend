@@ -9,6 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class PgaUpdateService {
 
@@ -27,20 +31,22 @@ public class PgaUpdateService {
     // update individual player scores with /PlayerTournamentStatsByPlayer
     // update leaderboard with /Leaderboard
 
-    public void processUpdateWorldRankings() throws ExternalAPIException {
+    public void processUpdateWorldRankings() throws Exception {
         logger.info("Calling api for world golf rankings");
 
-        List<PgaPlayer> pgaPlayers = sportsApiService.getWorldRankings();
+        Future<List<PgaPlayer>> futurePgaPlayers = sportsApiService.getWorldRankings();
+        List<PgaPlayer> pgaPlayers = futurePgaPlayers.get();
 
         pgaRepository.updateWorldRankings(pgaPlayers);
 
         logger.info("World golf rankings updated with top {} players", pgaPlayers.size());
     }
 
-    public void processUpdateSeasonSchedule() throws ExternalAPIException {
+    public void processUpdateSeasonSchedule() throws Exception {
         logger.info("Calling api for current season schedule");
 
-        List<Tournament> tournaments = sportsApiService.getSeasonSchedule();
+        Future<List<Tournament>> futureTournaments = sportsApiService.getSeasonSchedule();
+        List<Tournament> tournaments = futureTournaments.get();
 
         pgaRepository.updateSeasonSchedule(tournaments);
     }

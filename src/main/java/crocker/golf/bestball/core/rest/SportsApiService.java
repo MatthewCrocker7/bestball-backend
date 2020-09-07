@@ -6,12 +6,15 @@ import crocker.golf.bestball.domain.pga.Tournament;
 import org.springframework.scheduling.annotation.Async;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
 public interface SportsApiService {
 
-    List<PgaPlayer> getWorldRankings() throws ExternalAPIException;
+    @Async
+    Future<List<PgaPlayer>> getWorldRankings() throws ExternalAPIException;
 
-    List<Tournament> getSeasonSchedule() throws ExternalAPIException;
+    @Async
+    Future<List<Tournament>> getSeasonSchedule() throws ExternalAPIException;
 
 
 }

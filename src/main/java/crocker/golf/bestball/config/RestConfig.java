@@ -2,7 +2,6 @@ package crocker.golf.bestball.config;
 
 import crocker.golf.bestball.core.rest.SportsApiService;
 import crocker.golf.bestball.core.rest.sports.data.SportsDataResponseHelper;
-import crocker.golf.bestball.core.rest.sports.data.SportsDataService;
 import crocker.golf.bestball.core.rest.sports.radar.SportsRadarResponseHelper;
 import crocker.golf.bestball.core.rest.sports.radar.SportsRadarService;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,13 +15,12 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @PropertySource(value = {"classpath:application.yaml"}, ignoreResourceNotFound = true)
-@EnableRetry
 public class RestConfig {
 
     @Bean
     @ConditionalOnProperty(name = "golf.api.toggle.sports-data-enabled", havingValue = "true")
-    public SportsApiService sportsDataService(RestTemplate restTemplate, SportsDataResponseHelper sportsDataResponseHelper, @Value("${golf.api.key.sports.data}") String apiKey) {
-        return new SportsDataService(restTemplate, sportsDataResponseHelper, apiKey);
+    public SportsApiService sportsDataService(RestTemplate restTemplate, SportsRadarResponseHelper sportsDataResponseHelper, @Value("${golf.api.key.sports.radar}") String apiKey) {
+        return new SportsRadarService(restTemplate, sportsDataResponseHelper, apiKey);
     }
 
     @Bean
