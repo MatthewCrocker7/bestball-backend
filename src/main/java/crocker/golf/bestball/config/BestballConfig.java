@@ -1,5 +1,6 @@
 package crocker.golf.bestball.config;
 
+import crocker.golf.bestball.core.dao.*;
 import crocker.golf.bestball.core.draft.DraftManager;
 import crocker.golf.bestball.core.mapper.UserMapper;
 import crocker.golf.bestball.core.repository.DraftRepository;
@@ -85,5 +86,21 @@ public class BestballConfig {
     public InfoService infoService(DraftRepository draftRepository, GameRepository gameRepository, UserRepository userRepository) {
         return new InfoService(draftRepository, gameRepository, userRepository);
     }
+
+    @Bean
+    public UserRepository userRepository(UserDao userDao) {
+        return new UserRepository(userDao);
+    }
+
+    @Bean
+    public PgaRepository pgaRepository(PgaDao pgaDao) {
+        return new PgaRepository(pgaDao);
+    }
+
+    @Bean
+    public GameRepository gameRepository(GameDao gameDao, TeamDao teamDao) { return new GameRepository(gameDao, teamDao); }
+
+    @Bean
+    public DraftRepository draftRepository(DraftDao draftDao) { return new DraftRepository(draftDao); }
 
 }

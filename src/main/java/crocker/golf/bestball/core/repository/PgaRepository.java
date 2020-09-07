@@ -1,12 +1,12 @@
 package crocker.golf.bestball.core.repository;
 
 import crocker.golf.bestball.core.dao.PgaDao;
+import crocker.golf.bestball.core.dao.PgaDaoImpl;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
 import crocker.golf.bestball.domain.pga.Tournament;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
-import java.util.Collections;
 import java.util.List;
 
 public class PgaRepository {

@@ -1,7 +1,7 @@
 package crocker.golf.bestball.core.repository;
 
 import crocker.golf.bestball.core.dao.DraftDao;
-import crocker.golf.bestball.domain.game.Team;
+import crocker.golf.bestball.core.dao.DraftDaoImpl;
 import crocker.golf.bestball.domain.game.draft.Draft;
 import crocker.golf.bestball.domain.game.draft.DraftSchedule;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
