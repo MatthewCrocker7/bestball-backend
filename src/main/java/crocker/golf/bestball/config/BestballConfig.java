@@ -26,7 +26,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-@Import({DatabaseConfig.class, RestConfig.class, DraftConfig.class, WebSocketConfig.class})
+@Import({DatabaseConfig.class, RestConfig.class, DraftConfig.class})
 @PropertySource(value = {"classpath:application.yaml"}, ignoreResourceNotFound = true)
 public class BestballConfig {
     private static final Logger logger = LoggerFactory.getLogger(BestballConfig.class);
