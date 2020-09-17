@@ -5,6 +5,8 @@ import crocker.golf.bestball.domain.game.draft.Draft;
 import crocker.golf.bestball.domain.game.draft.DraftSchedule;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
 import crocker.golf.bestball.domain.user.UserInfo;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +22,7 @@ public class DraftRepository {
         this.draftDao = draftDao;
     }
 
+    @CacheEvict(value = "draftByDraftId", key = "#draftId")
     public void saveDraft(Draft draft) {
         draftDao.saveDraft(draft);
     }
@@ -40,10 +43,12 @@ public class DraftRepository {
         draftDao.saveDraftOrder(draftId, users);
     }
 
+    @CacheEvict(value = "draftablePgaPlayersByDraftId", key = "#draftId")
     public void draftPlayer(UUID draftId, PgaPlayer pgaPlayer) {
         draftDao.draftPlayer(draftId, pgaPlayer);
     }
 
+    @Cacheable(value = "draftByDraftId", key = "#draftId")
     public Draft getLatestDraftById(UUID draftId) {
         return draftDao.getLatestDraftById(draftId);
     }
@@ -53,10 +58,12 @@ public class DraftRepository {
         return Collections.emptyList();
     }
 
+    @Cacheable(value = "draftablePgaPlayersByDraftId", key = "#draftId")
     public List<PgaPlayer> getDraftablePgaPlayersByDraftId(UUID draftId) {
         return draftDao.getDraftablePgaPlayersByDraftId(draftId);
     }
 
+    @Cacheable(value = "draftOrderByDraftId", key = "#draftId")
     public List<UserInfo> getDraftOrderByDraftId(UUID draftId) {
         return draftDao.getDraftOrderByDraftId(draftId);
     }

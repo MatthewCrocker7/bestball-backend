@@ -30,8 +30,10 @@ public class GameRepository {
     @CacheEvict(value = "teamsByUserId", key = "#team.getUserId()")
     public void updateTeam(Team team) { teamDao.updateTeam(team); }
 
+    @Cacheable(value = "gameByGameId", key = "#gameId")
     public Game getLatestGameByGameId(UUID gameId) { return gameDao.getLatestGameByGameId(gameId); }
 
+    @Cacheable(value = "gameByDraftId", key = "#draftId")
     public Game getLatestGameByDraftId(UUID draftId) { return gameDao.getLatestGameByDraftId(draftId); }
 
     @Cacheable(value = "teamsByUserId", key = "#userId")
