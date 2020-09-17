@@ -41,6 +41,7 @@ public class GameRepository {
         return teamDao.getTeamsByUserId(userId);
     }
 
+    @Cacheable(value = "teamsByDraftId", key = "#draftId")
     public List<Team> getTeamsByDraftId(UUID draftId) {
         return teamDao.getTeamsByDraftId(draftId);
     }
