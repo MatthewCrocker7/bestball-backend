@@ -22,7 +22,7 @@ public class DraftRepository {
         this.draftDao = draftDao;
     }
 
-    @CacheEvict(value = "draftByDraftId", key = "#draftId")
+    @CacheEvict(value = "draftByDraftId", key = "#draft.getDraftId()")
     public void saveDraft(Draft draft) {
         draftDao.saveDraft(draft);
     }
