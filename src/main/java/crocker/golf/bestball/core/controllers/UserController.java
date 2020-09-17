@@ -1,8 +1,10 @@
 package crocker.golf.bestball.core.controllers;
 
+import crocker.golf.bestball.core.service.user.EmailService;
 import crocker.golf.bestball.core.service.user.UserService;
 import crocker.golf.bestball.domain.exceptions.user.PasswordNotMatchException;
 import crocker.golf.bestball.domain.exceptions.user.UserNotExistException;
+import crocker.golf.bestball.domain.user.RequestDto;
 import crocker.golf.bestball.domain.user.UserCredentials;
 import crocker.golf.bestball.domain.user.UserCredentialsDto;
 import crocker.golf.bestball.domain.exceptions.user.RegistrationException;
@@ -10,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -20,9 +23,11 @@ public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
+    private final EmailService emailService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, EmailService emailService) {
         this.userService = userService;
+        this.emailService = emailService;
     }
 
     @PostMapping("/register")
@@ -59,15 +64,19 @@ public class UserController {
             logger.error(e.getMessage(), e);
             return new ResponseEntity<>(e, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        // User submits this request from login page. Backend should return an object
-        // { authenticated: true, expireTime: someTime, userDto} and save clientContext in cache?
-        // Additional requests from main frontend would than be authenticated by comparing userCredentials with clientContext on backend
     }
 
     @PostMapping("/logout")
     public ResponseEntity logout() {
         logger.info("Received request to logout user.");
-        // do I need to clear a client context here?
+        return new ResponseEntity<>(null, null, HttpStatus.OK);
+    }
+
+    @PostMapping("/inviteToDraft")
+    public ResponseEntity inviteToDraft(@RequestBody RequestDto requestDto) {
+        logger.info("Received request from {} to invite {} to draft {}", requestDto.getEmail(), requestDto.getInviteEmail(), requestDto.getDraftId());
+        emailService.invitePlayerToDraft(requestDto);
+
         return new ResponseEntity<>(null, null, HttpStatus.OK);
     }
 

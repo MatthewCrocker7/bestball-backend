@@ -1,13 +1,15 @@
 package crocker.golf.bestball.core.repository;
 
 import crocker.golf.bestball.core.dao.PgaDao;
-import crocker.golf.bestball.core.dao.PgaDaoImpl;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
 import crocker.golf.bestball.domain.pga.Tournament;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class PgaRepository {
 
@@ -32,13 +34,18 @@ public class PgaRepository {
         return pgaDao.getWorldRankings();
     }
 
+    public Map<UUID, PgaPlayer> getWorldRankingsAsMap() {
+        return this.getWorldRankings().stream()
+                .collect(Collectors.toMap(PgaPlayer::getPlayerId, pgaPlayer -> pgaPlayer));
+    }
+
     @Cacheable("tournamentsBySeason")
     public List<Tournament> getTournamentsBySeason(int year) {
         return pgaDao.getTournamentsBySeason(year);
     }
 
     @Cacheable(value = "tournamentById", key = "#tournamentId")
-    public Tournament getTournamentById(String tournamentId) {
+    public Tournament getTournamentById(UUID tournamentId) {
         return pgaDao.getTournamentById(tournamentId);
     }
 }

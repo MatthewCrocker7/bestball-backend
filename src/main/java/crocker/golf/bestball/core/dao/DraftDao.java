@@ -22,7 +22,11 @@ public interface DraftDao {
 
     void saveDraftOrder(UUID draftId, List<UserInfo> users);
 
+    void draftPlayer(UUID draftId, PgaPlayer pgaPlayer);
+
     List<PgaPlayer> getDraftablePgaPlayersByDraftId(UUID draftId);
 
     List<UserInfo> getDraftOrderByDraftId(UUID draftId);
+
+    PgaPlayer getPgaPlayerById(UUID draftId, UUID playerId);
 }

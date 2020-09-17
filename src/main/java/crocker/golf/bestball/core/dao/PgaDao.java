@@ -4,6 +4,7 @@ import crocker.golf.bestball.domain.pga.PgaPlayer;
 import crocker.golf.bestball.domain.pga.Tournament;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface PgaDao {
 
@@ -15,5 +16,5 @@ public interface PgaDao {
 
     List<Tournament> getTournamentsBySeason(int year);
 
-    Tournament getTournamentById(String tournamentId);
+    Tournament getTournamentById(UUID tournamentId);
 }

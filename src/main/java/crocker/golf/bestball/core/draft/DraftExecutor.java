@@ -81,6 +81,7 @@ public class DraftExecutor {
                     return UserInfo.builder()
                             .userId(user.getUserId())
                             .userName(user.getUserName())
+                            .email(user.getEmail())
                             .pickNumber(team.getDraftPick())
                             .build();
                 })
@@ -94,6 +95,7 @@ public class DraftExecutor {
                 .collect(Collectors.toList());
 
         draftRepository.saveDraftOrder(draftId, draftOrder);
+        //TODO: Save updated team
     }
 
     private UserInfo getUserInfoRound(UserInfo user, int numPlayers, int round) {
@@ -102,6 +104,7 @@ public class DraftExecutor {
         return UserInfo.builder()
                 .userId(user.getUserId())
                 .userName(user.getUserName())
+                .email(user.getEmail())
                 .pickNumber(pickNumber)
                 .build();
     }

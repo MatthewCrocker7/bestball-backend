@@ -10,12 +10,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
-@RestController
-@RequestMapping("/api/draft")
+@Controller
 public class DraftController {
 
     private static final Logger logger = LoggerFactory.getLogger(DraftController.class);
@@ -26,15 +30,18 @@ public class DraftController {
         this.draftService = draftService;
     }
 
-    @PostMapping("/loadDraft")
-    public ResponseEntity loadDraft(@RequestBody RequestDto requestDto) {
-        try {
-            logger.info("Received request from {} to load draft {}", requestDto.getEmail(), requestDto.getDraftId());
-            Draft draft = draftService.loadDraft(requestDto);
-            return new ResponseEntity(draft, null, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @MessageMapping("/loadDraft/{draftId}")
+    @SendTo("/ui/refreshDraft/{draftId}")
+    public Draft loadDraft(@RequestBody RequestDto requestDto, @DestinationVariable String draftId) {
+        logger.info("Received request from {} to load draft {}", requestDto.getEmail(), draftId);
+        return draftService.loadDraft(requestDto);
+    }
+
+    @MessageMapping("/draftPlayer/{draftId}/{playerId}")
+    @SendTo("/ui/refreshDraft/{draftId}")
+    public Draft draftPlayer(@RequestBody RequestDto requestDto, @DestinationVariable String draftId, @DestinationVariable String playerId) {
+        logger.info("Received request from {} to draft player {} for draft {}", requestDto.getEmail(), playerId, draftId);
+        return draftService.draftPlayer(requestDto, UUID.fromString(playerId));
     }
 
 }

@@ -10,5 +10,6 @@ public class UserInfo {
 
     private UUID userId;
     private String userName;
+    private String email;
     private Integer pickNumber;
 }

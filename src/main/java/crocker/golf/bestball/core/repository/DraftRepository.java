@@ -1,7 +1,6 @@
 package crocker.golf.bestball.core.repository;
 
 import crocker.golf.bestball.core.dao.DraftDao;
-import crocker.golf.bestball.core.dao.DraftDaoImpl;
 import crocker.golf.bestball.domain.game.draft.Draft;
 import crocker.golf.bestball.domain.game.draft.DraftSchedule;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
@@ -41,19 +40,28 @@ public class DraftRepository {
         draftDao.saveDraftOrder(draftId, users);
     }
 
+    public void draftPlayer(UUID draftId, PgaPlayer pgaPlayer) {
+        draftDao.draftPlayer(draftId, pgaPlayer);
+    }
+
     public Draft getLatestDraftById(UUID draftId) {
         return draftDao.getLatestDraftById(draftId);
     }
 
-    public List<DraftSchedule> getDraftSchedules() { return Collections.emptyList(); }
+    public List<DraftSchedule> getDraftSchedules() {
+        //TODO: Implement before masters
+        return Collections.emptyList();
+    }
 
     public List<PgaPlayer> getDraftablePgaPlayersByDraftId(UUID draftId) {
         return draftDao.getDraftablePgaPlayersByDraftId(draftId);
     }
 
-    public Map<Integer, UserInfo> getDraftOrderByDraftId(UUID draftId) {
-        List<UserInfo> users = draftDao.getDraftOrderByDraftId(draftId);
-        return users.stream()
-            .collect(Collectors.toMap(UserInfo::getPickNumber, user -> user));
+    public List<UserInfo> getDraftOrderByDraftId(UUID draftId) {
+        return draftDao.getDraftOrderByDraftId(draftId);
+    }
+
+    public PgaPlayer getPgaPlayerById(UUID draftId, UUID playerId) {
+        return draftDao.getPgaPlayerById(draftId, playerId);
     }
 }

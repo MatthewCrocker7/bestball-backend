@@ -2,6 +2,8 @@ package crocker.golf.bestball.domain.game;
 
 import crocker.golf.bestball.domain.enums.game.TeamRole;
 import crocker.golf.bestball.domain.game.round.Round;
+import crocker.golf.bestball.domain.pga.PgaPlayer;
+import crocker.golf.bestball.domain.user.UserInfo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,13 +21,14 @@ public class Team {
     private UUID draftId;
     private UUID gameId;
 
+    private UserInfo userInfo;
     private TeamRole teamRole;
     private Integer draftPick;
 
-    private UUID playerOneId;
-    private UUID playerTwoId;
-    private UUID playerThreeId;
-    private UUID playerFourId;
+    private PgaPlayer golferOne;
+    private PgaPlayer golferTwo;
+    private PgaPlayer golferThree;
+    private PgaPlayer golferFour;
 
     private Integer toPar;
     private Integer totalScore;

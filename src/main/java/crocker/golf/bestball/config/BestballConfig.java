@@ -15,6 +15,7 @@ import crocker.golf.bestball.core.service.game.GameValidator;
 import crocker.golf.bestball.core.service.game.InfoService;
 import crocker.golf.bestball.core.service.pga.PgaInfoService;
 import crocker.golf.bestball.core.service.pga.PgaUpdateService;
+import crocker.golf.bestball.core.service.user.EmailService;
 import crocker.golf.bestball.core.service.user.UserRegistrationValidator;
 import crocker.golf.bestball.core.service.user.UserService;
 import org.slf4j.Logger;
@@ -24,10 +25,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-@Import({DatabaseConfig.class, RestConfig.class, DraftConfig.class})
+@Import({DatabaseConfig.class, RestConfig.class, DraftConfig.class, WebSocketConfig.class})
 @PropertySource(value = {"classpath:application.yaml"}, ignoreResourceNotFound = true)
 public class BestballConfig {
     private static final Logger logger = LoggerFactory.getLogger(BestballConfig.class);
@@ -50,6 +53,16 @@ public class BestballConfig {
     @Bean
     public UserRegistrationValidator userRegistrationValidator(UserRepository userRepository) {
         return new UserRegistrationValidator(userRepository);
+    }
+
+    @Bean
+    public EmailService emailService(JavaMailSender javaMailSender) {
+        return new EmailService(javaMailSender);
+    }
+
+    @Bean
+    public JavaMailSender javaMailSender() {
+        return new JavaMailSenderImpl();
     }
 
     @Bean
@@ -98,7 +111,7 @@ public class BestballConfig {
     }
 
     @Bean
-    public GameRepository gameRepository(GameDao gameDao, TeamDao teamDao) { return new GameRepository(gameDao, teamDao); }
+    public GameRepository gameRepository(GameDaoImpl gameDaoImpl, TeamDao teamDao) { return new GameRepository(gameDaoImpl, teamDao); }
 
     @Bean
     public DraftRepository draftRepository(DraftDao draftDao) { return new DraftRepository(draftDao); }

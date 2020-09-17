@@ -26,5 +26,5 @@ public class GameDto {
 
     private BigDecimal buyIn;
     private Integer numPlayers;
-    private String tournamentId;
+    private UUID tournamentId;
 }

@@ -14,4 +14,5 @@ public class RequestDto {
     private String email;
     private String draftId;
     private String gameId;
+    private String inviteEmail;
 }

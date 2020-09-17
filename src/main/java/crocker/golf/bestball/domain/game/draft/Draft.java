@@ -34,6 +34,5 @@ public class Draft {
     private Map<Integer, UserInfo> draftOrder;
 
     private List<Team> teams;
-
-
+    private Integer maxPlayers;
 }

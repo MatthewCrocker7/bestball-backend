@@ -16,6 +16,7 @@ public class UserInfoRowMapper implements RowMapper<UserInfo> {
                 .userId((UUID)rs.getObject("USER_ID"))
                 .userName(rs.getString("USER_NAME"))
                 .pickNumber(rs.getInt("PICK_NUMBER"))
+                .email(rs.getString("EMAIL"))
                 .build();
     }
 }

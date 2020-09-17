@@ -1,5 +1,6 @@
-package crocker.golf.bestball.core.dao;
+package crocker.golf.bestball.core.dao.h2;
 
+import crocker.golf.bestball.core.dao.PgaDao;
 import crocker.golf.bestball.core.mapper.PgaPlayerMapper;
 import crocker.golf.bestball.core.mapper.TournamentRowMapper;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
@@ -10,10 +11,11 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import java.util.List;
+import java.util.UUID;
 
-public class PgaDaoImpl implements PgaDao {
+public class H2PgaDaoImpl implements PgaDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(PgaDaoImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(H2PgaDaoImpl.class);
 
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -25,18 +27,12 @@ public class PgaDaoImpl implements PgaDao {
 
     private final String UPDATE_RANKINGS = "INSERT INTO " + WORLD_RANKINGS +
             " (PLAYER_ID, PLAYER_RANK, PLAYER_NAME)" +
-            " VALUES(:playerId, :playerRank, :playerName)" +
-            " ON CONFLICT (PLAYER_ID) DO UPDATE SET" +
-            " PLAYER_RANK = :playerRank, PLAYER_NAME = :playerName;";
+            " VALUES(:playerId, :playerRank, :playerName);";
 
     private final String UPDATE_SCHEDULE = "INSERT INTO " + SEASON_SCHEDULE +
             " (TOURNAMENT_ID, EVENT_TYPE, PGA_SEASON, TOURNAMENT_STATE, TOURNAMENT_NAME," +
             " TOURNAMENT_START_DATE, TOURNAMENT_END_DATE)" +
-            " VALUES(:tournamentId, :eventType, :season, :tournamentState, :tournamentName, :startDate, :endDate)" +
-            " ON CONFLICT (TOURNAMENT_ID) DO UPDATE SET" +
-            " EVENT_TYPE = :eventType, PGA_SEASON = :season, TOURNAMENT_STATE = :tournamentState," +
-            " TOURNAMENT_NAME = :tournamentName, TOURNAMENT_START_DATE = :startDate," +
-            " TOURNAMENT_END_DATE = :endDate;";
+            " VALUES(:tournamentId, :eventType, :season, :tournamentState, :tournamentName, :startDate, :endDate);";
 
     private final String GET_WORLD_RANKINGS = "SELECT * FROM " + WORLD_RANKINGS;
 
@@ -47,7 +43,7 @@ public class PgaDaoImpl implements PgaDao {
             " WHERE TOURNAMENT_ID=:tournamentId;";
 
 
-    public PgaDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
+    public H2PgaDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -76,7 +72,7 @@ public class PgaDaoImpl implements PgaDao {
         return jdbcTemplate.query(GET_SCHEDULE_BY_SEASON, params, new TournamentRowMapper());
     }
 
-    public Tournament getTournamentById(String tournamentId) {
+    public Tournament getTournamentById(UUID tournamentId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("tournamentId", tournamentId);
         return jdbcTemplate.queryForObject(GET_TOURNAMENT_BY_ID, params, new TournamentRowMapper());

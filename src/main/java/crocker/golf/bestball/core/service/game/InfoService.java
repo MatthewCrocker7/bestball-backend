@@ -3,8 +3,10 @@ package crocker.golf.bestball.core.service.game;
 import crocker.golf.bestball.core.repository.DraftRepository;
 import crocker.golf.bestball.core.repository.GameRepository;
 import crocker.golf.bestball.core.repository.UserRepository;
+import crocker.golf.bestball.domain.game.Game;
 import crocker.golf.bestball.domain.game.Team;
 import crocker.golf.bestball.domain.game.TeamInfo;
+import crocker.golf.bestball.domain.game.draft.Draft;
 import crocker.golf.bestball.domain.user.UserCredentials;
 import crocker.golf.bestball.domain.user.UserCredentialsDto;
 
@@ -36,9 +38,16 @@ public class InfoService {
         //TODO: This will likely need to be optimized with join query
         return teams.stream().map(team -> TeamInfo.builder()
             .teamId(team.getTeamId())
-            .draft(draftRepository.getLatestDraftById(team.getDraftId()))
+            .draft(teamInfoDraftEnrichment(team))
             .game(gameRepository.getLatestGameByGameId(team.getGameId()))
             .build()
         ).collect(Collectors.toList());
+    }
+
+    private Draft teamInfoDraftEnrichment(Team team) {
+        Draft draft = draftRepository.getLatestDraftById(team.getDraftId());
+        List<Team> teams = gameRepository.getTeamsByDraftId(team.getDraftId());
+        draft.setTeams(teams);
+        return draft;
     }
 }

@@ -1,10 +1,10 @@
 package crocker.golf.bestball.config;
 
 import crocker.golf.bestball.core.dao.*;
-import crocker.golf.bestball.core.repository.DraftRepository;
-import crocker.golf.bestball.core.repository.GameRepository;
+import crocker.golf.bestball.core.dao.h2.H2DraftDaoImpl;
+import crocker.golf.bestball.core.dao.h2.H2PgaDaoImpl;
+import crocker.golf.bestball.core.mapper.TeamRowMapper;
 import crocker.golf.bestball.core.repository.PgaRepository;
-import crocker.golf.bestball.core.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,17 +45,21 @@ public class DatabaseLocalConfig {
 
     @Bean
     public PgaDao pgaDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        logger.info("non production bean was made");
         return new H2PgaDaoImpl(namedParameterJdbcTemplate);
     }
 
     @Bean
-    public GameDao gameDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) { return new GameDao(namedParameterJdbcTemplate); }
+    public GameDaoImpl gameDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) { return new GameDaoImpl(namedParameterJdbcTemplate); }
 
 
     @Bean
     public DraftDao draftDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) { return new H2DraftDaoImpl(namedParameterJdbcTemplate); }
 
     @Bean
-    public TeamDao teamDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) { return new TeamDao(namedParameterJdbcTemplate); }
+    public TeamDao teamDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate, TeamRowMapper teamRowMapper) { return new TeamDao(namedParameterJdbcTemplate, teamRowMapper); }
+
+    @Bean
+    public TeamRowMapper teamRowMapper(PgaRepository pgaRepository) {
+        return new TeamRowMapper(pgaRepository);
+    }
 }

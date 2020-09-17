@@ -14,6 +14,7 @@ import crocker.golf.bestball.domain.game.Game;
 import crocker.golf.bestball.domain.game.GameDto;
 import crocker.golf.bestball.domain.game.Team;
 import crocker.golf.bestball.domain.pga.Tournament;
+import crocker.golf.bestball.domain.user.RequestDto;
 import crocker.golf.bestball.domain.user.UserCredentials;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,6 +85,44 @@ public class GameService {
         gameRepository.saveNewTeam(team);
     }
 
+    public void addToDraft(RequestDto requestDto) {
+        String email = requestDto.getEmail();
+        String inviteEmail = requestDto.getInviteEmail();
+        UUID draftId = UUID.fromString(requestDto.getDraftId());
+        UserCredentials userCredentials = userRepository.findByEmail(email);
+
+        Team team = gameRepository.getTeamByUserAndDraftId(userCredentials.getUserId(), draftId);
+
+        if (team.getTeamRole() == TeamRole.CREATOR) {
+            addPlayer(inviteEmail, team);
+        } else {
+            // do something else
+        }
+    }
+
+    public void addToGame(RequestDto requestDto) {
+        String email = requestDto.getEmail();
+        String inviteEmail = requestDto.getInviteEmail();
+        UUID gameId = UUID.fromString(requestDto.getGameId());
+        UserCredentials userCredentials = userRepository.findByEmail(email);
+
+        Team team = gameRepository.getTeamByUserAndGameId(userCredentials.getUserId(), gameId);
+
+        if (team.getTeamRole() == TeamRole.CREATOR) {
+            addPlayer(inviteEmail, team);
+        } else {
+            // do something else
+        }
+    }
+
+    private void addPlayer(String inviteEmail, Team creatorTeam) {
+        UserCredentials userCredentials = userRepository.findByEmail(inviteEmail);
+
+        Team team = makeParticipantTeam(userCredentials, creatorTeam);
+
+        gameRepository.saveNewTeam(team);
+    }
+
     private Team makeCreatorTeam(GameDto gameDto, Game game) {
         UserCredentials userCredentials = userRepository.findByEmail(gameDto.getEmail());
 
@@ -93,6 +132,16 @@ public class GameService {
                 .draftId(game.getDraftId())
                 .gameId(game.getGameId())
                 .teamRole(TeamRole.CREATOR)
+                .build();
+    }
+
+    private Team makeParticipantTeam(UserCredentials userCredentials, Team creatorTeam) {
+        return Team.builder()
+                .teamId(UUID.randomUUID())
+                .userId(userCredentials.getUserId())
+                .draftId(creatorTeam.getDraftId())
+                .gameId(creatorTeam.getGameId())
+                .teamRole(TeamRole.PARTICIPANT)
                 .build();
     }
 

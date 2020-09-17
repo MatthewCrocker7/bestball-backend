@@ -1,5 +1,6 @@
-package crocker.golf.bestball.core.dao;
+package crocker.golf.bestball.core.dao.postgresql;
 
+import crocker.golf.bestball.core.dao.DraftDao;
 import crocker.golf.bestball.core.mapper.DraftRowMapper;
 import crocker.golf.bestball.core.mapper.PgaPlayerMapper;
 import crocker.golf.bestball.core.mapper.UserInfoRowMapper;
@@ -15,9 +16,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import java.util.List;
 import java.util.UUID;
 
-public class H2DraftDaoImpl implements DraftDao {
+public class DraftDaoImpl implements DraftDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(H2DraftDaoImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(DraftDaoImpl.class);
 
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -43,13 +44,17 @@ public class H2DraftDaoImpl implements DraftDao {
             " VALUES(:draftId, :playerId, :playerRank, :playerName, :drafted);";
 
     private final String SAVE_DRAFT_ORDER = "INSERT INTO " + DRAFT_ORDER +
-            " (DRAFT_ID, USER_ID, PICK_NUMBER, USER_NAME)" +
-            " VALUES(:draftId, :userId, :pickNumber, :userName);";
+            " (DRAFT_ID, USER_ID, PICK_NUMBER, USER_NAME, EMAIL)" +
+            " VALUES(:draftId, :userId, :pickNumber, :userName, :email);";
+
+    private final String DRAFT_PLAYER = "UPDATE " + DRAFT_PGA_PLAYERS +
+            " SET DRAFTED=:drafted" +
+            " WHERE DRAFT_ID=:draftId AND PLAYER_ID=:playerId;";
 
     private final String GET_LATEST_DRAFT_BY_ID = "SELECT * FROM " + DRAFTS +
             " WHERE (DRAFT_ID, DRAFT_VERSION) IN" +
             " (SELECT DRAFT_ID, MAX(DRAFT_VERSION) FROM " + DRAFTS +
-            " WHERE DRAFT_ID=:draftId);";
+            " WHERE DRAFT_ID=:draftId GROUP BY DRAFT_ID);";
 
     private final String GET_DRAFTABLE_PGA_PLAYERS = "SELECT * FROM " + DRAFT_PGA_PLAYERS +
             " WHERE DRAFT_ID=:draftId AND DRAFTED=:drafted;";
@@ -57,7 +62,10 @@ public class H2DraftDaoImpl implements DraftDao {
     private final String GET_DRAFT_ORDER_BY_DRAFT_ID = "SELECT * FROM " + DRAFT_ORDER +
             " WHERE DRAFT_ID=:draftId;";
 
-    public H2DraftDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
+    private final String GET_PLAYER_BY_ID  = "SELECT * FROM " + DRAFT_PGA_PLAYERS +
+            " WHERE DRAFT_ID=:draftId AND PLAYER_ID=:playerId;";
+
+    public DraftDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -97,6 +105,15 @@ public class H2DraftDaoImpl implements DraftDao {
         jdbcTemplate.batchUpdate(SAVE_DRAFT_ORDER, params);
     }
 
+    public void draftPlayer(UUID draftId, PgaPlayer pgaPlayer) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("draftId", draftId);
+        params.addValue("playerId", pgaPlayer.getPlayerId());
+        params.addValue("drafted", true);
+
+        jdbcTemplate.update(DRAFT_PLAYER, params);
+    }
+
     public List<PgaPlayer> getDraftablePgaPlayersByDraftId(UUID draftId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("draftId", draftId);
@@ -110,6 +127,13 @@ public class H2DraftDaoImpl implements DraftDao {
         params.addValue("draftId", draftId);
 
         return jdbcTemplate.query(GET_DRAFT_ORDER_BY_DRAFT_ID, params, new UserInfoRowMapper());
+    }
+
+    public PgaPlayer getPgaPlayerById(UUID draftId, UUID playerId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("draftId", draftId);
+        params.addValue("playerId", playerId);
+        return jdbcTemplate.queryForObject(GET_PLAYER_BY_ID, params, new PgaPlayerMapper());
     }
 
     private MapSqlParameterSource getDraftParams(Draft draft) {
@@ -152,6 +176,7 @@ public class H2DraftDaoImpl implements DraftDao {
             params.addValue("userId", user.getUserId());
             params.addValue("pickNumber", user.getPickNumber());
             params.addValue("userName", user.getUserName());
+            params.addValue("email", user.getEmail());
 
             return params;
         }).toArray(MapSqlParameterSource[]::new);

@@ -20,7 +20,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 
-
     @Override
     public void configure(HttpSecurity http) throws Exception {
         logger.info("Setting up security levels.");
@@ -32,6 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .csrf().disable()
             .authorizeRequests()
             .antMatchers("/api/user/register/**", "/h2-console/**").permitAll()
+            .antMatchers("/draft", "/draft/**", "/connect/draft").permitAll()
             .anyRequest().authenticated()
             .and().httpBasic();
     }
