@@ -100,9 +100,8 @@ public class DraftService {
 
     private void enrichDraftOrderAndTeams(Draft draft) {
         List<Team> teams = gameRepository.getTeamsByDraftId(draft.getDraftId());
-        draft.setTeams(teams);
-
         List<UserInfo> users = draftRepository.getDraftOrderByDraftId(draft.getDraftId());
+
         Map<Integer, UserInfo> draftOrder = users.stream()
                 .collect(Collectors.toMap(UserInfo::getPickNumber, user -> user));
 
@@ -120,7 +119,7 @@ public class DraftService {
         });
 
         draft.setDraftOrder(draftOrder);
-
+        draft.setTeams(teams);
     }
 
     private UserInfo getUserInfoFromUserCredentials(Team team) {
