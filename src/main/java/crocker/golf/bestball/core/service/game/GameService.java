@@ -121,6 +121,7 @@ public class GameService {
         Team team = makeParticipantTeam(userCredentials, creatorTeam);
 
         gameRepository.saveNewTeam(team);
+        logger.info("Successfully added new user {} as team {} to draft {} and game {}", team.getUserId(), team.getTeamId(), team.getDraftId(), team.getGameId());
     }
 
     private Team makeCreatorTeam(GameDto gameDto, Game game) {

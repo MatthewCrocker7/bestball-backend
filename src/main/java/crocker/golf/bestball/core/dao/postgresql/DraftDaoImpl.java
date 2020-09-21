@@ -103,7 +103,7 @@ public class DraftDaoImpl implements DraftDao {
         return jdbcTemplate.query(GET_DRAFT_SCHEDULES_BY_RELEASE_STATUS, params, new DraftScheduleRowMapper());
     }
 
-    public void saveDraftList(UUID draftId, List<PgaPlayer> pgaPlayers) {
+    public void saveDraftablePgaPlayers(UUID draftId, List<PgaPlayer> pgaPlayers) {
         logger.info("Finalizing pga players for draft {}", draftId);
 
         MapSqlParameterSource[] params = getNewDraftPgaPlayers(draftId, pgaPlayers);

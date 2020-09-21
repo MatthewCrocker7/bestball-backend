@@ -21,7 +21,7 @@ public interface DraftDao {
 
     List<DraftSchedule> getDraftSchedulesByReleaseStatus(ReleaseStatus releaseStatus);
 
-    void saveDraftList(UUID draftId, List<PgaPlayer> pgaPlayers);
+    void saveDraftablePgaPlayers(UUID draftId, List<PgaPlayer> pgaPlayers);
 
     void saveDraftOrder(UUID draftId, List<UserInfo> users);
 

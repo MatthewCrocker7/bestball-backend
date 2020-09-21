@@ -132,7 +132,7 @@ public class DraftExecutor {
         //use tournament id to get tournament participants
         //filter out participants base on their world ranking
         List<PgaPlayer> worldRankings = pgaRepository.getWorldRankings();
-        draftRepository.saveDraftList(draftId, worldRankings);
+        draftRepository.saveDraftablePgaPlayers(draftId, worldRankings);
     }
 
     private void releaseDraftSchedule(DraftSchedule draftSchedule) {

@@ -9,11 +9,8 @@ import crocker.golf.bestball.domain.user.UserInfo;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class DraftRepository {
 
@@ -36,10 +33,12 @@ public class DraftRepository {
         draftDao.updateReleaseStatus(draftSchedule);
     }
 
-    public void saveDraftList(UUID draftId, List<PgaPlayer> pgaPlayers) {
-        draftDao.saveDraftList(draftId, pgaPlayers);
+    @CacheEvict(value = "draftablePgaPlayersByDraftId", key = "#draftId")
+    public void saveDraftablePgaPlayers(UUID draftId, List<PgaPlayer> pgaPlayers) {
+        draftDao.saveDraftablePgaPlayers(draftId, pgaPlayers);
     }
 
+    @CacheEvict(value = "draftOrderByDraftId", key = "#draftId")
     public void saveDraftOrder(UUID draftId, List<UserInfo> users) {
         draftDao.saveDraftOrder(draftId, users);
     }
