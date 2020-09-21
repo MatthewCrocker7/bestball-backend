@@ -2,8 +2,10 @@ package crocker.golf.bestball.core.dao.h2;
 
 import crocker.golf.bestball.core.dao.DraftDao;
 import crocker.golf.bestball.core.mapper.DraftRowMapper;
+import crocker.golf.bestball.core.mapper.DraftScheduleRowMapper;
 import crocker.golf.bestball.core.mapper.PgaPlayerMapper;
 import crocker.golf.bestball.core.mapper.UserInfoRowMapper;
+import crocker.golf.bestball.domain.enums.game.ReleaseStatus;
 import crocker.golf.bestball.domain.game.draft.Draft;
 import crocker.golf.bestball.domain.game.draft.DraftSchedule;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
@@ -56,6 +58,9 @@ public class H2DraftDaoImpl implements DraftDao {
             " (SELECT DRAFT_ID, MAX(DRAFT_VERSION) FROM " + DRAFTS +
             " WHERE DRAFT_ID=:draftId);";
 
+    private final String GET_DRAFT_SCHEDULES_BY_RELEASE_STATUS = "SELECT * FROM " + DRAFT_SCHEDULES +
+            " WHERE RELEASE_STATUS = :releaseStatus;";
+
     private final String GET_DRAFTABLE_PGA_PLAYERS = "SELECT * FROM " + DRAFT_PGA_PLAYERS +
             " WHERE DRAFT_ID=:draftId AND DRAFTED=:drafted;";
 
@@ -89,6 +94,13 @@ public class H2DraftDaoImpl implements DraftDao {
         params.addValue("draftId", draftId);
 
         return jdbcTemplate.queryForObject(GET_LATEST_DRAFT_BY_ID, params, new DraftRowMapper());
+    }
+
+    public List<DraftSchedule> getDraftSchedulesByReleaseStatus(ReleaseStatus releaseStatus) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("releaseStatus", releaseStatus.name());
+
+        return jdbcTemplate.query(GET_DRAFT_SCHEDULES_BY_RELEASE_STATUS, params, new DraftScheduleRowMapper());
     }
 
     public void saveDraftList(UUID draftId, List<PgaPlayer> pgaPlayers) {

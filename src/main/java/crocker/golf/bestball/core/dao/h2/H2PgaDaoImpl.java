@@ -50,7 +50,7 @@ public class H2PgaDaoImpl implements PgaDao {
     public void updateWorldRankings(List<PgaPlayer> pgaPlayers) {
         MapSqlParameterSource[] params = getPlayerParams(pgaPlayers);
 
-        //TODO: Need to add on conflict update
+        jdbcTemplate.update(DELETE_RANKINGS, params[0]);
         jdbcTemplate.batchUpdate(UPDATE_RANKINGS, params);
         logger.info("World golf rankings updated");
     }
@@ -58,6 +58,7 @@ public class H2PgaDaoImpl implements PgaDao {
     public void updateSeasonSchedule(List<Tournament> tournaments) {
         MapSqlParameterSource[] params = getTournamentParams(tournaments);
 
+        jdbcTemplate.update(DELETE_SCHEDULE, params[0]);
         jdbcTemplate.batchUpdate(UPDATE_SCHEDULE, params);
         logger.info("Season schedule updated");
     }

@@ -1,6 +1,7 @@
 package crocker.golf.bestball.core.repository;
 
 import crocker.golf.bestball.core.dao.DraftDao;
+import crocker.golf.bestball.domain.enums.game.ReleaseStatus;
 import crocker.golf.bestball.domain.game.draft.Draft;
 import crocker.golf.bestball.domain.game.draft.DraftSchedule;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
@@ -53,9 +54,8 @@ public class DraftRepository {
         return draftDao.getLatestDraftById(draftId);
     }
 
-    public List<DraftSchedule> getDraftSchedules() {
-        //TODO: Implement before masters
-        return Collections.emptyList();
+    public List<DraftSchedule> getDraftSchedulesByReleaseStatus(ReleaseStatus releaseStatus) {
+        return draftDao.getDraftSchedulesByReleaseStatus(releaseStatus);
     }
 
     @Cacheable(value = "draftablePgaPlayersByDraftId", key = "#draftId")

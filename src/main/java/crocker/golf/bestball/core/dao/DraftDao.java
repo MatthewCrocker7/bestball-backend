@@ -1,5 +1,6 @@
 package crocker.golf.bestball.core.dao;
 
+import crocker.golf.bestball.domain.enums.game.ReleaseStatus;
 import crocker.golf.bestball.domain.game.draft.Draft;
 import crocker.golf.bestball.domain.game.draft.DraftSchedule;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
@@ -17,6 +18,8 @@ public interface DraftDao {
     void updateReleaseStatus(DraftSchedule draftSchedule);
 
     Draft getLatestDraftById(UUID draftId);
+
+    List<DraftSchedule> getDraftSchedulesByReleaseStatus(ReleaseStatus releaseStatus);
 
     void saveDraftList(UUID draftId, List<PgaPlayer> pgaPlayers);
 

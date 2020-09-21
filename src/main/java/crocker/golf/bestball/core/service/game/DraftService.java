@@ -99,12 +99,13 @@ public class DraftService {
     }
 
     private void enrichDraftOrderAndTeams(Draft draft) {
-        List<UserInfo> users = draftRepository.getDraftOrderByDraftId(draft.getDraftId());
+        List<Team> teams = gameRepository.getTeamsByDraftId(draft.getDraftId());
+        draft.setTeams(teams);
 
+        List<UserInfo> users = draftRepository.getDraftOrderByDraftId(draft.getDraftId());
         Map<Integer, UserInfo> draftOrder = users.stream()
                 .collect(Collectors.toMap(UserInfo::getPickNumber, user -> user));
 
-        List<Team> teams = gameRepository.getTeamsByDraftId(draft.getDraftId());
 
         teams.forEach(team ->  {
             Optional<UserInfo> userInfo = users.stream().filter(user ->
@@ -114,12 +115,27 @@ public class DraftService {
             if (userInfo.isPresent()) {
                 team.setUserInfo(userInfo.get());
             } else {
-                logger.error("Unable to find matching user for team {} and draft {}", team.getTeamId(), draft.getDraftId());
+                team.setUserInfo(getUserInfoFromUserCredentials(team));
             }
         });
 
         draft.setDraftOrder(draftOrder);
-        draft.setTeams(teams);
+
+    }
+
+    private UserInfo getUserInfoFromUserCredentials(Team team) {
+        UserCredentials userCredentials = userRepository.getUserByUserId(team.getUserId());
+
+        if (userCredentials == null) {
+            logger.error("Unable to find matching user for team {} and draft {}", team.getTeamId(), team.getDraftId());
+            return null;
+        }
+
+        return UserInfo.builder()
+                .email(userCredentials.getEmail())
+                .userName(userCredentials.getUserName())
+                .userId(userCredentials.getUserId())
+                .build();
     }
 
     private boolean isPlayerTurn(Draft draft, UserCredentials userCredentials) {

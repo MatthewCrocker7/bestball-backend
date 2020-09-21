@@ -2,6 +2,7 @@ package crocker.golf.bestball.core.draft;
 
 import crocker.golf.bestball.core.repository.DraftRepository;
 import crocker.golf.bestball.core.util.TimeHelper;
+import crocker.golf.bestball.domain.enums.game.ReleaseStatus;
 import crocker.golf.bestball.domain.game.draft.DraftSchedule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.springframework.scheduling.TaskScheduler;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -42,7 +44,9 @@ public class DraftScheduler {
 
     public void warmUpDraftSchedules() {
         logger.info("Warming up existing draft schedules");
-        draftRepository.getDraftSchedules().forEach(this::schedule);
+        List<DraftSchedule> unreleasedDraftSchedules = draftRepository.getDraftSchedulesByReleaseStatus(ReleaseStatus.NOT_RELEASED);
+        logger.info("Scheduling {} unreleased draft schedules", unreleasedDraftSchedules.size());
+        unreleasedDraftSchedules.forEach(this::schedule);
     }
 
     private void execute(DraftSchedule draftSchedule) {
