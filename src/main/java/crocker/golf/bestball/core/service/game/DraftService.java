@@ -5,6 +5,7 @@ import crocker.golf.bestball.core.repository.GameRepository;
 import crocker.golf.bestball.core.repository.PgaRepository;
 import crocker.golf.bestball.core.repository.UserRepository;
 import crocker.golf.bestball.domain.enums.game.DraftState;
+import crocker.golf.bestball.domain.enums.game.GameState;
 import crocker.golf.bestball.domain.game.Game;
 import crocker.golf.bestball.domain.game.Team;
 import crocker.golf.bestball.domain.game.draft.Draft;
@@ -180,6 +181,10 @@ public class DraftService {
     private void checkForCompletion(Draft draft) {
         if (draft.getCurrentPick() > draft.getTeams().size() * 4) {
             draft.setDraftState(DraftState.COMPLETE);
+
+            Game game = gameRepository.getLatestGameByDraftId(draft.getDraftId());
+            game.setGameState(GameState.IN_PROGRESS);
+            gameRepository.saveNewGame(game);
         }
     }
 }

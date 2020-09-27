@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SportsRadarPgaPlayerDto {
+public class SportsRadarPgaPlayerRankingDto {
 
     @JsonProperty("id")
     private String playerId;
@@ -30,5 +30,5 @@ public class SportsRadarPgaPlayerDto {
     @JsonProperty("country")
     private String country;
 
-    public SportsRadarPgaPlayerDto(){ super(); }
+    public SportsRadarPgaPlayerRankingDto(){ super(); }
 }

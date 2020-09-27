@@ -1,17 +1,14 @@
-package crocker.golf.bestball.core.mapper;
+package crocker.golf.bestball.core.mapper.game;
 
 import crocker.golf.bestball.domain.enums.game.GameState;
 import crocker.golf.bestball.domain.enums.game.GameType;
-import crocker.golf.bestball.domain.enums.pga.EventType;
-import crocker.golf.bestball.domain.enums.pga.TournamentState;
 import crocker.golf.bestball.domain.game.Game;
-import crocker.golf.bestball.domain.pga.Tournament;
+import crocker.golf.bestball.domain.pga.tournament.Tournament;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class GameRowMapper implements RowMapper<Game> {

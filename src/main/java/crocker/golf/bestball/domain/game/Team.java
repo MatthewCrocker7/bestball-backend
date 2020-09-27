@@ -1,7 +1,7 @@
 package crocker.golf.bestball.domain.game;
 
 import crocker.golf.bestball.domain.enums.game.TeamRole;
-import crocker.golf.bestball.domain.game.round.Round;
+import crocker.golf.bestball.domain.game.round.TeamRound;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
 import crocker.golf.bestball.domain.user.UserInfo;
 import lombok.Builder;
@@ -33,6 +33,6 @@ public class Team {
     private Integer toPar;
     private Integer totalScore;
 
-    private List<Round> rounds;
+    private List<TeamRound> teamRounds;
 
 }

@@ -1,4 +1,4 @@
-package crocker.golf.bestball.core.mapper;
+package crocker.golf.bestball.core.mapper.pga;
 
 import crocker.golf.bestball.domain.enums.game.DraftState;
 import crocker.golf.bestball.domain.game.draft.Draft;

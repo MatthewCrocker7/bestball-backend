@@ -1,7 +1,7 @@
 package crocker.golf.bestball.core.controllers;
 
 import crocker.golf.bestball.core.service.pga.PgaInfoService;
-import crocker.golf.bestball.domain.pga.Tournament;
+import crocker.golf.bestball.domain.pga.tournament.Tournament;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

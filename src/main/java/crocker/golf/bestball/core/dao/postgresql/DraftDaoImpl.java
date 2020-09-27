@@ -1,10 +1,10 @@
 package crocker.golf.bestball.core.dao.postgresql;
 
 import crocker.golf.bestball.core.dao.DraftDao;
-import crocker.golf.bestball.core.mapper.DraftRowMapper;
-import crocker.golf.bestball.core.mapper.DraftScheduleRowMapper;
-import crocker.golf.bestball.core.mapper.PgaPlayerMapper;
-import crocker.golf.bestball.core.mapper.UserInfoRowMapper;
+import crocker.golf.bestball.core.mapper.game.DraftRowMapper;
+import crocker.golf.bestball.core.mapper.game.DraftScheduleRowMapper;
+import crocker.golf.bestball.core.mapper.pga.PgaPlayerMapper;
+import crocker.golf.bestball.core.mapper.game.UserInfoRowMapper;
 import crocker.golf.bestball.domain.enums.game.ReleaseStatus;
 import crocker.golf.bestball.domain.game.draft.Draft;
 import crocker.golf.bestball.domain.game.draft.DraftSchedule;

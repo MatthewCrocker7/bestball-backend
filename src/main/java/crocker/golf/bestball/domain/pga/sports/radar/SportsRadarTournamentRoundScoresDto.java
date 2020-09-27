@@ -12,26 +12,19 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SportsRadarWorldGolfRankingDto {
+public class SportsRadarTournamentRoundScoresDto {
 
     @JsonProperty("id")
-    private String worldGolfRankingId;
+    private String roundId;
 
-    @JsonProperty("name")
-    private String name;
-
-    @JsonProperty("alias")
-    private String alias;
+    @JsonProperty("number")
+    private Integer roundNumber;
 
     @JsonProperty("status")
-    private String status;
-
-    @JsonProperty("season")
-    private Integer season;
+    private String roundStatus;
 
     @JsonProperty("players")
-    private List<SportsRadarPgaPlayerRankingDto> players;
+    private List<SportsRadarTournamentPlayerRoundDto> playerRoundDtos;
 
-    public SportsRadarWorldGolfRankingDto(){ super(); }
-
+    public SportsRadarTournamentRoundScoresDto() { super(); }
 }

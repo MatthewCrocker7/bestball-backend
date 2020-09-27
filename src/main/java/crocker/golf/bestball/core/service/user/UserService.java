@@ -1,6 +1,6 @@
 package crocker.golf.bestball.core.service.user;
 
-import crocker.golf.bestball.core.mapper.UserMapper;
+import crocker.golf.bestball.core.mapper.user.UserMapper;
 import crocker.golf.bestball.core.repository.UserRepository;
 import crocker.golf.bestball.domain.exceptions.user.PasswordNotMatchException;
 import crocker.golf.bestball.domain.exceptions.user.UserNotExistException;

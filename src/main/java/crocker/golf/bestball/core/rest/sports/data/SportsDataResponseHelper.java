@@ -3,14 +3,13 @@ package crocker.golf.bestball.core.rest.sports.data;
 import crocker.golf.bestball.domain.enums.pga.TournamentState;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
 import crocker.golf.bestball.domain.pga.sports.data.SportsDataPgaPlayerDto;
-import crocker.golf.bestball.domain.pga.Tournament;
+import crocker.golf.bestball.domain.pga.tournament.Tournament;
 import crocker.golf.bestball.domain.pga.sports.data.SportsDataTournamentDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 

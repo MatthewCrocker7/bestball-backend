@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS EXAMPLE_TABLE;
+-- DROP TABLE IF EXISTS EXAMPLE_TABLE;
 -- DROP TABLE IF EXISTS USER_CREDENTIALS;
 -- DROP TABLE IF EXISTS WORLD_RANKINGS;
 -- DROP TABLE IF EXISTS SEASON_SCHEDULE;
@@ -8,6 +8,9 @@ DROP TABLE IF EXISTS EXAMPLE_TABLE;
 -- DROP TABLE IF EXISTS DRAFT_SCHEDULES;
 -- DROP TABLE IF EXISTS DRAFT_PGA_PLAYERS;
 -- DROP TABLE IF EXISTS DRAFT_ORDER;
+DROP TABLE IF EXISTS TOURNAMENT_COURSES;
+DROP TABLE IF EXISTS TOURNAMENT_ROUNDS;
+DROP TABLE IF EXISTS PLAYER_ROUNDS;
 --
 -- CREATE TABLE USER_CREDENTIALS (
 --     USER_ID                 UUID PRIMARY KEY    NOT NULL,
@@ -36,7 +39,7 @@ DROP TABLE IF EXISTS EXAMPLE_TABLE;
 -- );
 --
 -- CREATE TABLE GAMES (
---     GAME_ID                 UUID PRIMARY KEY    NOT NULL,
+--     GAME_ID                 UUID                NOT NULL,
 --     GAME_STATE              VARCHAR(255)        NOT NULL,
 --     GAME_VERSION            NUMERIC             NOT NULL,
 --     GAME_TYPE               VARCHAR(255)        NOT NULL,
@@ -44,7 +47,8 @@ DROP TABLE IF EXISTS EXAMPLE_TABLE;
 --     TOURNAMENT_ID           UUID                NOT NULL,
 --     NUM_PLAYERS             NUMERIC             NOT NULL,
 --     BUY_IN                  NUMERIC             NOT NULL,
---     MONEY_POT               NUMERIC             NOT NULL
+--     MONEY_POT               NUMERIC             NOT NULL,
+--     PRIMARY KEY (GAME_ID, GAME_VERSION)
 -- );
 --
 -- CREATE TABLE TEAMS (
@@ -99,3 +103,34 @@ DROP TABLE IF EXISTS EXAMPLE_TABLE;
 --     EMAIL                   VARCHAR(255)        NOT NULL,
 --     PRIMARY KEY (DRAFT_ID, USER_ID, PICK_NUMBER)
 -- );
+
+CREATE TABLE TOURNAMENT_COURSES (
+    TOURNAMENT_ID               UUID                NOT NULL,
+    COURSE_ID                   UUID                NOT NULL,
+    COURSE_NAME                 VARCHAR(500)        NOT NULL,
+    YARDAGE                     NUMERIC             NOT NULL,
+    PAR                         NUMERIC             NOT NULL,
+    HOLES                       BYTEA               NOT NULL,
+    PRIMARY KEY (TOURNAMENT_ID, COURSE_ID)
+);
+
+CREATE TABLE TOURNAMENT_ROUNDS (
+    TOURNAMENT_ID               UUID                NOT NULL,
+    ROUND_ID                    UUID                NOT NULL,
+    ROUND_NUMBER                NUMERIC             NOT NULL,
+    STATUS                      VARCHAR(100)        NOT NULL,
+    PRIMARY KEY (TOURNAMENT_ID, ROUND_ID)
+);
+
+CREATE TABLE PLAYER_ROUNDS (
+    PLAYER_ID                   UUID                NOT NULL,
+    TOURNAMENT_ID               UUID                NOT NULL,
+    ROUND_ID                    UUID                NOT NULL,
+    ROUND_NUMBER                NUMERIC             NOT NULL,
+    COURSE_ID                   UUID                NOT NULL,
+    TO_PAR                       NUMERIC             NOT NULL,
+    THRU                        NUMERIC             NOT NULL,
+    STROKES                     NUMERIC             NOT NULL,
+    SCORES                      BYTEA               NOT NULL,
+    PRIMARY KEY (PLAYER_ID, TOURNAMENT_ID, ROUND_ID)
+);

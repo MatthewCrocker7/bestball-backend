@@ -3,12 +3,10 @@ package crocker.golf.bestball.core.service.pga;
 import crocker.golf.bestball.core.repository.PgaRepository;
 import crocker.golf.bestball.core.util.TimeHelper;
 import crocker.golf.bestball.domain.enums.pga.TournamentState;
-import crocker.golf.bestball.domain.pga.Tournament;
+import crocker.golf.bestball.domain.pga.tournament.Tournament;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;

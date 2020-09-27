@@ -2,8 +2,9 @@ package crocker.golf.bestball.config;
 
 import crocker.golf.bestball.core.dao.*;
 import crocker.golf.bestball.core.dao.postgresql.DraftDaoImpl;
+import crocker.golf.bestball.core.dao.postgresql.GameDaoImpl;
 import crocker.golf.bestball.core.dao.postgresql.PgaDaoImpl;
-import crocker.golf.bestball.core.mapper.TeamRowMapper;
+import crocker.golf.bestball.core.mapper.game.TeamRowMapper;
 import crocker.golf.bestball.core.repository.PgaRepository;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;

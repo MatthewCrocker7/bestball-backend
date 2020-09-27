@@ -6,32 +6,30 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SportsRadarWorldGolfRankingDto {
+public class SportsRadarTournamentCourseDto {
 
     @JsonProperty("id")
-    private String worldGolfRankingId;
+    private String courseId;
 
     @JsonProperty("name")
     private String name;
 
-    @JsonProperty("alias")
-    private String alias;
+    @JsonProperty("yardage")
+    private Integer yardage;
 
-    @JsonProperty("status")
-    private String status;
+    @JsonProperty("par")
+    private Integer par;
 
-    @JsonProperty("season")
-    private Integer season;
+    @JsonProperty("holes")
+    private List<SportsRadarCourseHoleDto> holes;
 
-    @JsonProperty("players")
-    private List<SportsRadarPgaPlayerRankingDto> players;
-
-    public SportsRadarWorldGolfRankingDto(){ super(); }
-
+    public SportsRadarTournamentCourseDto() { super(); }
 }

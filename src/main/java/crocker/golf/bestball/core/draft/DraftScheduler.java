@@ -63,13 +63,10 @@ public class DraftScheduler {
             LocalDateTime releaseTime = draftSchedule.getReleaseTime();
             ZonedDateTime draftStartTime = TimeHelper.getZonedDateTime(releaseTime);
 
-            logger.info("Draft {} is scheduled at {}", draftId, draftStartTime);
-
             ScheduledFuture<?> futureDraft = taskScheduler.schedule(draftTasklet, draftStartTime.toInstant());
             taskMap.put(draftId, futureDraft);
 
-            logger.info("Draft scheduled {}", draftId);
-
+            logger.info("Draft {} is scheduled at {}", draftId, draftStartTime);
         } else {
             logger.info("Draft schedule already exists for draft id {}", draftId);
         }

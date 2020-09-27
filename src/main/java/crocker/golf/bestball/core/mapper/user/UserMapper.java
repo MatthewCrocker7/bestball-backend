@@ -1,4 +1,4 @@
-package crocker.golf.bestball.core.mapper;
+package crocker.golf.bestball.core.mapper.user;
 
 import crocker.golf.bestball.domain.user.UserCredentials;
 import org.springframework.security.core.userdetails.User;

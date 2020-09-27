@@ -1,6 +1,7 @@
-package crocker.golf.bestball.core.dao;
+package crocker.golf.bestball.core.dao.postgresql;
 
-import crocker.golf.bestball.core.mapper.GameRowMapper;
+import crocker.golf.bestball.core.dao.GameDao;
+import crocker.golf.bestball.core.mapper.game.GameRowMapper;
 import crocker.golf.bestball.domain.game.Game;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,14 +1,11 @@
 package crocker.golf.bestball.core.dao;
 
-import crocker.golf.bestball.core.mapper.UserInfoRowMapper;
 import crocker.golf.bestball.domain.user.UserCredentials;
 
-import crocker.golf.bestball.core.mapper.UserRowMapper;
-import crocker.golf.bestball.domain.user.UserInfo;
+import crocker.golf.bestball.core.mapper.user.UserRowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 

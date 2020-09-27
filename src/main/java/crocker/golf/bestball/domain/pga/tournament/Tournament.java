@@ -1,4 +1,4 @@
-package crocker.golf.bestball.domain.pga;
+package crocker.golf.bestball.domain.pga.tournament;
 
 import crocker.golf.bestball.domain.enums.pga.EventType;
 import crocker.golf.bestball.domain.enums.pga.TournamentState;

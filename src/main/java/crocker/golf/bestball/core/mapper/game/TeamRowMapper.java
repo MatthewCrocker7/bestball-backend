@@ -1,4 +1,4 @@
-package crocker.golf.bestball.core.mapper;
+package crocker.golf.bestball.core.mapper.game;
 
 import crocker.golf.bestball.core.repository.PgaRepository;
 import crocker.golf.bestball.domain.enums.game.TeamRole;

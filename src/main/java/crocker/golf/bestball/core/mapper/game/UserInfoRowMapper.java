@@ -1,4 +1,4 @@
-package crocker.golf.bestball.core.mapper;
+package crocker.golf.bestball.core.mapper.game;
 
 import crocker.golf.bestball.domain.user.UserCredentials;
 import crocker.golf.bestball.domain.user.UserInfo;

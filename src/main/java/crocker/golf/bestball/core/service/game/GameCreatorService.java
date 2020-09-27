@@ -13,7 +13,7 @@ import crocker.golf.bestball.domain.game.draft.Draft;
 import crocker.golf.bestball.domain.game.Game;
 import crocker.golf.bestball.domain.game.GameDto;
 import crocker.golf.bestball.domain.game.Team;
-import crocker.golf.bestball.domain.pga.Tournament;
+import crocker.golf.bestball.domain.pga.tournament.Tournament;
 import crocker.golf.bestball.domain.user.RequestDto;
 import crocker.golf.bestball.domain.user.UserCredentials;
 import org.slf4j.Logger;
@@ -23,9 +23,9 @@ import java.math.BigDecimal;
 import java.time.*;
 import java.util.UUID;
 
-public class GameService {
+public class GameCreatorService {
 
-    private static final Logger logger = LoggerFactory.getLogger(GameService.class);
+    private static final Logger logger = LoggerFactory.getLogger(GameCreatorService.class);
 
     private GameValidator gameValidator;
     private GameRepository gameRepository;
@@ -35,7 +35,7 @@ public class GameService {
 
     private BigDecimal feeMultiplier;
 
-    public GameService(GameValidator gameValidator, GameRepository gameRepository, UserRepository userRepository, PgaRepository pgaRepository, DraftManager draftManager) {
+    public GameCreatorService(GameValidator gameValidator, GameRepository gameRepository, UserRepository userRepository, PgaRepository pgaRepository, DraftManager draftManager) {
         this.gameValidator = gameValidator;
         this.gameRepository = gameRepository;
         this.userRepository = userRepository;
@@ -111,7 +111,7 @@ public class GameService {
         if (team.getTeamRole() == TeamRole.CREATOR) {
             addPlayer(inviteEmail, team);
         } else {
-            // do something else
+            //TODO: do something elsess
         }
     }
 

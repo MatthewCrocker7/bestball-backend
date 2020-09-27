@@ -2,17 +2,18 @@ package crocker.golf.bestball.core.service.pga;
 
 import crocker.golf.bestball.core.repository.PgaRepository;
 import crocker.golf.bestball.core.rest.SportsApiService;
-import crocker.golf.bestball.domain.exceptions.ExternalAPIException;
+import crocker.golf.bestball.domain.enums.pga.Status;
+import crocker.golf.bestball.domain.enums.pga.TournamentState;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
-import crocker.golf.bestball.domain.pga.Tournament;
+import crocker.golf.bestball.domain.pga.tournament.Tournament;
+import crocker.golf.bestball.domain.pga.tournament.TournamentRound;
+import crocker.golf.bestball.domain.pga.tournament.TournamentSummary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.stream.Collectors;
 
 public class PgaUpdateService {
 
@@ -26,13 +27,10 @@ public class PgaUpdateService {
         this.pgaRepository = pgaRepository;
     }
 
-    // update world golf rankings with /PlayerSeasonStats (presorted list 1 through x)
-    // update tournament schedule by season with /tournaments/season(2020)
     // update individual player scores with /PlayerTournamentStatsByPlayer
     // update leaderboard with /Leaderboard
 
-    public void processUpdateWorldRankings() throws Exception {
-        logger.info("Calling api for world golf rankings");
+    public void updateWorldRankings() throws Exception {
 
         Future<List<PgaPlayer>> futurePgaPlayers = sportsApiService.getWorldRankings();
         List<PgaPlayer> pgaPlayers = futurePgaPlayers.get();
@@ -42,8 +40,7 @@ public class PgaUpdateService {
         logger.info("World golf rankings updated with top {} players", pgaPlayers.size());
     }
 
-    public void processUpdateSeasonSchedule() throws Exception {
-        logger.info("Calling api for current season schedule");
+    public void updateSeasonSchedule() throws Exception {
 
         Future<List<Tournament>> futureTournaments = sportsApiService.getSeasonSchedule();
         List<Tournament> tournaments = futureTournaments.get();
@@ -51,10 +48,55 @@ public class PgaUpdateService {
         pgaRepository.updateSeasonSchedule(tournaments);
     }
 
-    public void processUpdateCurrentTournament() {
-        logger.info("Calling api for currrent tournament leaderboard");
-        // call api for leaderboard
-        // then call api X number of times for each player on board
+    public void updateTournamentSummary() {
+        List<Tournament> tournaments = pgaRepository.getAllTournaments();
+        List<Tournament> updateTournaments = tournaments.stream()
+                .filter(tournament -> tournament.getTournamentState() == TournamentState.IN_PROGRESS)
+                .collect(Collectors.toList());
+
+        updateTournaments.forEach(tournament -> {
+            try {
+                Future<TournamentSummary> test = sportsApiService.updateTournamentSummary(tournament);
+                TournamentSummary tournamentSummary = test.get();
+                pgaRepository.updateTournamentSummary(tournamentSummary);
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
+
+        });
+    }
+
+    public void updateTournamentRound() {
+
+        List<Tournament> tournaments = pgaRepository.getAllTournaments();
+        List<Tournament> updateTournaments = tournaments.stream()
+                .filter(tournament -> tournament.getTournamentState() == TournamentState.IN_PROGRESS)
+                .collect(Collectors.toList());
+
+        updateTournaments.forEach(tournament -> {
+            TournamentSummary tournamentSummary = TournamentSummary.builder()
+                    .tournamentId(tournament.getTournamentId())
+                    .name(tournament.getName())
+                    .season(tournament.getSeason())
+                    .tournamentCourses(pgaRepository.getTournamentCourses(tournament.getTournamentId()))
+                    .tournamentRounds(pgaRepository.getTournamentRounds(tournament.getTournamentId()))
+                    .tournamentStatus(null)
+                    .build();
+
+            tournamentSummary.getTournamentRounds().forEach(tournamentRound -> {
+                try {
+                    if (tournamentRound.getRoundStatus() != Status.CLOSED) {
+                        logger.info("Updating round {} for tournament {}", tournamentRound.getRoundNumber(), tournamentSummary.getName());
+                        Future<TournamentRound> test = sportsApiService.updateTournamentRound(tournamentSummary, tournamentRound);
+                        TournamentRound round = test.get();
+                        logger.info("Persist player round scores");
+                    }
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
+
+            });
+        });
 
     }
 }

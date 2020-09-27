@@ -1,18 +1,16 @@
 package crocker.golf.bestball.config;
 
 import crocker.golf.bestball.core.dao.*;
+import crocker.golf.bestball.core.dao.postgresql.GameDaoImpl;
 import crocker.golf.bestball.core.draft.DraftManager;
-import crocker.golf.bestball.core.mapper.UserMapper;
+import crocker.golf.bestball.core.mapper.user.UserMapper;
 import crocker.golf.bestball.core.repository.DraftRepository;
 import crocker.golf.bestball.core.repository.GameRepository;
 import crocker.golf.bestball.core.repository.PgaRepository;
 import crocker.golf.bestball.core.rest.SportsApiService;
 import crocker.golf.bestball.core.scheduler.PgaUpdateScheduler;
 import crocker.golf.bestball.core.repository.UserRepository;
-import crocker.golf.bestball.core.service.game.DraftService;
-import crocker.golf.bestball.core.service.game.GameService;
-import crocker.golf.bestball.core.service.game.GameValidator;
-import crocker.golf.bestball.core.service.game.InfoService;
+import crocker.golf.bestball.core.service.game.*;
 import crocker.golf.bestball.core.service.pga.PgaInfoService;
 import crocker.golf.bestball.core.service.pga.PgaUpdateService;
 import crocker.golf.bestball.core.service.user.EmailService;
@@ -66,8 +64,13 @@ public class BestballConfig {
     }
 
     @Bean
-    public GameService gameService(GameValidator gameValidator, GameRepository gameRepository, UserRepository userRepository, PgaRepository pgaRepository, DraftManager draftManager) {
-        return new GameService(gameValidator, gameRepository, userRepository, pgaRepository, draftManager);
+    public GameCreatorService gameService(GameValidator gameValidator, GameRepository gameRepository, UserRepository userRepository, PgaRepository pgaRepository, DraftManager draftManager) {
+        return new GameCreatorService(gameValidator, gameRepository, userRepository, pgaRepository, draftManager);
+    }
+
+    @Bean
+    public GameManagerService gameManagerService(GameRepository gameRepository, UserRepository userRepository, PgaRepository pgaRepository) {
+        return new GameManagerService(gameRepository, userRepository, pgaRepository);
     }
 
     @Bean
