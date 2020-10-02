@@ -1,7 +1,10 @@
 package crocker.golf.bestball.core.dao;
 
+import crocker.golf.bestball.domain.game.Team;
+import crocker.golf.bestball.domain.game.round.TeamRound;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
 import crocker.golf.bestball.domain.pga.tournament.CourseHole;
+import crocker.golf.bestball.domain.pga.tournament.PlayerRound;
 import crocker.golf.bestball.domain.pga.tournament.Tournament;
 import crocker.golf.bestball.domain.pga.tournament.TournamentSummary;
 import org.slf4j.Logger;
@@ -76,10 +79,80 @@ public class ParamHelper {
         }).toArray(MapSqlParameterSource[]::new);
     }
 
-    private static byte[] convertToByteArray(List<CourseHole> courseHoles) throws IOException {
+    public static MapSqlParameterSource[] getPlayerRoundParams(List<PlayerRound> playerRounds) {
+        return playerRounds.stream().map(playerRound -> {
+            try {
+                MapSqlParameterSource params = new MapSqlParameterSource();
+                params.addValue("playerId", playerRound.getPlayerId());
+                params.addValue("tournamentId", playerRound.getTournamentId());
+                params.addValue("roundId", playerRound.getRoundId());
+                params.addValue("roundNumber", playerRound.getRoundNumber());
+                params.addValue("courseId", playerRound.getCourseId());
+                params.addValue("toPar", playerRound.getToPar());
+                params.addValue("thru", playerRound.getThru());
+                params.addValue("strokes", playerRound.getStrokes());
+                params.addValue("scores", convertToByteArray(playerRound.getScores()));
+
+                return params;
+            } catch (IOException e) {
+                logger.error("Score is null for player {} during round {} of tournament {}", playerRound.getPlayerId(), playerRound.getRoundNumber(), playerRound.getTournamentId());
+                throw new RuntimeException(e);
+            }
+        }).toArray(MapSqlParameterSource[]::new);
+    }
+
+    public static MapSqlParameterSource getNewTeamParams(Team team) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("teamId", team.getTeamId());
+        params.addValue("userId", team.getUserId());
+        params.addValue("gameId", team.getGameId());
+        params.addValue("draftId", team.getDraftId());
+        params.addValue("tournamentId", team.getTournamentId());
+        params.addValue("teamRole", team.getTeamRole().name());
+
+        return params;
+    }
+
+    public static MapSqlParameterSource getUpdateTeamParams(Team team) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("teamId", team.getTeamId());
+
+        params.addValue("playerOneId", team.getGolferOne() != null ? team.getGolferOne().getPlayerId() : null);
+        params.addValue("playerTwoId", team.getGolferTwo() != null ? team.getGolferTwo().getPlayerId() : null);
+        params.addValue("playerThreeId", team.getGolferThree() != null ? team.getGolferThree().getPlayerId() : null);
+        params.addValue("playerFourId", team.getGolferFour() != null ? team.getGolferFour().getPlayerId() : null);
+
+        return params;
+    }
+
+    public static MapSqlParameterSource[] getTeamRoundParams(List<TeamRound> teamRounds) {
+        return teamRounds.stream().map(teamRound -> {
+            try {
+                MapSqlParameterSource params = new MapSqlParameterSource();
+                params.addValue("teamId", teamRound.getTeamId());
+                params.addValue("gameId", teamRound.getGameId());
+                params.addValue("roundId", teamRound.getRoundId());
+                params.addValue("tournamentId", teamRound.getTournamentId());
+                params.addValue("roundNumber", teamRound.getRoundNumber());
+                params.addValue("toPar", teamRound.getToPar());
+                params.addValue("strokes", teamRound.getStrokes());
+                params.addValue("frontNine", teamRound.getFrontNine());
+                params.addValue("backNine", teamRound.getBackNine());
+                params.addValue("scores", convertToByteArray(teamRound.getHoleScores()));
+
+                return params;
+            } catch (IOException e) {
+                logger.error("Score is null for team {} during round {} of tournament {}", teamRound.getTeamId(), teamRound.getRoundNumber(), teamRound.getTournamentId());
+                throw new RuntimeException(e);
+            }
+
+        }).toArray(MapSqlParameterSource[]::new);
+    }
+
+    private static byte[] convertToByteArray(Object object) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream outputStream = new ObjectOutputStream(byteArrayOutputStream);
-        outputStream.writeObject(courseHoles);
+        outputStream.writeObject(object);
         return byteArrayOutputStream.toByteArray();
     }
 }

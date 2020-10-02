@@ -184,6 +184,7 @@ public class DraftService {
 
             Game game = gameRepository.getLatestGameByDraftId(draft.getDraftId());
             game.setGameState(GameState.IN_PROGRESS);
+            game.setGameVersion(game.getGameVersion() + 1);
             gameRepository.saveNewGame(game);
         }
     }

@@ -49,12 +49,9 @@ public class PgaUpdateService {
     }
 
     public void updateTournamentSummary() {
-        List<Tournament> tournaments = pgaRepository.getAllTournaments();
-        List<Tournament> updateTournaments = tournaments.stream()
-                .filter(tournament -> tournament.getTournamentState() == TournamentState.IN_PROGRESS)
-                .collect(Collectors.toList());
+        List<Tournament> tournaments = getInProgressTournaments();
 
-        updateTournaments.forEach(tournament -> {
+        tournaments.forEach(tournament -> {
             try {
                 Future<TournamentSummary> test = sportsApiService.updateTournamentSummary(tournament);
                 TournamentSummary tournamentSummary = test.get();
@@ -67,13 +64,9 @@ public class PgaUpdateService {
     }
 
     public void updateTournamentRound() {
+        List<Tournament> tournaments = getInProgressTournaments();
 
-        List<Tournament> tournaments = pgaRepository.getAllTournaments();
-        List<Tournament> updateTournaments = tournaments.stream()
-                .filter(tournament -> tournament.getTournamentState() == TournamentState.IN_PROGRESS)
-                .collect(Collectors.toList());
-
-        updateTournaments.forEach(tournament -> {
+        tournaments.forEach(tournament -> {
             TournamentSummary tournamentSummary = TournamentSummary.builder()
                     .tournamentId(tournament.getTournamentId())
                     .name(tournament.getName())
@@ -85,11 +78,11 @@ public class PgaUpdateService {
 
             tournamentSummary.getTournamentRounds().forEach(tournamentRound -> {
                 try {
-                    if (tournamentRound.getRoundStatus() != Status.CLOSED) {
+                    if (tournamentRound.getRoundStatus() == Status.IN_PROGRESS) {
                         logger.info("Updating round {} for tournament {}", tournamentRound.getRoundNumber(), tournamentSummary.getName());
-                        Future<TournamentRound> test = sportsApiService.updateTournamentRound(tournamentSummary, tournamentRound);
-                        TournamentRound round = test.get();
-                        logger.info("Persist player round scores");
+                        Future<TournamentRound> updatedRoundFuture = sportsApiService.updateTournamentRound(tournamentSummary, tournamentRound);
+                        TournamentRound updatedRound = updatedRoundFuture.get();
+                        pgaRepository.updatePlayerRounds(updatedRound.getPlayerRounds());
                     }
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);
@@ -98,5 +91,12 @@ public class PgaUpdateService {
             });
         });
 
+    }
+
+    private List<Tournament> getInProgressTournaments() {
+        List<Tournament> tournaments = pgaRepository.getAllTournaments();
+        return tournaments.stream()
+                .filter(tournament -> tournament.getTournamentState() == TournamentState.IN_PROGRESS)
+                .collect(Collectors.toList());
     }
 }

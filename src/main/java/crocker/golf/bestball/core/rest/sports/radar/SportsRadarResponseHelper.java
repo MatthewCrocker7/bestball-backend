@@ -1,5 +1,6 @@
 package crocker.golf.bestball.core.rest.sports.radar;
 
+import crocker.golf.bestball.domain.enums.game.ScoreType;
 import crocker.golf.bestball.domain.enums.pga.EventType;
 import crocker.golf.bestball.domain.enums.pga.Status;
 import crocker.golf.bestball.domain.enums.pga.TournamentState;
@@ -92,6 +93,7 @@ public class SportsRadarResponseHelper {
                         .par(scoreDto.getPar())
                         .yardage(scoreDto.getYardage())
                         .strokes(scoreDto.getStrokes())
+                        .scoreType(ScoreType.getScoreType(scoreDto.getPar(), scoreDto.getStrokes()))
                         .build())
                 .collect(Collectors.toList());
     }

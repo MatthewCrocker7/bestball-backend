@@ -79,6 +79,7 @@ public class GameCreatorService {
                 .userId(userCredentials.getUserId())
                 .draftId(game.getDraftId())
                 .gameId(game.getGameId())
+                .tournamentId(game.getTournament().getTournamentId())
                 .teamRole(TeamRole.PARTICIPANT)
                 .build();
 
@@ -132,6 +133,7 @@ public class GameCreatorService {
                 .userId(userCredentials.getUserId())
                 .draftId(game.getDraftId())
                 .gameId(game.getGameId())
+                .tournamentId(game.getTournament().getTournamentId())
                 .teamRole(TeamRole.CREATOR)
                 .build();
     }
@@ -142,6 +144,7 @@ public class GameCreatorService {
                 .userId(userCredentials.getUserId())
                 .draftId(creatorTeam.getDraftId())
                 .gameId(creatorTeam.getGameId())
+                .tournamentId(creatorTeam.getTournamentId())
                 .teamRole(TeamRole.PARTICIPANT)
                 .build();
     }

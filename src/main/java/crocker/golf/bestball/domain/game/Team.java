@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,6 +22,7 @@ public class Team {
     private UUID userId;
     private UUID draftId;
     private UUID gameId;
+    private UUID tournamentId;
 
     private UserInfo userInfo;
     private TeamRole teamRole;
@@ -31,8 +34,12 @@ public class Team {
     private PgaPlayer golferFour;
 
     private Integer toPar;
-    private Integer totalScore;
+    private Integer totalStrokes;
 
     private List<TeamRound> teamRounds;
+
+    public List<PgaPlayer> getGolfersAsList() {
+        return Arrays.asList(golferOne, golferTwo, golferThree, golferFour);
+    }
 
 }

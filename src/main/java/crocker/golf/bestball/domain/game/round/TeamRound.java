@@ -1,23 +1,29 @@
 package crocker.golf.bestball.domain.game.round;
 
-import crocker.golf.bestball.domain.enums.game.RoundNumber;
-import crocker.golf.bestball.domain.game.TeamHoleScore;
+import crocker.golf.bestball.domain.pga.tournament.HoleScore;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Builder
+@Setter
+@Getter
 public class TeamRound {
 
-    protected UUID roundId;
-    protected UUID teamId;
+    private UUID teamId;
+    private UUID gameId;
+    private UUID tournamentId;
+    private UUID roundId;
+    private Integer roundNumber;
 
-    protected List<TeamHoleScore> teamHoleScores;
-    protected RoundNumber roundNumber;
+    private Integer toPar;
+    private Integer strokes;
+    private List<HoleScore> holeScores;
 
-    protected Integer toPar;
-    protected Integer strokes;
-    protected Integer frontNine;
-    protected Integer backNine;
+    private Integer frontNine;
+    private Integer backNine;
 }

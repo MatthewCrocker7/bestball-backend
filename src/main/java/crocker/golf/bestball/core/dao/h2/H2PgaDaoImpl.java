@@ -2,15 +2,9 @@ package crocker.golf.bestball.core.dao.h2;
 
 import crocker.golf.bestball.core.dao.ParamHelper;
 import crocker.golf.bestball.core.dao.PgaDao;
-import crocker.golf.bestball.core.mapper.pga.PgaPlayerMapper;
-import crocker.golf.bestball.core.mapper.pga.TournamentCourseMapper;
-import crocker.golf.bestball.core.mapper.pga.TournamentRoundMapper;
-import crocker.golf.bestball.core.mapper.pga.TournamentRowMapper;
+import crocker.golf.bestball.core.mapper.pga.*;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
-import crocker.golf.bestball.domain.pga.tournament.Tournament;
-import crocker.golf.bestball.domain.pga.tournament.TournamentCourse;
-import crocker.golf.bestball.domain.pga.tournament.TournamentRound;
-import crocker.golf.bestball.domain.pga.tournament.TournamentSummary;
+import crocker.golf.bestball.domain.pga.tournament.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -29,22 +23,15 @@ public class H2PgaDaoImpl implements PgaDao {
     private final String SEASON_SCHEDULE = "SEASON_SCHEDULE";
     private final String TOURNAMENT_COURSES = "TOURNAMENT_COURSES";
     private final String TOURNAMENT_ROUNDS = "TOURNAMENT_ROUNDS";
+    private final String PLAYER_ROUNDS = "PLAYER_ROUNDS";
 
-    //TODO: Come up with an on conflict option  for h2 instead of using delete
-    private final String DELETE_RANKINGS = "DELETE FROM " + WORLD_RANKINGS + ";";
-    private final String DELETE_SCHEDULE = "DELETE FROM " + SEASON_SCHEDULE + ";";
-    private final String DELETE_COURSES = "DELETE FROM " + TOURNAMENT_COURSES + ";";
-    private final String DELETE_ROUNDS = "DELETE FROM " + TOURNAMENT_ROUNDS + ";";
-
-    private final String UPDATE_RANKINGS = "INSERT INTO " + WORLD_RANKINGS +
-            " (PLAYER_ID, PLAYER_RANK, PLAYER_NAME)" +
-            " VALUES(:playerId, :playerRank, :playerName);";
+    private final String UPDATE_RANKINGS = "MERGE INTO " + WORLD_RANKINGS +
+            " KEY(PLAYER_ID) VALUES(:playerId, :playerRank, :playerName);";
 
     private final String GET_WORLD_RANKINGS = "SELECT * FROM " + WORLD_RANKINGS;
 
-    private final String UPDATE_SCHEDULE = "INSERT INTO " + SEASON_SCHEDULE +
-            " (TOURNAMENT_ID, EVENT_TYPE, PGA_SEASON, TOURNAMENT_STATE, TOURNAMENT_NAME," +
-            " TOURNAMENT_START_DATE, TOURNAMENT_END_DATE)" +
+    private final String UPDATE_SCHEDULE = "MERGE INTO " + SEASON_SCHEDULE +
+            " KEY(TOURNAMENT_ID)" +
             " VALUES(:tournamentId, :eventType, :season, :tournamentState, :tournamentName, :startDate, :endDate);";
 
     private final String GET_SCHEDULE_BY_SEASON = "SELECT * FROM " + SEASON_SCHEDULE +
@@ -55,18 +42,26 @@ public class H2PgaDaoImpl implements PgaDao {
 
     private final String GET_ALL_TOURNAMENTS = "SELECT * FROM " + SEASON_SCHEDULE + ";";
 
-    private final String UPDATE_TOURNAMENT_COURSES = "INSERT INTO " + TOURNAMENT_COURSES +
-            " (TOURNAMENT_ID, COURSE_ID, COURSE_NAME, YARDAGE, PAR, HOLES)" +
+    private final String UPDATE_TOURNAMENT_COURSES = "MERGE INTO " + TOURNAMENT_COURSES +
+            " KEY(TOURNAMENT_ID, COURSE_ID)" +
             " VALUES(:tournamentId, :courseId, :courseName, :yardage, :par, :holes);";
 
-    private final String UPDATE_TOURNAMENT_ROUNDS = "INSERT INTO " + TOURNAMENT_ROUNDS +
-            " (TOURNAMENT_ID, ROUND_ID, ROUND_NUMBER, STATUS)" +
+    private final String UPDATE_TOURNAMENT_ROUNDS = "MERGE INTO " + TOURNAMENT_ROUNDS +
+            " KEY(TOURNAMENT_ID, ROUND_ID)" +
             " VALUES(:tournamentId, :roundId, :roundNumber, :status);";
 
     private final String GET_TOURNAMENT_COURSES_BY_ID = "SELECT * FROM " + TOURNAMENT_COURSES +
             " WHERE TOURNAMENT_ID=:tournamentId;";
 
     private final String GET_TOURNAMENT_ROUNDS_BY_ID = "SELECT * FROM " + TOURNAMENT_ROUNDS +
+            " WHERE TOURNAMENT_ID=:tournamentId;";
+
+    private final String UPDATE_PLAYER_ROUNDS = "MERGE INTO " + PLAYER_ROUNDS +
+            " KEY(PLAYER_ID, TOURNAMENT_ID, ROUND_ID)" +
+            " VALUES(:playerId, :tournamentId, :roundId, :roundNumber," +
+            " :courseId, :toPar, :thru, :strokes, :scores);";
+
+    private final String GET_PLAYER_ROUNDS_BY_TOURNAMENT_ID = "SELECT * FROM " + PLAYER_ROUNDS +
             " WHERE TOURNAMENT_ID=:tournamentId;";
 
     public H2PgaDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -76,7 +71,6 @@ public class H2PgaDaoImpl implements PgaDao {
     public void updateWorldRankings(List<PgaPlayer> pgaPlayers) {
         MapSqlParameterSource[] params = ParamHelper.getPlayerParams(pgaPlayers);
 
-        jdbcTemplate.update(DELETE_RANKINGS, params[0]);
         jdbcTemplate.batchUpdate(UPDATE_RANKINGS, params);
         logger.info("World golf rankings updated");
     }
@@ -88,7 +82,6 @@ public class H2PgaDaoImpl implements PgaDao {
     public void updateSeasonSchedule(List<Tournament> tournaments) {
         MapSqlParameterSource[] params = ParamHelper.getTournamentParams(tournaments);
 
-        jdbcTemplate.update(DELETE_SCHEDULE, params[0]);
         jdbcTemplate.batchUpdate(UPDATE_SCHEDULE, params);
         logger.info("Season schedule updated");
     }
@@ -115,8 +108,6 @@ public class H2PgaDaoImpl implements PgaDao {
         MapSqlParameterSource[] courseParams = ParamHelper.getTournamentCourseParams(tournamentSummary);
         MapSqlParameterSource[] roundParams = ParamHelper.getTournamentRoundParams(tournamentSummary);
 
-        // jdbcTemplate.update(DELETE_COURSES, courseParams[0]);
-        jdbcTemplate.update(DELETE_ROUNDS, roundParams[0]);
         jdbcTemplate.batchUpdate(UPDATE_TOURNAMENT_COURSES, courseParams);
         jdbcTemplate.batchUpdate(UPDATE_TOURNAMENT_ROUNDS, roundParams);
     }
@@ -131,5 +122,16 @@ public class H2PgaDaoImpl implements PgaDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("tournamentId", tournamentId);
         return jdbcTemplate.query(GET_TOURNAMENT_ROUNDS_BY_ID, params, new TournamentRoundMapper());
+    }
+
+    public void updatePlayerRounds(List<PlayerRound> playerRounds) {
+        MapSqlParameterSource[] playerRoundParams = ParamHelper.getPlayerRoundParams(playerRounds);
+        jdbcTemplate.batchUpdate(UPDATE_PLAYER_ROUNDS, playerRoundParams);
+    }
+
+    public List<PlayerRound> getPlayerRoundsByTournamentId(UUID tournamentId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("tournamentId", tournamentId);
+        return jdbcTemplate.query(GET_PLAYER_ROUNDS_BY_TOURNAMENT_ID, params, new PlayerRoundMapper());
     }
 }

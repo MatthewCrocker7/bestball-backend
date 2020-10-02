@@ -26,6 +26,7 @@ public class TeamRowMapper implements RowMapper<Team> {
                 .userId((UUID)rs.getObject("USER_ID"))
                 .draftId((UUID)rs.getObject("DRAFT_ID"))
                 .gameId((UUID)rs.getObject("GAME_ID"))
+                .tournamentId((UUID)rs.getObject("TOURNAMENT_ID"))
                 .teamRole(TeamRole.valueOf(rs.getString("TEAM_ROLE")))
                 .golferOne(buildGolfer(rs, "PLAYER_ONE_ID"))
                 .golferTwo(buildGolfer(rs, "PLAYER_TWO_ID"))

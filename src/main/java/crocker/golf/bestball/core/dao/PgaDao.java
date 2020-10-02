@@ -1,10 +1,7 @@
 package crocker.golf.bestball.core.dao;
 
 import crocker.golf.bestball.domain.pga.PgaPlayer;
-import crocker.golf.bestball.domain.pga.tournament.Tournament;
-import crocker.golf.bestball.domain.pga.tournament.TournamentCourse;
-import crocker.golf.bestball.domain.pga.tournament.TournamentRound;
-import crocker.golf.bestball.domain.pga.tournament.TournamentSummary;
+import crocker.golf.bestball.domain.pga.tournament.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,4 +25,8 @@ public interface PgaDao {
     List<TournamentCourse> getTournamentCourses(UUID tournamentId);
 
     List<TournamentRound> getTournamentRounds(UUID tournamentId);
+
+    void updatePlayerRounds(List<PlayerRound> playerRounds);
+
+    List<PlayerRound> getPlayerRoundsByTournamentId(UUID tournamentId);
 }

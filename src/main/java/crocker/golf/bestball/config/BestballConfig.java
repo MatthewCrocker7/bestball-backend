@@ -8,6 +8,7 @@ import crocker.golf.bestball.core.repository.DraftRepository;
 import crocker.golf.bestball.core.repository.GameRepository;
 import crocker.golf.bestball.core.repository.PgaRepository;
 import crocker.golf.bestball.core.rest.SportsApiService;
+import crocker.golf.bestball.core.scheduler.GameUpdateScheduler;
 import crocker.golf.bestball.core.scheduler.PgaUpdateScheduler;
 import crocker.golf.bestball.core.repository.UserRepository;
 import crocker.golf.bestball.core.service.game.*;
@@ -76,6 +77,11 @@ public class BestballConfig {
     @Bean
     public GameValidator gameValidator() {
         return new GameValidator();
+    }
+
+    @Bean
+    public GameUpdateScheduler gameUpdateScheduler(GameManagerService gameManagerService) {
+        return new GameUpdateScheduler(gameManagerService);
     }
 
     @Bean
