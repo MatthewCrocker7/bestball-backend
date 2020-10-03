@@ -29,14 +29,14 @@ public class H2GameDaoImpl implements GameDao {
             " ON " + GAMES + ".TOURNAMENT_ID = " + SEASON_SCHEDULE + ".TOURNAMENT_ID" +
             " WHERE (GAME_ID, GAME_VERSION) IN" +
             " (SELECT GAME_ID, MAX(GAME_VERSION) FROM " + GAMES +
-            " WHERE GAME_ID=:gameId);";
+            " WHERE GAME_ID=:gameId GROUP BY GAME_ID);";
 
     private final String GET_LATEST_GAME_BY_DRAFT_ID = "SELECT * FROM " + GAMES +
             " INNER JOIN " + SEASON_SCHEDULE +
             " ON " + GAMES + ".TOURNAMENT_ID = " + SEASON_SCHEDULE + ".TOURNAMENT_ID" +
             " WHERE (GAME_ID, GAME_VERSION) IN" +
             " (SELECT GAME_ID, MAX(GAME_VERSION) FROM " + GAMES +
-            " WHERE DRAFT_ID=:draftId);";
+            " WHERE DRAFT_ID=:draftId GROUP BY GAME_ID);";
 
     public H2GameDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

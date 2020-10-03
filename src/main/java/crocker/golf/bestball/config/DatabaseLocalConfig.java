@@ -2,8 +2,11 @@ package crocker.golf.bestball.config;
 
 import crocker.golf.bestball.core.dao.*;
 import crocker.golf.bestball.core.dao.h2.H2DraftDaoImpl;
+import crocker.golf.bestball.core.dao.h2.H2GameDaoImpl;
 import crocker.golf.bestball.core.dao.h2.H2PgaDaoImpl;
+import crocker.golf.bestball.core.dao.h2.H2TeamDaoImpl;
 import crocker.golf.bestball.core.dao.postgresql.GameDaoImpl;
+import crocker.golf.bestball.core.dao.postgresql.TeamDaoImpl;
 import crocker.golf.bestball.core.mapper.game.TeamRowMapper;
 import crocker.golf.bestball.core.repository.PgaRepository;
 import org.slf4j.Logger;
@@ -50,14 +53,14 @@ public class DatabaseLocalConfig {
     }
 
     @Bean
-    public GameDaoImpl gameDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) { return new GameDaoImpl(namedParameterJdbcTemplate); }
+    public GameDao gameDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) { return new H2GameDaoImpl(namedParameterJdbcTemplate); }
 
 
     @Bean
     public DraftDao draftDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) { return new H2DraftDaoImpl(namedParameterJdbcTemplate); }
 
     @Bean
-    public TeamDao teamDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate, TeamRowMapper teamRowMapper) { return new TeamDao(namedParameterJdbcTemplate, teamRowMapper); }
+    public TeamDao teamDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate, TeamRowMapper teamRowMapper) { return new H2TeamDaoImpl(namedParameterJdbcTemplate, teamRowMapper); }
 
     @Bean
     public TeamRowMapper teamRowMapper(PgaRepository pgaRepository) {

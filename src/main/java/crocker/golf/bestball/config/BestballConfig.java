@@ -2,6 +2,7 @@ package crocker.golf.bestball.config;
 
 import crocker.golf.bestball.core.dao.*;
 import crocker.golf.bestball.core.dao.postgresql.GameDaoImpl;
+import crocker.golf.bestball.core.dao.postgresql.TeamDaoImpl;
 import crocker.golf.bestball.core.draft.DraftManager;
 import crocker.golf.bestball.core.mapper.user.UserMapper;
 import crocker.golf.bestball.core.repository.DraftRepository;
@@ -120,7 +121,7 @@ public class BestballConfig {
     }
 
     @Bean
-    public GameRepository gameRepository(GameDaoImpl gameDaoImpl, TeamDao teamDao) { return new GameRepository(gameDaoImpl, teamDao); }
+    public GameRepository gameRepository(GameDao gameDao, TeamDao teamDao) { return new GameRepository(gameDao, teamDao); }
 
     @Bean
     public DraftRepository draftRepository(DraftDao draftDao) { return new DraftRepository(draftDao); }

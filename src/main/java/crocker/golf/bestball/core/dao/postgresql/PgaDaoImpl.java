@@ -71,7 +71,10 @@ public class PgaDaoImpl implements PgaDao {
     private final String UPDATE_PLAYER_ROUNDS = "INSERT INTO " + PLAYER_ROUNDS +
             " (PLAYER_ID, TOURNAMENT_ID, ROUND_ID, ROUND_NUMBER, COURSE_ID, TO_PAR, THRU," +
             " STROKES, SCORES) VALUES(:playerId, :tournamentId, :roundId, :roundNumber," +
-            " :courseId, :toPar, :thru, :strokes, :scores);";
+            " :courseId, :toPar, :thru, :strokes, :scores)" +
+            " ON CONFLICT (PLAYER_ID, TOURNAMENT_ID, ROUND_ID) DO UPDATE SET" +
+            " ROUND_NUMBER=:roundNumber, COURSE_ID=:courseId, TO_PAR=:toPar," +
+            " THRU=:thru, STROKES=:strokes, SCORES=:scores;";
 
     private final String GET_PLAYER_ROUNDS_BY_TOURNAMENT_ID = "SELECT * FROM " + PLAYER_ROUNDS +
             " WHERE TOURNAMENT_ID=:tournamentId;";

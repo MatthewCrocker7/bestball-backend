@@ -4,6 +4,7 @@ import crocker.golf.bestball.core.dao.*;
 import crocker.golf.bestball.core.dao.postgresql.DraftDaoImpl;
 import crocker.golf.bestball.core.dao.postgresql.GameDaoImpl;
 import crocker.golf.bestball.core.dao.postgresql.PgaDaoImpl;
+import crocker.golf.bestball.core.dao.postgresql.TeamDaoImpl;
 import crocker.golf.bestball.core.mapper.game.TeamRowMapper;
 import crocker.golf.bestball.core.repository.PgaRepository;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -78,14 +79,14 @@ public class DatabaseConfig {
     }
 
     @Bean
-    public GameDaoImpl gameDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) { return new GameDaoImpl(namedParameterJdbcTemplate); }
+    public GameDao gameDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) { return new GameDaoImpl(namedParameterJdbcTemplate); }
 
 
     @Bean
     public DraftDao draftDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) { return new DraftDaoImpl(namedParameterJdbcTemplate); }
 
     @Bean
-    public TeamDao teamDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate, TeamRowMapper teamRowMapper) { return new TeamDao(namedParameterJdbcTemplate, teamRowMapper); }
+    public TeamDao teamDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate, TeamRowMapper teamRowMapper) { return new TeamDaoImpl(namedParameterJdbcTemplate, teamRowMapper); }
 
     @Bean
     public TeamRowMapper teamRowMapper(PgaRepository pgaRepository) {
