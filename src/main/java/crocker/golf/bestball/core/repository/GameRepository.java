@@ -50,6 +50,10 @@ public class GameRepository {
     })
     public void updateTeam(Team team) { teamDao.updateTeam(team); }
 
+    public void updateTeams(List<Team> teams) {
+        teamDao.updateTeams(teams);
+    }
+
     @Cacheable(value = "teamsByUserId", key = "#userId")
     public List<Team> getTeamsByUserId(UUID userId) {
         return teamDao.getTeamsByUserId(userId);

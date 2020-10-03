@@ -70,8 +70,8 @@ public class BestballConfig {
     }
 
     @Bean
-    public GameManagerService gameManagerService(GameRepository gameRepository, UserRepository userRepository, PgaRepository pgaRepository) {
-        return new GameManagerService(gameRepository, userRepository, pgaRepository);
+    public GameManagerService gameManagerService(GameRepository gameRepository, UserRepository userRepository, PgaRepository pgaRepository, UserService userService) {
+        return new GameManagerService(gameRepository, userRepository, pgaRepository, userService);
     }
 
     @Bean
@@ -100,8 +100,8 @@ public class BestballConfig {
     }
 
     @Bean
-    public DraftService draftService(DraftRepository draftRepository, GameRepository gameRepository, UserRepository userRepository, PgaRepository pgaRepository) {
-        return new DraftService(draftRepository, userRepository, gameRepository, pgaRepository);
+    public DraftService draftService(DraftRepository draftRepository, GameRepository gameRepository, UserRepository userRepository, PgaRepository pgaRepository, UserService userService) {
+        return new DraftService(draftRepository, userRepository, gameRepository, pgaRepository, userService);
     }
 
     @Bean

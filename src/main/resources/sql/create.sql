@@ -11,7 +11,7 @@ DROP TABLE IF EXISTS EXAMPLE_TABLE;
 -- DROP TABLE IF EXISTS TOURNAMENT_COURSES;
 -- DROP TABLE IF EXISTS TOURNAMENT_ROUNDS;
 -- DROP TABLE IF EXISTS PLAYER_ROUNDS;
-DROP TABLE IF EXISTS TEAM_ROUNDS;
+-- DROP TABLE IF EXISTS TEAM_ROUNDS;
 -- --
 -- CREATE TABLE USER_CREDENTIALS (
 --     USER_ID                 UUID PRIMARY KEY    NOT NULL,
@@ -65,7 +65,7 @@ DROP TABLE IF EXISTS TEAM_ROUNDS;
 --     PLAYER_THREE_ID         UUID,
 --     PLAYER_FOUR_ID          UUID,
 --     TO_PAR                  NUMERIC,
---     TOTAL_SCORE             NUMERIC,
+--     TOTAL_STROKES           NUMERIC,
 --     PRIMARY KEY (TEAM_ID, USER_ID, GAME_ID, DRAFT_ID, TOURNAMENT_ID)
 -- );
 --
@@ -137,16 +137,16 @@ DROP TABLE IF EXISTS TEAM_ROUNDS;
 --     PRIMARY KEY (PLAYER_ID, TOURNAMENT_ID, ROUND_ID)
 -- );
 --
-CREATE TABLE TEAM_ROUNDS (
-    TEAM_ID                     UUID                NOT NULL,
-    GAME_ID                     UUID                NOT NULL,
-    ROUND_ID                    UUID                NOT NULL,
-    TOURNAMENT_ID               UUID                NOT NULL,
-    ROUND_NUMBER                NUMERIC             NOT NULL,
-    TO_PAR                      NUMERIC             NOT NULL,
-    STROKES                     NUMERIC             NOT NULL,
-    FRONT_NINE                  NUMERIC             NOT NULL,
-    BACK_NINE                   NUMERIC             NOT NULL,
-    SCORES                      BYTEA               NOT NULL,
-    PRIMARY KEY (TEAM_ID, GAME_ID, ROUND_ID)
-);
+-- CREATE TABLE TEAM_ROUNDS (
+--     TEAM_ID                     UUID                NOT NULL,
+--     GAME_ID                     UUID                NOT NULL,
+--     ROUND_ID                    UUID                NOT NULL,
+--     TOURNAMENT_ID               UUID                NOT NULL,
+--     ROUND_NUMBER                NUMERIC             NOT NULL,
+--     TO_PAR                      NUMERIC             NOT NULL,
+--     STROKES                     NUMERIC             NOT NULL,
+--     FRONT_NINE                  NUMERIC             NOT NULL,
+--     BACK_NINE                   NUMERIC             NOT NULL,
+--     SCORES                      BYTEA               NOT NULL,
+--     PRIMARY KEY (TEAM_ID, GAME_ID, ROUND_ID)
+-- );

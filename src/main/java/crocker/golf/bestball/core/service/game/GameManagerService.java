@@ -3,6 +3,7 @@ package crocker.golf.bestball.core.service.game;
 import crocker.golf.bestball.core.repository.GameRepository;
 import crocker.golf.bestball.core.repository.PgaRepository;
 import crocker.golf.bestball.core.repository.UserRepository;
+import crocker.golf.bestball.core.service.user.UserService;
 import crocker.golf.bestball.domain.enums.game.GameState;
 import crocker.golf.bestball.domain.enums.game.ScoreType;
 import crocker.golf.bestball.domain.enums.pga.TournamentState;
@@ -13,6 +14,7 @@ import crocker.golf.bestball.domain.pga.PgaPlayer;
 import crocker.golf.bestball.domain.pga.tournament.HoleScore;
 import crocker.golf.bestball.domain.pga.tournament.PlayerRound;
 import crocker.golf.bestball.domain.pga.tournament.Tournament;
+import crocker.golf.bestball.domain.pga.tournament.TournamentSummary;
 import crocker.golf.bestball.domain.user.RequestDto;
 import crocker.golf.bestball.domain.user.UserCredentials;
 import org.slf4j.Logger;
@@ -28,11 +30,13 @@ public class GameManagerService {
     private GameRepository gameRepository;
     private UserRepository userRepository;
     private PgaRepository pgaRepository;
+    private UserService userService;
 
-    public GameManagerService(GameRepository gameRepository, UserRepository userRepository, PgaRepository pgaRepository) {
+    public GameManagerService(GameRepository gameRepository, UserRepository userRepository, PgaRepository pgaRepository, UserService userService) {
         this.gameRepository = gameRepository;
         this.userRepository = userRepository;
         this.pgaRepository = pgaRepository;
+        this.userService = userService;
     }
 
     public Game loadGame(RequestDto requestDto) {
@@ -59,6 +63,7 @@ public class GameManagerService {
             List<TeamRound> allTeamRounds = new ArrayList<>();
             teams.forEach(team -> allTeamRounds.addAll(team.getTeamRounds()));
             gameRepository.updateTeamRounds(allTeamRounds);
+            gameRepository.updateTeams(teams);
         });
     }
 
@@ -70,7 +75,11 @@ public class GameManagerService {
             if(teamRound != null) teamRounds.add(teamRound);
         }
 
+        int toPar = teamRounds.stream().mapToInt(TeamRound::getToPar).sum();
+        int strokes = teamRounds.stream().mapToInt(TeamRound::getStrokes).sum();
         team.setTeamRounds(teamRounds);
+        team.setToPar(toPar);
+        team.setTotalStrokes(strokes);
     }
 
     private TeamRound getTeamRound(Team team, List<PlayerRound> playerRounds, int roundNumber) {
@@ -164,6 +173,7 @@ public class GameManagerService {
                 .build();
 
         enrichTeams(enrichedGame);
+        enrichTournament(enrichedGame);
 
         logger.info("Enriched game {} loaded for {}", game.getGameId(), userCredentials.getEmail());
         return enrichedGame;
@@ -185,9 +195,25 @@ public class GameManagerService {
                     .collect(Collectors.toList());
 
             team.setTeamRounds(teamRounds);
+            team.setUserInfo(userService.getUserInfoFromUserCredentials(team));
         });
 
         game.setTeams(teams);
+    }
+
+    private void enrichTournament(Game game) {
+        Tournament tournament = game.getTournament();
+
+        TournamentSummary tournamentSummary = TournamentSummary.builder()
+                .tournamentId(tournament.getTournamentId())
+                .name(tournament.getName())
+                .season(tournament.getSeason())
+                .tournamentCourses(pgaRepository.getTournamentCourses(tournament.getTournamentId()))
+                .tournamentRounds(pgaRepository.getTournamentRounds(tournament.getTournamentId()))
+                .tournamentStatus(null)
+                .build();
+
+        game.setTournamentSummary(tournamentSummary);
     }
 
     private void enrichPlayerRounds(PgaPlayer pgaPlayer, List<PlayerRound> allPlayerRounds) {

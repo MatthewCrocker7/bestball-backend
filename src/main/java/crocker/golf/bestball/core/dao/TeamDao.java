@@ -23,10 +23,11 @@ public class TeamDao {
             " (TEAM_ID, USER_ID, GAME_ID, DRAFT_ID, TOURNAMENT_ID, TEAM_ROLE)" +
             " VALUES(:teamId, :userId, :gameId, :draftId, :tournamentId, :teamRole);";
 
-    private final String UPDATE_TEAM = "UPDATE " + TEAMS +
-            " SET PLAYER_ONE_ID = :playerOneId, PLAYER_TWO_ID = :playerTwoId," +
-            " PLAYER_THREE_ID = :playerThreeId, PLAYER_FOUR_ID = :playerFourId" +
-            " WHERE TEAM_ID = :teamId;";
+    private final String UPDATE_TEAM = "MERGE INTO " + TEAMS +
+            " KEY(TEAM_ID, USER_ID, GAME_ID, DRAFT_ID, TOURNAMENT_ID)" +
+            " VALUES(:teamId, :userId, :gameId, :draftId, :tournamentId, :teamRole," +
+            " :draftPick, :playerOneId, :playerTwoId, :playerThreeId, :playerFourId," +
+            " :toPar, :totalStrokes);";
 
     private final String GET_TEAMS_BY_USER_ID = "SELECT * FROM " + TEAMS +
             " WHERE USER_ID=:userId;";
@@ -66,6 +67,11 @@ public class TeamDao {
     public void updateTeam(Team team) {
         MapSqlParameterSource params = ParamHelper.getUpdateTeamParams(team);
         jdbcTemplate.update(UPDATE_TEAM, params);
+    }
+
+    public void updateTeams(List<Team> teams) {
+        MapSqlParameterSource[] params = ParamHelper.getUpdateTeamsParams(teams);
+        jdbcTemplate.batchUpdate(UPDATE_TEAM, params);
     }
 
     public List<Team> getTeamsByUserId(UUID userId) {

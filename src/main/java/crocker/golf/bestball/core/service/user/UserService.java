@@ -4,9 +4,11 @@ import crocker.golf.bestball.core.mapper.user.UserMapper;
 import crocker.golf.bestball.core.repository.UserRepository;
 import crocker.golf.bestball.domain.exceptions.user.PasswordNotMatchException;
 import crocker.golf.bestball.domain.exceptions.user.UserNotExistException;
+import crocker.golf.bestball.domain.game.Team;
 import crocker.golf.bestball.domain.user.UserCredentials;
 import crocker.golf.bestball.domain.user.UserCredentialsDto;
 import crocker.golf.bestball.domain.exceptions.user.RegistrationException;
+import crocker.golf.bestball.domain.user.UserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class UserService implements UserDetailsService, UserDetailsPasswordService {
@@ -81,5 +84,20 @@ public class UserService implements UserDetailsService, UserDetailsPasswordServi
         } else {
             throw new PasswordNotMatchException("Incorrect password");
         }
+    }
+
+    public UserInfo getUserInfoFromUserCredentials(Team team) {
+        UserCredentials userCredentials = userRepository.getUserByUserId(team.getUserId());
+
+        if (userCredentials == null) {
+            logger.error("Unable to find matching user for team {} and draft {}", team.getTeamId(), team.getDraftId());
+            return null;
+        }
+
+        return UserInfo.builder()
+                .email(userCredentials.getEmail())
+                .userName(userCredentials.getUserName())
+                .userId(userCredentials.getUserId())
+                .build();
     }
 }

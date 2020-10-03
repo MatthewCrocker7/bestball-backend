@@ -114,15 +114,21 @@ public class ParamHelper {
     }
 
     public static MapSqlParameterSource getUpdateTeamParams(Team team) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("teamId", team.getTeamId());
+        MapSqlParameterSource params = getNewTeamParams(team);
 
+        params.addValue("draftPick", team.getDraftPick());
         params.addValue("playerOneId", team.getGolferOne() != null ? team.getGolferOne().getPlayerId() : null);
         params.addValue("playerTwoId", team.getGolferTwo() != null ? team.getGolferTwo().getPlayerId() : null);
         params.addValue("playerThreeId", team.getGolferThree() != null ? team.getGolferThree().getPlayerId() : null);
         params.addValue("playerFourId", team.getGolferFour() != null ? team.getGolferFour().getPlayerId() : null);
+        params.addValue("toPar", team.getToPar());
+        params.addValue("totalStrokes", team.getTotalStrokes());
 
         return params;
+    }
+
+    public static MapSqlParameterSource[] getUpdateTeamsParams(List<Team> teams) {
+        return teams.stream().map(ParamHelper::getUpdateTeamParams).toArray(MapSqlParameterSource[]::new);
     }
 
     public static MapSqlParameterSource[] getTeamRoundParams(List<TeamRound> teamRounds) {

@@ -32,6 +32,8 @@ public class TeamRowMapper implements RowMapper<Team> {
                 .golferTwo(buildGolfer(rs, "PLAYER_TWO_ID"))
                 .golferThree(buildGolfer(rs, "PLAYER_THREE_ID"))
                 .golferFour(buildGolfer(rs, "PLAYER_FOUR_ID"))
+                .toPar(rs.getInt("TO_PAR"))
+                .totalStrokes(rs.getInt("TOTAL_STROKES"))
                 .build();
     }
 

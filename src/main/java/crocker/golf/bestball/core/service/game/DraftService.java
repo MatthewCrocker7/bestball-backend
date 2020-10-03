@@ -4,6 +4,7 @@ import crocker.golf.bestball.core.repository.DraftRepository;
 import crocker.golf.bestball.core.repository.GameRepository;
 import crocker.golf.bestball.core.repository.PgaRepository;
 import crocker.golf.bestball.core.repository.UserRepository;
+import crocker.golf.bestball.core.service.user.UserService;
 import crocker.golf.bestball.domain.enums.game.DraftState;
 import crocker.golf.bestball.domain.enums.game.GameState;
 import crocker.golf.bestball.domain.game.Game;
@@ -30,12 +31,14 @@ public class DraftService {
     private UserRepository userRepository;
     private GameRepository gameRepository;
     private PgaRepository pgaRepository;
+    private UserService userService;
 
-    public DraftService(DraftRepository draftRepository, UserRepository userRepository, GameRepository gameRepository, PgaRepository pgaRepository) {
+    public DraftService(DraftRepository draftRepository, UserRepository userRepository, GameRepository gameRepository, PgaRepository pgaRepository, UserService userService) {
         this.draftRepository = draftRepository;
         this.userRepository = userRepository;
         this.gameRepository = gameRepository;
         this.pgaRepository = pgaRepository;
+        this.userService = userService;
     }
 
     public Draft loadDraft(RequestDto requestDto) {
@@ -115,27 +118,12 @@ public class DraftService {
             if (userInfo.isPresent()) {
                 team.setUserInfo(userInfo.get());
             } else {
-                team.setUserInfo(getUserInfoFromUserCredentials(team));
+                team.setUserInfo(userService.getUserInfoFromUserCredentials(team));
             }
         });
 
         draft.setDraftOrder(draftOrder);
         draft.setTeams(teams);
-    }
-
-    private UserInfo getUserInfoFromUserCredentials(Team team) {
-        UserCredentials userCredentials = userRepository.getUserByUserId(team.getUserId());
-
-        if (userCredentials == null) {
-            logger.error("Unable to find matching user for team {} and draft {}", team.getTeamId(), team.getDraftId());
-            return null;
-        }
-
-        return UserInfo.builder()
-                .email(userCredentials.getEmail())
-                .userName(userCredentials.getUserName())
-                .userId(userCredentials.getUserId())
-                .build();
     }
 
     private boolean isPlayerTurn(Draft draft, UserCredentials userCredentials) {
