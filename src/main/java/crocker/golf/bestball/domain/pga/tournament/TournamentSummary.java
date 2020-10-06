@@ -1,6 +1,7 @@
 package crocker.golf.bestball.domain.pga.tournament;
 
 import crocker.golf.bestball.domain.enums.pga.Status;
+import crocker.golf.bestball.domain.pga.PgaPlayer;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -16,6 +17,7 @@ public class TournamentSummary {
     private Status tournamentStatus;
     private Integer season;
 
+    private List<PgaPlayer> field;
     private List<TournamentCourse> tournamentCourses;
     private List<TournamentRound> tournamentRounds;
 }

@@ -37,11 +37,8 @@ public class UserController {
             userService.register(userCredentialsDto);
 
             return new ResponseEntity<>(null, null, HttpStatus.OK);
-        } catch (RegistrationException e) {
-            logger.error("Error {}", e.toString());
-            return new ResponseEntity<>(e, null, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            logger.error(e.getMessage());
             return new ResponseEntity<>(e, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

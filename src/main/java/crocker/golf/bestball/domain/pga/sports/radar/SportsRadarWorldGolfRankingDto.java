@@ -30,7 +30,7 @@ public class SportsRadarWorldGolfRankingDto {
     private Integer season;
 
     @JsonProperty("players")
-    private List<SportsRadarPgaPlayerRankingDto> players;
+    private List<SportsRadarPgaPlayerDto> players;
 
     public SportsRadarWorldGolfRankingDto(){ super(); }
 

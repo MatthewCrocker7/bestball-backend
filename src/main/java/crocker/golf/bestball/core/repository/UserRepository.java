@@ -22,7 +22,6 @@ public class UserRepository {
         return userDao.findByUserName(username);
     }
 
-    //TODO: Cache this
     public UserCredentials findByEmail(String email) {
         return userDao.findByEmail(email);
     }

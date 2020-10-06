@@ -29,5 +29,8 @@ public class SportsRadarTournamentSummaryDto {
     @JsonProperty("rounds")
     private List<SportsRadarTournamentRoundSummaryDto> rounds;
 
+    @JsonProperty("field")
+    private List<SportsRadarPgaPlayerDto> field;
+
     public SportsRadarTournamentSummaryDto() { super(); }
 }

@@ -157,7 +157,7 @@ public class SportsRadarResponseHelper {
         return Status.CLOSED;
     }
 
-    private String getFullName(SportsRadarPgaPlayerRankingDto pgaPlayerDto) {
+    private String getFullName(SportsRadarPgaPlayerDto pgaPlayerDto) {
         return pgaPlayerDto.getFirstName() + " " + pgaPlayerDto.getLastName();
     }
 
