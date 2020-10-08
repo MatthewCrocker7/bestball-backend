@@ -30,14 +30,14 @@ public class PgaUpdateScheduler {
         pgaUpdateService.updateSeasonSchedule();
     }
 
-    @Scheduled(fixedDelayString = "${golf.pga.update.rate.tournament}", initialDelay = 2000000000)
+    @Scheduled(fixedDelayString = "${golf.pga.update.rate.tournament}", initialDelay = 0)
     @Async
     public void updateTournamentSummary() {
         logger.info("Updating tournament summary on thread {}", Thread.currentThread().getName());
         pgaUpdateService.updateTournamentSummary();
     }
 
-    @Scheduled(fixedDelayString = "${golf.pga.update.rate.round}", initialDelay = 2000000000)
+    @Scheduled(fixedDelayString = "${golf.pga.update.rate.round}", initialDelay = 20000)
     @Async
     public void updateTournamentRound() {
         logger.info("Updating tournament round on thread {}", Thread.currentThread().getName());
