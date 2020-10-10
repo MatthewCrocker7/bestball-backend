@@ -50,6 +50,7 @@ public class GameRepository {
     })
     public void updateTeam(Team team) { teamDao.updateTeam(team); }
 
+    @CacheEvict(value = "teamsByDraftId", key = "#teams.get(0).getDraftId()")
     public void updateTeams(List<Team> teams) {
         teamDao.updateTeams(teams);
     }
@@ -77,10 +78,12 @@ public class GameRepository {
         return teamDao.getTeamByUserAndGameId(userId, gameId);
     }
 
-    public void updateTeamRounds(List<TeamRound> teamRounds) {
+    @CacheEvict(value = "teamRoundsByGameId", key = "#gameId")
+    public void updateTeamRounds(UUID gameId, List<TeamRound> teamRounds) {
         teamDao.updateTeamRounds(teamRounds);
     }
 
+    @Cacheable(value = "teamRoundsByGameId", key = "#gameId")
     public List<TeamRound> getTeamRoundsByGameId(UUID gameId) {
         return teamDao.getTeamRoundsByGameId(gameId);
     }

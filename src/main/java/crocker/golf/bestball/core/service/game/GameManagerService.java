@@ -52,18 +52,39 @@ public class GameManagerService {
 
     public void updateTeamScores() {
         List<Tournament> tournaments = getInProgressTournaments();
+        HashMap<UUID, List<Team>> batchTeams = new HashMap<>();
+        HashMap<UUID, List<TeamRound>> batchTeamRounds = new HashMap<>();
 
         tournaments.forEach(tournament -> {
             List<PlayerRound> playerRounds = pgaRepository.getPlayerRoundsByTournamentId(tournament.getTournamentId());
             List<Team> teams = gameRepository.getTeamsByTournamentId(tournament.getTournamentId());
 
-            teams.forEach(team -> enrichTeamRounds(team, playerRounds));
+            teams.forEach(team -> {
+                enrichTeamRounds(team, playerRounds);
+
+                if (batchTeams.containsKey(team.getGameId())) {
+                    batchTeams.get(team.getGameId()).add(team);
+                } else {
+                    batchTeams.put(team.getGameId(), new ArrayList<>(Arrays.asList(team)));
+                }
+
+                if (batchTeamRounds.containsKey(team.getGameId())) {
+                    batchTeamRounds.get(team.getGameId()).addAll(team.getTeamRounds());
+                } else {
+                    batchTeamRounds.put(team.getGameId(), team.getTeamRounds());
+                }
+            });
             logger.info("Latest team round scores calculated for tournament {}", tournament.getName());
 
+            /*
             List<TeamRound> allTeamRounds = new ArrayList<>();
             teams.forEach(team -> allTeamRounds.addAll(team.getTeamRounds()));
-            gameRepository.updateTeamRounds(allTeamRounds);
-            gameRepository.updateTeams(teams);
+
+             */
+            batchTeams.keySet().forEach(gameId -> {
+                gameRepository.updateTeamRounds(gameId, batchTeamRounds.get(gameId));
+                gameRepository.updateTeams(batchTeams.get(gameId));
+            });
         });
     }
 
