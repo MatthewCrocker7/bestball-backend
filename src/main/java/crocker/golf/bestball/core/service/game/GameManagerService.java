@@ -6,7 +6,6 @@ import crocker.golf.bestball.core.repository.UserRepository;
 import crocker.golf.bestball.core.service.user.UserService;
 import crocker.golf.bestball.domain.enums.game.GameState;
 import crocker.golf.bestball.domain.enums.game.ScoreType;
-import crocker.golf.bestball.domain.enums.pga.TournamentState;
 import crocker.golf.bestball.domain.game.Game;
 import crocker.golf.bestball.domain.game.Team;
 import crocker.golf.bestball.domain.game.round.TeamRound;
@@ -14,7 +13,6 @@ import crocker.golf.bestball.domain.pga.PgaPlayer;
 import crocker.golf.bestball.domain.pga.tournament.HoleScore;
 import crocker.golf.bestball.domain.pga.tournament.PlayerRound;
 import crocker.golf.bestball.domain.pga.tournament.Tournament;
-import crocker.golf.bestball.domain.pga.tournament.TournamentSummary;
 import crocker.golf.bestball.domain.user.RequestDto;
 import crocker.golf.bestball.domain.user.UserCredentials;
 import org.slf4j.Logger;
@@ -51,7 +49,7 @@ public class GameManagerService {
     }
 
     public void updateTeamScores() {
-        List<Tournament> tournaments = getInProgressTournaments();
+        List<Tournament> tournaments = pgaRepository.getInProgressTournaments();
         HashMap<UUID, List<Team>> batchTeams = new HashMap<>();
         HashMap<UUID, List<TeamRound>> batchTeamRounds = new HashMap<>();
 
@@ -225,16 +223,8 @@ public class GameManagerService {
     private void enrichTournament(Game game) {
         Tournament tournament = game.getTournament();
 
-        TournamentSummary tournamentSummary = TournamentSummary.builder()
-                .tournamentId(tournament.getTournamentId())
-                .name(tournament.getName())
-                .season(tournament.getSeason())
-                .tournamentCourses(pgaRepository.getTournamentCourses(tournament.getTournamentId()))
-                .tournamentRounds(pgaRepository.getTournamentRounds(tournament.getTournamentId()))
-                .tournamentStatus(null)
-                .build();
-
-        game.setTournamentSummary(tournamentSummary);
+        tournament.setTournamentCourses(pgaRepository.getTournamentCourses(tournament.getTournamentId()));
+        tournament.setTournamentRounds(pgaRepository.getTournamentRounds(tournament.getTournamentId()));
     }
 
     private void enrichPlayerRounds(PgaPlayer pgaPlayer, List<PlayerRound> allPlayerRounds) {
@@ -244,12 +234,4 @@ public class GameManagerService {
 
         pgaPlayer.setRounds(playerRounds);
     }
-
-    private List<Tournament> getInProgressTournaments() {
-        List<Tournament> tournaments = pgaRepository.getAllTournaments();
-        return tournaments.stream()
-                .filter(tournament -> tournament.getTournamentState() == TournamentState.IN_PROGRESS)
-                .collect(Collectors.toList());
-    }
-
 }

@@ -52,14 +52,14 @@ public class UserService implements UserDetailsService, UserDetailsPasswordServi
         return userMapper.convertUserToUserDetails(userCredentials);
     }
 
-    public void register(UserCredentialsDto userCredentialsDto) throws RegistrationException {
+    public UserCredentials register(UserCredentialsDto userCredentialsDto) throws RegistrationException {
         userRegistrationValidator.validateNewUser(userCredentialsDto);
 
         UserCredentials userCredentials = UserCredentials.builder()
                 .userId(UUID.randomUUID())
                 .enabled(false)
                 .userName(userCredentialsDto.getUserName())
-                .email(userCredentialsDto.getEmail())
+                .email(userCredentialsDto.getEmail().toLowerCase())
                 .firstName(userCredentialsDto.getFirstName())
                 .lastName(userCredentialsDto.getLastName())
                 .password(passwordEncoder.encode(userCredentialsDto.getPassword()))
@@ -67,6 +67,8 @@ public class UserService implements UserDetailsService, UserDetailsPasswordServi
 
         userRepository.save(userCredentials);
         logger.info("UserCredentials registered successfully.");
+
+        return userCredentials;
     }
 
     public void login(UserCredentialsDto userCredentialsDto) throws UserNotExistException, PasswordNotMatchException {

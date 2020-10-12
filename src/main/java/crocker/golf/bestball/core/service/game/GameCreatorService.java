@@ -9,6 +9,7 @@ import crocker.golf.bestball.domain.enums.game.DraftState;
 import crocker.golf.bestball.domain.enums.game.GameState;
 import crocker.golf.bestball.domain.enums.game.GameType;
 import crocker.golf.bestball.domain.enums.game.TeamRole;
+import crocker.golf.bestball.domain.exceptions.game.TeamNotAuthorizedException;
 import crocker.golf.bestball.domain.game.draft.Draft;
 import crocker.golf.bestball.domain.game.Game;
 import crocker.golf.bestball.domain.game.GameDto;
@@ -86,7 +87,7 @@ public class GameCreatorService {
         gameRepository.saveNewTeam(team);
     }
 
-    public void addToDraft(RequestDto requestDto) {
+    public void addToDraft(RequestDto requestDto) throws TeamNotAuthorizedException {
         String email = requestDto.getEmail();
         String inviteEmail = requestDto.getInviteEmail();
         UUID draftId = UUID.fromString(requestDto.getDraftId());
@@ -97,11 +98,11 @@ public class GameCreatorService {
         if (team.getTeamRole() == TeamRole.CREATOR) {
             addPlayer(inviteEmail, team);
         } else {
-            // do something else
+            throw new TeamNotAuthorizedException("You're not authorized to invite new players");
         }
     }
 
-    public void addToGame(RequestDto requestDto) {
+    public void addToGame(RequestDto requestDto) throws TeamNotAuthorizedException {
         String email = requestDto.getEmail();
         String inviteEmail = requestDto.getInviteEmail();
         UUID gameId = UUID.fromString(requestDto.getGameId());
@@ -112,7 +113,7 @@ public class GameCreatorService {
         if (team.getTeamRole() == TeamRole.CREATOR) {
             addPlayer(inviteEmail, team);
         } else {
-            //TODO: do something elsess
+            throw new TeamNotAuthorizedException("You're not authorized to invite new players");
         }
     }
 

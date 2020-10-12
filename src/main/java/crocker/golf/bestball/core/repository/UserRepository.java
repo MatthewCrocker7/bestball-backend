@@ -23,7 +23,7 @@ public class UserRepository {
     }
 
     public UserCredentials findByEmail(String email) {
-        return userDao.findByEmail(email);
+        return userDao.findByEmail(email.toLowerCase());
     }
 
     public UserCredentials getUserByUserId(UUID userId) {

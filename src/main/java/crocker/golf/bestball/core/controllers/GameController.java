@@ -2,6 +2,7 @@ package crocker.golf.bestball.core.controllers;
 
 import crocker.golf.bestball.core.service.game.GameCreatorService;
 import crocker.golf.bestball.core.service.game.GameManagerService;
+import crocker.golf.bestball.domain.exceptions.game.TeamNotAuthorizedException;
 import crocker.golf.bestball.domain.game.Game;
 import crocker.golf.bestball.domain.game.GameDto;
 import crocker.golf.bestball.domain.user.RequestDto;
@@ -53,6 +54,8 @@ public class GameController {
             gameCreatorService.addToDraft(requestDto);
 
             return new ResponseEntity(null, null, HttpStatus.OK);
+        } catch (TeamNotAuthorizedException e) {
+            return new ResponseEntity<>(e, null, HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return new ResponseEntity<>(e, null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -62,9 +65,17 @@ public class GameController {
 
     @PostMapping("/addToGame")
     public ResponseEntity addToGame(@RequestBody RequestDto requestDto) {
-        gameCreatorService.addToGame(requestDto);
+        try {
+            gameCreatorService.addToGame(requestDto);
 
-        return new ResponseEntity(null, null, HttpStatus.OK);
+            return new ResponseEntity(null, null, HttpStatus.OK);
+        } catch (TeamNotAuthorizedException e) {
+            return new ResponseEntity<>(e, null, HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseEntity<>(e, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @PostMapping("/loadGame")

@@ -4,7 +4,6 @@ import crocker.golf.bestball.domain.exceptions.ExternalAPIException;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
 import crocker.golf.bestball.domain.pga.tournament.Tournament;
 import crocker.golf.bestball.domain.pga.tournament.TournamentRound;
-import crocker.golf.bestball.domain.pga.tournament.TournamentSummary;
 import org.springframework.scheduling.annotation.Async;
 
 import java.util.List;
@@ -19,8 +18,8 @@ public interface SportsApiService{
     Future<List<Tournament>> getSeasonSchedule() throws ExternalAPIException;
 
     @Async
-    Future<TournamentSummary> updateTournamentSummary(Tournament tournament) throws ExternalAPIException;
+    Future<Tournament> getLatestTournamentDetails(Tournament tournament) throws ExternalAPIException;
 
     @Async
-    Future<TournamentRound> updateTournamentRound(TournamentSummary tournamentSummary, TournamentRound tournamentRound) throws ExternalAPIException;
+    Future<TournamentRound> updateTournamentRound(Tournament tournament, TournamentRound tournamentRound) throws ExternalAPIException;
 }

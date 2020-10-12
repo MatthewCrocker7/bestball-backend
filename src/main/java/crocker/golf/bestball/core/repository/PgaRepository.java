@@ -1,6 +1,7 @@
 package crocker.golf.bestball.core.repository;
 
 import crocker.golf.bestball.core.dao.PgaDao;
+import crocker.golf.bestball.domain.enums.pga.TournamentState;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
 import crocker.golf.bestball.domain.pga.tournament.*;
 import org.springframework.cache.annotation.CacheEvict;
@@ -38,7 +39,8 @@ public class PgaRepository {
     @Caching(evict = {
             @CacheEvict(value = "tournamentsBySeason", allEntries = true),
             @CacheEvict(value = "tournamentById", allEntries = true),
-            @CacheEvict(value = "allTournaments")
+            @CacheEvict(value = "allTournaments"),
+            @CacheEvict(value = "inProgressTournaments")
     })
     public void updateSeasonSchedule(List<Tournament> tournaments) {
         pgaDao.updateSeasonSchedule(tournaments);
@@ -47,25 +49,39 @@ public class PgaRepository {
 
     @Cacheable("tournamentsBySeason")
     public List<Tournament> getTournamentsBySeason(int year) {
-        return pgaDao.getTournamentsBySeason(year);
+        return pgaDao.getTournamentSchedulesBySeason(year);
     }
 
     @Cacheable(value = "tournamentById", key = "#tournamentId")
     public Tournament getTournamentById(UUID tournamentId) {
-        return pgaDao.getTournamentById(tournamentId);
+        return pgaDao.getTournamentScheduleById(tournamentId);
     }
 
     @Cacheable(value = "allTournaments")
     public List<Tournament> getAllTournaments () {
-        return pgaDao.getAllTournaments();
+        return pgaDao.getAllTournamentSchedules();
+    }
+
+    @Cacheable(value = "inProgressTournaments")
+    public List<Tournament> getInProgressTournaments() {
+        List<Tournament> tournaments = this.getAllTournaments();
+        return tournaments.stream()
+                .filter(tournament -> tournament.getTournamentState() == TournamentState.IN_PROGRESS)
+                .collect(Collectors.toList());
     }
 
     @Caching(evict = {
-            @CacheEvict(value = "tournamentCourses", key = "#tournamentSummary.getTournamentId()"),
-            @CacheEvict(value = "tournamentRounds", key = "#tournamentSummary.getTournamentId()")
+            @CacheEvict(value = "tournamentField", key = "#tournament.getTournamentId()"),
+            @CacheEvict(value = "tournamentCourses", key = "#tournament.getTournamentId()"),
+            @CacheEvict(value = "tournamentRounds", key = "#tournament.getTournamentId()")
     })
-    public void updateTournamentSummary(TournamentSummary tournamentSummary) {
-        pgaDao.updateTournamentSummary(tournamentSummary);
+    public void updateTournamentDetails(Tournament tournament) {
+        pgaDao.updateTournamentDetails(tournament);
+    }
+
+    @Cacheable(value = "tournamentField", key = "#tournamentId")
+    public List<PgaPlayer> getTournamentField(UUID tournamentId) {
+        return pgaDao.getTournamentField(tournamentId);
     }
 
     @Cacheable(value = "tournamentCourses", key = "#tournamentId")

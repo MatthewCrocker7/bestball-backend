@@ -95,7 +95,7 @@ public class DraftExecutor {
                 .collect(Collectors.toList());
 
         draftRepository.saveDraftOrder(draftId, draftOrder);
-        //TODO: Save updated team
+        gameRepository.updateTeams(teams);
     }
 
     private UserInfo getUserInfoRound(UserInfo user, int numPlayers, int round) {
@@ -125,14 +125,16 @@ public class DraftExecutor {
 
 
     private void saveDraftablePgaPlayers(UUID draftId) {
-        //TODO: Finalize pga players available to draft here
-        //tournament summary endpoint gets tournament participants
         Game game = gameRepository.getLatestGameByDraftId(draftId);
         UUID tournamentId = game.getTournament().getTournamentId();
-        //use tournament id to get tournament participants
-        //filter out participants base on their world ranking
+        List<PgaPlayer> tournamentField = pgaRepository.getTournamentField(tournamentId);
         List<PgaPlayer> worldRankings = pgaRepository.getWorldRankings();
-        draftRepository.saveDraftablePgaPlayers(draftId, worldRankings);
+        List<UUID> worldRankingsPlayerId = worldRankings.stream()
+                .map(PgaPlayer::getPlayerId).collect(Collectors.toList());
+        List<PgaPlayer> draftablePlayers = tournamentField.stream()
+                .filter(pgaPlayer -> worldRankingsPlayerId.contains(pgaPlayer.getPlayerId()))
+                .collect(Collectors.toList());
+        draftRepository.saveDraftablePgaPlayers(draftId, draftablePlayers);
     }
 
     private void releaseDraftSchedule(DraftSchedule draftSchedule) {

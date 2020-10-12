@@ -8,7 +8,6 @@ import crocker.golf.bestball.domain.pga.sports.radar.SportsRadarTournamentRoundD
 import crocker.golf.bestball.domain.pga.sports.radar.SportsRadarTournamentSummaryDto;
 import crocker.golf.bestball.domain.pga.tournament.Tournament;
 import crocker.golf.bestball.domain.pga.tournament.TournamentRound;
-import crocker.golf.bestball.domain.pga.tournament.TournamentSummary;
 import crocker.golf.bestball.domain.pga.sports.radar.SportsRadarScheduleDto;
 import crocker.golf.bestball.domain.pga.sports.radar.SportsRadarWorldGolfRankingDto;
 import org.slf4j.Logger;
@@ -34,7 +33,6 @@ public class SportsRadarService implements SportsApiService {
 
     private static final Logger logger = LoggerFactory.getLogger(SportsRadarService.class);
 
-    //TODO: On api key forbidden failure, cycle to next key in list and retry
     private RestTemplate restTemplate;
     private SportsRadarResponseHelper sportsRadarResponseHelper;
 
@@ -47,16 +45,9 @@ public class SportsRadarService implements SportsApiService {
     private final String TOURNAMENT_SUMMARY_URL = "/summary/pga/{0}/tournaments/{1}/summary.json";
     private final String TOURNAMENT_ROUND_URL = "/scorecards/pga/{0}/tournaments/{1}/rounds/{2}/scores.json";
 
-    //tournament summary -> gives field, cut line, hole information (par, number, yardage), weather each day, tournament status (in_progress, complete, closed, etc.)
-    //http://api.sportradar.us/golf-t2/summary/pga/2021/tournaments/416a2e0a-d3b3-4518-8560-48bef8b09161/summary.json?api_key=gtf9xtrvcysmghmj89rs5pks
-    //scorecards per round -> gives round specific info for tourney, includes round id, and list of players
-    // that includes their score, progress on course (hole 5, hole 8, F, etc.), the course they played on, cut status (only if cut),
-    //http://api.sportradar.us/golf-t2/scorecards/pga/2020/tournaments/416a2e0a-d3b3-4518-8560-48bef8b09161/rounds/1/scores.json?api_key=gtf9xtrvcysmghmj89rs5pks
-
     public SportsRadarService(RestTemplate restTemplate, SportsRadarResponseHelper sportsRadarResponseHelper, String keys) {
         this.restTemplate = restTemplate;
         this.sportsRadarResponseHelper = sportsRadarResponseHelper;
-        // this.apiKey = "?api_key=" + apiKey;
         this.keys = Stream.of(keys.split(","))
                 .collect(Collectors.toCollection(LinkedList::new));
     }
@@ -123,7 +114,7 @@ public class SportsRadarService implements SportsApiService {
             backoff = @Backoff(2000)
     )
     @Async
-    public Future<TournamentSummary> updateTournamentSummary(Tournament tournament) throws ExternalAPIException {
+    public Future<Tournament> getLatestTournamentDetails(Tournament tournament) throws ExternalAPIException {
         String url = buildTournamentSummaryUrl(tournament);
         logger.info("Calling api to update tournament summary {}", tournament.getName());
 
@@ -136,9 +127,9 @@ public class SportsRadarService implements SportsApiService {
 
             SportsRadarTournamentSummaryDto summaryDto = responseEntity.getBody();
 
-            TournamentSummary tournamentSummary = sportsRadarResponseHelper.mapResponseToTournamentSummary(summaryDto);
+            Tournament tournamentDetails = sportsRadarResponseHelper.mapResponseToTournamentDetails(summaryDto);
 
-            return new AsyncResult<>(tournamentSummary);
+            return new AsyncResult<>(tournamentDetails);
         } catch (HttpClientErrorException e) {
             shiftKeys();
             throw new HttpClientErrorException(HttpStatus.FORBIDDEN);
@@ -151,9 +142,9 @@ public class SportsRadarService implements SportsApiService {
             backoff = @Backoff(2000)
     )
     @Async
-    public Future<TournamentRound> updateTournamentRound(TournamentSummary tournamentSummary, TournamentRound round) throws ExternalAPIException {
-        String url = buildTournamentRoundUrl(tournamentSummary, round);
-        logger.info("Calling api to update tournament round {}", tournamentSummary.getName());
+    public Future<TournamentRound> updateTournamentRound(Tournament tournament, TournamentRound round) throws ExternalAPIException {
+        String url = buildTournamentRoundUrl(tournament, round);
+        logger.info("Calling api to update tournament round {}", tournament.getName());
 
         try {
             ResponseEntity<SportsRadarTournamentRoundDto> responseEntity = restTemplate.exchange(url, HttpMethod.GET, null, SportsRadarTournamentRoundDto.class);
@@ -188,8 +179,8 @@ public class SportsRadarService implements SportsApiService {
         return BASE_URL + MessageFormat.format(TOURNAMENT_SUMMARY_URL, Integer.toString(tournament.getSeason()), tournament.getTournamentId()) + addKey();
     }
 
-    private String buildTournamentRoundUrl(TournamentSummary tournamentSummary, TournamentRound tournamentRound) {
-        return BASE_URL + MessageFormat.format(TOURNAMENT_ROUND_URL, Integer.toString(tournamentSummary.getSeason()), tournamentSummary.getTournamentId(), tournamentRound.getRoundNumber()) + addKey();
+    private String buildTournamentRoundUrl(Tournament tournament, TournamentRound tournamentRound) {
+        return BASE_URL + MessageFormat.format(TOURNAMENT_ROUND_URL, Integer.toString(tournament.getSeason()), tournament.getTournamentId(), tournamentRound.getRoundNumber()) + addKey();
     }
 
     private void shiftKeys() {

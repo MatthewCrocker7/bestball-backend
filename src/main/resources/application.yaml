@@ -15,6 +15,10 @@ spring:
       ddl-auto: ${datasource.update:none}
     database-platform: ${datasource.platform:org.hibernate.dialect.H2Dialect}
 
+user:
+  url:
+    base: ${user.url:http://localhost:3000}
+
 golf:
   pga:
     update:

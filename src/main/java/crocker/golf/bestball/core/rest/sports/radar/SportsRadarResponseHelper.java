@@ -49,10 +49,11 @@ public class SportsRadarResponseHelper {
                 .collect(Collectors.toList());
     }
 
-    public TournamentSummary mapResponseToTournamentSummary(SportsRadarTournamentSummaryDto summaryDto) {
-        return TournamentSummary.builder()
+    public Tournament mapResponseToTournamentDetails(SportsRadarTournamentSummaryDto summaryDto) {
+        return Tournament.builder()
                 .tournamentId(UUID.fromString(summaryDto.getTournamentId()))
                 .tournamentStatus(mapResponseToStatus(summaryDto.getStatus()))
+                .tournamentField(mapResponseToTournamentField(summaryDto))
                 .tournamentCourses(mapResponseToTournamentCourses(summaryDto))
                 .tournamentRounds(mapResponseToTournamentRounds(summaryDto))
                 .build();
@@ -94,6 +95,16 @@ public class SportsRadarResponseHelper {
                         .yardage(scoreDto.getYardage())
                         .strokes(scoreDto.getStrokes())
                         .scoreType(ScoreType.getScoreType(scoreDto.getPar(), scoreDto.getStrokes()))
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    private List<PgaPlayer> mapResponseToTournamentField(SportsRadarTournamentSummaryDto summaryDto) {
+        return summaryDto.getField().stream()
+                .map(pgaPlayerDto ->
+                        PgaPlayer.builder()
+                        .playerId(UUID.fromString(pgaPlayerDto.getPlayerId()))
+                        .playerName(getFullName(pgaPlayerDto))
                         .build())
                 .collect(Collectors.toList());
     }
@@ -170,7 +181,6 @@ public class SportsRadarResponseHelper {
     }
 
     private TournamentState getTournamentState(SportsRadarTournamentDto tournamentDto) {
-
         ZoneId courseTimeZone;
         if (tournamentDto.getCourseTimezone() == null) {
             courseTimeZone = ZoneId.of("UTC");

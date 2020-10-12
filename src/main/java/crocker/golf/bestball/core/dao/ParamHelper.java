@@ -3,10 +3,8 @@ package crocker.golf.bestball.core.dao;
 import crocker.golf.bestball.domain.game.Team;
 import crocker.golf.bestball.domain.game.round.TeamRound;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
-import crocker.golf.bestball.domain.pga.tournament.CourseHole;
 import crocker.golf.bestball.domain.pga.tournament.PlayerRound;
 import crocker.golf.bestball.domain.pga.tournament.Tournament;
-import crocker.golf.bestball.domain.pga.tournament.TournamentSummary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -31,7 +29,7 @@ public class ParamHelper {
         }).toArray(MapSqlParameterSource[]::new);
     }
 
-    public static MapSqlParameterSource[] getTournamentParams(List<Tournament> tournaments) {
+    public static MapSqlParameterSource[] getTournamentScheduleParams(List<Tournament> tournaments) {
         return tournaments.stream().map(tournament -> {
             MapSqlParameterSource params = new MapSqlParameterSource();
             params.addValue("tournamentId", tournament.getTournamentId());
@@ -46,12 +44,22 @@ public class ParamHelper {
         }).toArray(MapSqlParameterSource[]::new);
     }
 
-    public static MapSqlParameterSource[] getTournamentCourseParams(TournamentSummary tournamentSummary) {
+    public static MapSqlParameterSource[] getTournamentFieldParams(Tournament tournament, List<PgaPlayer> pgaPlayers) {
+        return pgaPlayers.stream().map(pgaPlayer -> {
+            MapSqlParameterSource params = new MapSqlParameterSource();
+            params.addValue("tournamentId", tournament.getTournamentId());
+            params.addValue("playerId", pgaPlayer.getPlayerId());
 
-        return tournamentSummary.getTournamentCourses().stream().map(tournamentCourse -> {
+            return params;
+        }).toArray(MapSqlParameterSource[]::new);
+    }
+
+    public static MapSqlParameterSource[] getTournamentCourseParams(Tournament tournament) {
+
+        return tournament.getTournamentCourses().stream().map(tournamentCourse -> {
             try {
                 MapSqlParameterSource params = new MapSqlParameterSource();
-                params.addValue("tournamentId", tournamentSummary.getTournamentId());
+                params.addValue("tournamentId", tournament.getTournamentId());
                 params.addValue("courseId", tournamentCourse.getCourseId());
                 params.addValue("courseName", tournamentCourse.getCourseName());
                 params.addValue("yardage", tournamentCourse.getYardage());
@@ -60,17 +68,16 @@ public class ParamHelper {
 
                 return params;
             } catch (IOException e) {
-                logger.error("Course holes is null for {}, can't convert to byte array", tournamentSummary.getTournamentId());
+                logger.error("Course holes is null for {}, can't convert to byte array", tournament.getTournamentId());
                 throw new RuntimeException(e);
             }
         }).toArray(MapSqlParameterSource[]::new);
-
     }
 
-    public static MapSqlParameterSource[] getTournamentRoundParams(TournamentSummary tournamentSummary) {
-        return tournamentSummary.getTournamentRounds().stream().map(tournamentRound -> {
+    public static MapSqlParameterSource[] getTournamentRoundParams(Tournament tournament) {
+        return tournament.getTournamentRounds().stream().map(tournamentRound -> {
             MapSqlParameterSource params = new MapSqlParameterSource();
-            params.addValue("tournamentId", tournamentSummary.getTournamentId());
+            params.addValue("tournamentId", tournament.getTournamentId());
             params.addValue("roundId", tournamentRound.getRoundId());
             params.addValue("roundNumber", tournamentRound.getRoundNumber());
             params.addValue("status", tournamentRound.getRoundStatus().name());

@@ -2,6 +2,7 @@ package crocker.golf.bestball.core.controllers;
 
 import crocker.golf.bestball.core.service.user.EmailService;
 import crocker.golf.bestball.core.service.user.UserService;
+import crocker.golf.bestball.domain.events.RegisterNewUserEvent;
 import crocker.golf.bestball.domain.exceptions.user.PasswordNotMatchException;
 import crocker.golf.bestball.domain.exceptions.user.UserNotExistException;
 import crocker.golf.bestball.domain.user.RequestDto;
@@ -10,10 +11,15 @@ import crocker.golf.bestball.domain.user.UserCredentialsDto;
 import crocker.golf.bestball.domain.exceptions.user.RegistrationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 @RestController
@@ -25,17 +31,24 @@ public class UserController {
     private final UserService userService;
     private final EmailService emailService;
 
-    public UserController(UserService userService, EmailService emailService) {
+    private ApplicationEventPublisher eventPublisher;
+
+    @Value("${user.url.base}")
+    private String userUrl;
+
+    public UserController(UserService userService, EmailService emailService, ApplicationEventPublisher eventPublisher) {
         this.userService = userService;
         this.emailService = emailService;
+        this.eventPublisher = eventPublisher;
     }
 
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody UserCredentialsDto userCredentialsDto) {
         try {
             logger.info("Received request to register new user");
-            userService.register(userCredentialsDto);
+            UserCredentials userCredentials = userService.register(userCredentialsDto);
 
+            eventPublisher.publishEvent(new RegisterNewUserEvent(userCredentials, userUrl));
             return new ResponseEntity<>(null, null, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());

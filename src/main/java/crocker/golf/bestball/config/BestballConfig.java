@@ -16,6 +16,7 @@ import crocker.golf.bestball.core.service.game.*;
 import crocker.golf.bestball.core.service.pga.PgaInfoService;
 import crocker.golf.bestball.core.service.pga.PgaUpdateService;
 import crocker.golf.bestball.core.service.user.EmailService;
+import crocker.golf.bestball.core.service.user.RegistrationEventListener;
 import crocker.golf.bestball.core.service.user.UserRegistrationValidator;
 import crocker.golf.bestball.core.service.user.UserService;
 import org.slf4j.Logger;
@@ -53,6 +54,11 @@ public class BestballConfig {
     @Bean
     public UserRegistrationValidator userRegistrationValidator(UserRepository userRepository) {
         return new UserRegistrationValidator(userRepository);
+    }
+
+    @Bean
+    public RegistrationEventListener registrationEventListener() {
+        return new RegistrationEventListener();
     }
 
     @Bean

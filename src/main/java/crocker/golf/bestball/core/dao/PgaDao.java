@@ -14,13 +14,15 @@ public interface PgaDao {
 
     void updateSeasonSchedule(List<Tournament> tournaments);
 
-    List<Tournament> getTournamentsBySeason(int year);
+    List<Tournament> getTournamentSchedulesBySeason(int year);
 
-    Tournament getTournamentById(UUID tournamentId);
+    Tournament getTournamentScheduleById(UUID tournamentId);
 
-    List<Tournament> getAllTournaments();
+    List<Tournament> getAllTournamentSchedules();
 
-    void updateTournamentSummary(TournamentSummary tournamentSummary);
+    void updateTournamentDetails(Tournament tournamentDetails);
+
+    List<PgaPlayer> getTournamentField(UUID tournamentId);
 
     List<TournamentCourse> getTournamentCourses(UUID tournamentId);
 
