@@ -55,7 +55,7 @@ public class PgaDaoImpl implements PgaDao {
     private final String UPDATE_TOURNAMENT_FIELD = "INSERT INTO " + TOURNAMENT_FIELD +
             " (TOURNAMENT_ID, PLAYER_ID)" +
             " VALUES(:tournamentId, :playerId)" +
-            " ON CONFLICT (TOURNAMENT_ID, COURSE_ID) DO NOTHING;";
+            " ON CONFLICT (TOURNAMENT_ID, PLAYER_ID) DO NOTHING;";
 
     private final String REMOVE_FROM_TOURNAMENT_FIELD = "DELETE FROM " + TOURNAMENT_FIELD +
             " WHERE TOURNAMENT_ID=:tournamentId AND PLAYER_ID=:playerId;";
