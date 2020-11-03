@@ -106,12 +106,12 @@ DROP TABLE IF EXISTS EXAMPLE_TABLE;
 --     EMAIL                   VARCHAR(255)        NOT NULL,
 --     PRIMARY KEY (DRAFT_ID, USER_ID, PICK_NUMBER)
 -- );
-
-CREATE TABLE TOURNAMENT_FIELD (
-    TOURNAMENT_ID               UUID                NOT NULL,
-    PLAYER_ID                   UUID                NOT NULL,
-    PRIMARY KEY (TOURNAMENT_ID, PLAYER_ID)
-);
+--
+-- CREATE TABLE TOURNAMENT_FIELD (
+--     TOURNAMENT_ID               UUID                NOT NULL,
+--     PLAYER_ID                   UUID                NOT NULL,
+--     PRIMARY KEY (TOURNAMENT_ID, PLAYER_ID)
+-- );
 --
 -- CREATE TABLE TOURNAMENT_COURSES (
 --     TOURNAMENT_ID               UUID                NOT NULL,
