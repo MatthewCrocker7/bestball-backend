@@ -71,23 +71,23 @@ public class DraftExecutor {
         List<Team> teams = gameRepository.getTeamsByDraftId(draftId);
         int numPlayers = teams.size();
 
-        List<Team> matthewTeam = teams.stream().filter(team -> team.getUserInfo().getEmail().toLowerCase().equals("matthewcroc@gmail.com"))
+        List<Team> matthewTeam = teams.stream().filter(team -> team.getUserId().toString().equals("cf8217b0-d23c-4a0d-ad96-90114b0e3ece"))
                 .collect(Collectors.toList());
 
         if(!matthewTeam.isEmpty()) {
-            List<Team> dentynTeam = teams.stream().filter(team -> team.getUserInfo().getEmail().toLowerCase().equals("dentynmchugh@yahoo.com"))
+            List<Team> dentynTeam = teams.stream().filter(team -> team.getUserId().toString().equals("e7496ab2-d3b3-4601-8f7f-e66ec0a3aacd"))
                     .collect(Collectors.toList());
-            List<Team> jonTeam = teams.stream().filter(team -> team.getUserInfo().getEmail().toLowerCase().equals("jonathandcramer@gmail.com"))
+            List<Team> jonTeam = teams.stream().filter(team -> team.getUserId().toString().equals("082c3dc5-8945-4de1-940b-65e488645187"))
                     .collect(Collectors.toList());
-            List<Team> drewTeam = teams.stream().filter(team -> team.getUserInfo().getEmail().toLowerCase().equals("drewlucas2012@gmail.com"))
+            List<Team> drewTeam = teams.stream().filter(team -> team.getUserId().toString().equals("f829ac9a-fb9a-4c00-ba3c-73208960b25e"))
                     .collect(Collectors.toList());
-            List<Team> mattTeam = teams.stream().filter(team -> team.getUserInfo().getEmail().toLowerCase().equals("matthewschneider13@gmail.com"))
+            List<Team> mattTeam = teams.stream().filter(team -> team.getUserId().toString().equals("870ccfee-ce05-42ad-96d9-9dfcf538b26a"))
                     .collect(Collectors.toList());
-            List<Team> zackTeam = teams.stream().filter(team -> team.getUserInfo().getEmail().toLowerCase().equals("maxwell.zack@gmail.com"))
+            List<Team> zackTeam = teams.stream().filter(team -> team.getUserId().toString().equals("87a0b3d2-8401-4c96-9f9c-43da9f51292c"))
                     .collect(Collectors.toList());
-            List<Team> connorTeam = teams.stream().filter(team -> team.getUserInfo().getEmail().toLowerCase().equals("connorrogers92@hotmail.com"))
+            List<Team> connorTeam = teams.stream().filter(team -> team.getUserId().toString().equals("cfd9418d-7b3d-459f-9716-ae950e06b059"))
                     .collect(Collectors.toList());
-            List<Team> shayneTeam = teams.stream().filter(team -> team.getUserInfo().getEmail().toLowerCase().equals("shaynedterry@gmail.com"))
+            List<Team> shayneTeam = teams.stream().filter(team -> team.getUserId().toString().equals("a797385d-cf3c-42be-9316-9ec1d9a6d657"))
                     .collect(Collectors.toList());
 
 
