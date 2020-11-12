@@ -58,19 +58,24 @@ public class GameManagerService {
             List<Team> teams = gameRepository.getTeamsByTournamentId(tournament.getTournamentId());
 
             teams.forEach(team -> {
-                enrichTeamRounds(team, playerRounds);
+                //TODO: This if statement is a hacky way to check if the draft is complete.
+                if(team.getGolfersAsList().size() == 4) {
+                    enrichTeamRounds(team, playerRounds);
 
-                if (batchTeams.containsKey(team.getGameId())) {
-                    batchTeams.get(team.getGameId()).add(team);
-                } else {
-                    batchTeams.put(team.getGameId(), new ArrayList<>(Arrays.asList(team)));
+                    if (batchTeams.containsKey(team.getGameId())) {
+                        batchTeams.get(team.getGameId()).add(team);
+                    } else {
+                        batchTeams.put(team.getGameId(), new ArrayList<>(Arrays.asList(team)));
+                    }
+
+                    if (batchTeamRounds.containsKey(team.getGameId())) {
+                        batchTeamRounds.get(team.getGameId()).addAll(team.getTeamRounds());
+                    } else {
+                        batchTeamRounds.put(team.getGameId(), team.getTeamRounds());
+                    }
                 }
 
-                if (batchTeamRounds.containsKey(team.getGameId())) {
-                    batchTeamRounds.get(team.getGameId()).addAll(team.getTeamRounds());
-                } else {
-                    batchTeamRounds.put(team.getGameId(), team.getTeamRounds());
-                }
+
             });
             logger.info("Latest team round scores calculated for tournament {}", tournament.getName());
 
@@ -102,13 +107,11 @@ public class GameManagerService {
     }
 
     private TeamRound getTeamRound(Team team, List<PlayerRound> playerRounds, int roundNumber) {
-        logger.info("Getting team round for team {}", team.getTeamId());
+        logger.info("Calculating team scores of round {} for team {}", roundNumber, team.getTeamId());
 
         List<PlayerRound> rounds = playerRounds.stream()
                 .filter(playerRound -> playerRound.getRoundNumber() == roundNumber && playerIsOnTeam(team.getGolfersAsList(), playerRound.getPlayerId()))
                 .collect(Collectors.toList());
-
-        logger.info("{} different player rounds found for team {}", rounds.size(), team.getTeamId());
 
         TeamRound teamRound = TeamRound.builder()
                 .teamId(team.getTeamId())
