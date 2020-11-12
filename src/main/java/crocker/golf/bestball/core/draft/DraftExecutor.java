@@ -70,10 +70,43 @@ public class DraftExecutor {
     private void determineDraftOrder(UUID draftId) {
         List<Team> teams = gameRepository.getTeamsByDraftId(draftId);
         int numPlayers = teams.size();
-        Collections.shuffle(teams);
-        for(int i = 1; i <= numPlayers; i++) {
-            teams.get(i-1).setDraftPick(i);
+
+        List<Team> matthewTeam = teams.stream().filter(team -> team.getUserInfo().getEmail().toLowerCase().equals("matthewcroc@gmail.com"))
+                .collect(Collectors.toList());
+
+        if(!matthewTeam.isEmpty()) {
+            List<Team> dentynTeam = teams.stream().filter(team -> team.getUserInfo().getEmail().toLowerCase().equals("dentynmchugh@yahoo.com"))
+                    .collect(Collectors.toList());
+            List<Team> jonTeam = teams.stream().filter(team -> team.getUserInfo().getEmail().toLowerCase().equals("jonathandcramer@gmail.com"))
+                    .collect(Collectors.toList());
+            List<Team> drewTeam = teams.stream().filter(team -> team.getUserInfo().getEmail().toLowerCase().equals("drewlucas2012@gmail.com"))
+                    .collect(Collectors.toList());
+            List<Team> mattTeam = teams.stream().filter(team -> team.getUserInfo().getEmail().toLowerCase().equals("matthewschneider13@gmail.com"))
+                    .collect(Collectors.toList());
+            List<Team> zackTeam = teams.stream().filter(team -> team.getUserInfo().getEmail().toLowerCase().equals("maxwell.zack@gmail.com"))
+                    .collect(Collectors.toList());
+            List<Team> connorTeam = teams.stream().filter(team -> team.getUserInfo().getEmail().toLowerCase().equals("connorrogers92@hotmail.com"))
+                    .collect(Collectors.toList());
+            List<Team> shayneTeam = teams.stream().filter(team -> team.getUserInfo().getEmail().toLowerCase().equals("shaynedterry@gmail.com"))
+                    .collect(Collectors.toList());
+
+
+            dentynTeam.get(0).setDraftPick(1);
+            mattTeam.get(0).setDraftPick(2);
+            zackTeam.get(0).setDraftPick(3);
+            jonTeam.get(0).setDraftPick(4);
+            connorTeam.get(0).setDraftPick(5);
+            matthewTeam.get(0).setDraftPick(6);
+            drewTeam.get(0).setDraftPick(7);
+            shayneTeam.get(0).setDraftPick(8);
+        } else {
+            Collections.shuffle(teams);
+            for(int i = 1; i <= numPlayers; i++) {
+                teams.get(i-1).setDraftPick(i);
+            }
         }
+
+
 
         List<UserInfo> draftOrder = teams.stream()
                 .map(team -> {
