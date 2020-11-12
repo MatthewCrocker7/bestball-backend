@@ -51,7 +51,7 @@ public class PgaUpdateService {
         List<Tournament> tournaments = allTournaments.stream()
                 .filter(tournament -> tournament.getTournamentState() == TournamentState.IN_PROGRESS)
                 .sorted(Comparator.comparing(Tournament::getStartDate))
-                .collect(Collectors.toList()).subList(0, 2);
+                .collect(Collectors.toList());
 
         tournaments.forEach(tournament -> {
             try {
