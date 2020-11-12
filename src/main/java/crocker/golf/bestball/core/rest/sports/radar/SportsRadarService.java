@@ -55,7 +55,7 @@ public class SportsRadarService implements SportsApiService {
     @Retryable(
         value = { HttpClientErrorException.class },
         maxAttempts = 100,
-        backoff = @Backoff(2000)
+        backoff = @Backoff(3000)
     )
     @Async
     public Future<List<PgaPlayer>> getWorldRankings() throws ExternalAPIException {
@@ -82,7 +82,7 @@ public class SportsRadarService implements SportsApiService {
     @Retryable(
             value = { HttpClientErrorException.class },
             maxAttempts = 100,
-            backoff = @Backoff(2000)
+            backoff = @Backoff(3000)
     )
     @Async
     public Future<List<Tournament>> getSeasonSchedule() throws ExternalAPIException {
@@ -111,7 +111,7 @@ public class SportsRadarService implements SportsApiService {
     @Retryable(
             value = { HttpClientErrorException.class },
             maxAttempts = 100,
-            backoff = @Backoff(2000)
+            backoff = @Backoff(3000)
     )
     @Async
     public Future<Tournament> getLatestTournamentDetails(Tournament tournament) throws ExternalAPIException {
@@ -139,7 +139,7 @@ public class SportsRadarService implements SportsApiService {
     @Retryable(
             value = { HttpClientErrorException.class },
             maxAttempts = 100,
-            backoff = @Backoff(2000)
+            backoff = @Backoff(3000)
     )
     @Async
     public Future<TournamentRound> updateTournamentRound(Tournament tournament, TournamentRound round) throws ExternalAPIException {
