@@ -16,14 +16,14 @@ public class PgaUpdateScheduler {
         this.pgaUpdateService = pgaUpdateService;
     }
 
-    @Scheduled(fixedDelayString = "${golf.pga.update.rate.rankings}", initialDelay = 2000000000)
+    @Scheduled(fixedDelayString = "${golf.pga.update.rate.rankings}", initialDelay = 10000)
     @Async
     public void updateWorldRankings() throws Exception {
         logger.info("Updating world golf rankings on thread {}", Thread.currentThread().getName());
         pgaUpdateService.updateWorldRankings();
     }
 
-    @Scheduled(fixedDelayString = "${golf.pga.update.rate.schedule}", initialDelay = 2000000000)
+    @Scheduled(fixedDelayString = "${golf.pga.update.rate.schedule}", initialDelay = 20000)
     @Async
     public void updateSeasonSchedule() throws Exception {
         logger.info("Updating season schedule on thread {}", Thread.currentThread().getName());
