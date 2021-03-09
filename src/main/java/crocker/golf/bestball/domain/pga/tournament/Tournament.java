@@ -32,4 +32,8 @@ public class Tournament {
     private List<PgaPlayer> tournamentField;
     private List<TournamentCourse> tournamentCourses;
     private List<TournamentRound> tournamentRounds;
+
+    public String toString() {
+        return name + " - " + tournamentState;
+    }
 }
