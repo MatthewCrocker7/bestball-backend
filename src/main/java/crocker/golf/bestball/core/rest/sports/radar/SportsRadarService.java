@@ -172,7 +172,7 @@ public class SportsRadarService implements SportsApiService {
     private String buildScheduleUrl() {
         //TODO: Need to make call for both 2020 and 2021 as the season ends in Sept
         int year = TimeHelper.getCurrentSeason();
-        return BASE_URL + MessageFormat.format(SCHEDULE_URL, Integer.toString(year + 1)) + addKey();
+        return BASE_URL + MessageFormat.format(SCHEDULE_URL, Integer.toString(year)) + addKey();
     }
 
     private String buildTournamentSummaryUrl(Tournament tournament) {

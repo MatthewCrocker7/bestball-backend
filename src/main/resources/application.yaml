@@ -24,9 +24,9 @@ golf:
     update:
       rate:
         rankings: ${pga.update.rate.rankings:30000000}
-        schedule: ${pga.update.rate.schedule:6000000}
+        schedule: ${pga.update.rate.schedule:3600000}
         tournament: ${pga.update.rate.tournament:3600000}
-        round: ${pga.update.rate.round:60000}
+        round: ${pga.update.rate.round:600000}
   api:
     key:
       sports:
