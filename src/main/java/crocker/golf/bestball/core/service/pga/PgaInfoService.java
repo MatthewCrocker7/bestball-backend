@@ -23,7 +23,7 @@ public class PgaInfoService {
 
     public List<Tournament> getUpcomingTournaments() {
         //TODO: Need to make call for both 2020 and 2021 as the season ends in Sept
-        List<Tournament> tournaments = pgaRepository.getTournamentsBySeason(TimeHelper.getCurrentSeason() + 1);
+        List<Tournament> tournaments = pgaRepository.getTournamentsBySeason(TimeHelper.getCurrentSeason());
 
         return tournaments.stream()
                 .filter(tournament -> tournament.getTournamentState() == TournamentState.NOT_STARTED)

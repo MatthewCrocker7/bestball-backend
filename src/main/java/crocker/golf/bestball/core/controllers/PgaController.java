@@ -29,8 +29,6 @@ public class PgaController {
     public ResponseEntity getUpcomingTournaments() {
         List<Tournament> tournaments = pgaInfoService.getUpcomingTournaments();
 
-        tournaments.forEach(tournament -> logger.info(tournament.toString()));
-
         return new ResponseEntity<>(tournaments, null, HttpStatus.OK);
     }
 }
