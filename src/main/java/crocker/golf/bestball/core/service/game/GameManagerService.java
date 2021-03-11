@@ -108,6 +108,8 @@ public class GameManagerService {
 
     private TeamRound getTeamRound(Team team, List<PlayerRound> playerRounds, int roundNumber) {
 
+        logger.info("Trying to update team round for team {} on game {}", team.getTeamId(), team.getGameId());
+
         List<PlayerRound> rounds = playerRounds.stream()
                 .filter(playerRound -> playerRound.getRoundNumber() == roundNumber && playerIsOnTeam(team.getGolfersAsList(), playerRound.getPlayerId()))
                 .collect(Collectors.toList());
