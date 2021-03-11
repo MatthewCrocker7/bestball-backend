@@ -57,6 +57,9 @@ public class GameManagerService {
             List<PlayerRound> playerRounds = pgaRepository.getPlayerRoundsByTournamentId(tournament.getTournamentId());
             List<Team> teams = gameRepository.getTeamsByTournamentId(tournament.getTournamentId());
 
+            teams = teams.stream().filter(team -> team.getGameId().equals(UUID.fromString("11ae5678-0db0-4c63-a533-c4f2abd6bf2c")))
+                    .collect(Collectors.toList());
+
             teams.forEach(team -> {
                 //TODO: This if statement is a hacky way to check if the draft is complete.
                 if(team.getGolfersAsList().size() == 4) {
