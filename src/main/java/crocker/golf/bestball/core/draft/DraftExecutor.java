@@ -92,15 +92,17 @@ public class DraftExecutor {
             List<Team> donnyTeam = teams.stream().filter(team -> team.getUserId().toString().equals("a838467f-b498-44e4-8a54-8c140408f31c"))
                     .collect(Collectors.toList());
 
-            mattTeam.get(0).setDraftPick(1);
-            donnyTeam.get(0).setDraftPick(2);
-            matthewTeam.get(0).setDraftPick(3);
-            jonTeam.get(0).setDraftPick(4);
-            dentynTeam.get(0).setDraftPick(5);
-            zackTeam.get(0).setDraftPick(6);
-            shayneTeam.get(0).setDraftPick(7);
-            drewTeam.get(0).setDraftPick(8);
-            connorTeam.get(0).setDraftPick(9);
+            dentynTeam.get(0).setDraftPick(1);
+            drewTeam.get(0).setDraftPick(2);
+            jonTeam.get(0).setDraftPick(3);
+            connorTeam.get(0).setDraftPick(4);
+            donnyTeam.get(0).setDraftPick(5);
+            matthewTeam.get(0).setDraftPick(6);
+            mattTeam.get(0).setDraftPick(7);
+            zackTeam.get(0).setDraftPick(8);
+            shayneTeam.get(0).setDraftPick(9);
+
+
         } else {
             Collections.shuffle(teams);
             for(int i = 1; i <= numPlayers; i++) {
