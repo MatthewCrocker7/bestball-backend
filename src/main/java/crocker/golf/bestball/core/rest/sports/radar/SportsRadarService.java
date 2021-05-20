@@ -144,6 +144,7 @@ public class SportsRadarService implements SportsApiService {
     @Async
     public Future<TournamentRound> updateTournamentRound(Tournament tournament, TournamentRound round) throws ExternalAPIException {
         String url = buildTournamentRoundUrl(tournament, round);
+        logger.info("API endpoint: {}", url);
         logger.info("Calling api to update tournament round {}", tournament.getName());
 
         try {
