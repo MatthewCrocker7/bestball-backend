@@ -58,7 +58,7 @@ public class GameManagerService {
             List<Team> teams = gameRepository.getTeamsByTournamentId(tournament.getTournamentId());
 
             //TODO: Implement swagger ui to delete bad games
-            teams = teams.stream().filter(team -> team.getGameId().equals(UUID.fromString("495d51a2-7fed-44ed-ab53-77da7d55b27a")))
+            teams = teams.stream().filter(team -> team.getGameId().equals(UUID.fromString("d4602606-3551-4e85-8b90-0d2d93b5f1f4")))
                     .collect(Collectors.toList());
 
             teams.forEach(team -> {
