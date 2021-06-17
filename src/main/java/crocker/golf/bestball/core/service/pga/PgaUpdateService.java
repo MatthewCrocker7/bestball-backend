@@ -50,7 +50,7 @@ public class PgaUpdateService {
         //TODO: Ideally we'd update the details of all tournaments that are not complete to accomdate any draft time. For now we only update the current upcoming tourney.
         List<Tournament> tournaments = allTournaments.stream()
                 // .filter(tournament -> tournament.getTournamentState() == TournamentState.IN_PROGRESS)
-                .filter(tournament -> tournament.getTournamentId().toString().equals("c64bdf30-a5e5-4342-a466-22ce64761921"))
+                .filter(tournament -> tournament.getTournamentId().toString().equals("0a4373fe-a2b9-4a9d-ad84-d342dea6b61a"))
                 .sorted(Comparator.comparing(Tournament::getStartDate))
                 .collect(Collectors.toList());
 
