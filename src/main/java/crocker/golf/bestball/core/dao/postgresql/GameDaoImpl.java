@@ -14,7 +14,7 @@ public class GameDaoImpl implements GameDao {
 
     private static final Logger logger = LoggerFactory.getLogger(GameDaoImpl.class);
 
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
     private final String GAMES = "GAMES";
     private final String SEASON_SCHEDULE = "SEASON_SCHEDULE";
@@ -23,6 +23,9 @@ public class GameDaoImpl implements GameDao {
             " (GAME_ID, GAME_STATE, GAME_VERSION, GAME_TYPE, DRAFT_ID," +
             " TOURNAMENT_ID, NUM_PLAYERS, BUY_IN, MONEY_POT)" +
             " VALUES(:gameId, :gameState, :gameVersion, :gameType, :draftId, :tournamentId, :numPlayers, :buyIn, :moneyPot);";
+
+    private final String DELETE_GAME_BY_GAME_ID = "DELETE FROM " + GAMES +
+            " WHERE GAME_ID=:gameId;";
 
     private final String GET_LATEST_GAME_BY_GAME_ID = "SELECT * FROM " + GAMES +
             " INNER JOIN " + SEASON_SCHEDULE +
@@ -38,6 +41,7 @@ public class GameDaoImpl implements GameDao {
             " (SELECT GAME_ID, MAX(GAME_VERSION) FROM " + GAMES +
             " WHERE DRAFT_ID=:draftId GROUP BY GAME_ID);";
 
+
     public GameDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -45,6 +49,12 @@ public class GameDaoImpl implements GameDao {
     public void saveNewGame(Game game) {
         MapSqlParameterSource params = getNewGameParams(game);
         jdbcTemplate.update(SAVE_NEW_GAME, params);
+    }
+
+    public void deleteGame(UUID gameId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("gameId", gameId);
+        jdbcTemplate.update(DELETE_GAME_BY_GAME_ID, params);
     }
 
     public Game getLatestGameByGameId(UUID gameId) {

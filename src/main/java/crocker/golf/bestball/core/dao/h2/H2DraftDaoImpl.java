@@ -148,6 +148,10 @@ public class H2DraftDaoImpl implements DraftDao {
         return jdbcTemplate.queryForObject(GET_PLAYER_BY_ID, params, new PgaPlayerMapper());
     }
 
+    public void deleteDraft(UUID draftId) {
+
+    }
+
     private MapSqlParameterSource getDraftParams(Draft draft) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("draftId", draft.getDraftId());

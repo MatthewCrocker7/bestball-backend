@@ -32,4 +32,6 @@ public interface DraftDao {
     List<UserInfo> getDraftOrderByDraftId(UUID draftId);
 
     PgaPlayer getPgaPlayerById(UUID draftId, UUID playerId);
+
+    void deleteDraft(UUID draftId);
 }

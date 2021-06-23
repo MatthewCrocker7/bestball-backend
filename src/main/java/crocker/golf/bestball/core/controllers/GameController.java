@@ -85,4 +85,23 @@ public class GameController {
 
         return new ResponseEntity<>(game, null, HttpStatus.OK);
     }
+
+    @PostMapping("/deleteGame")
+    public ResponseEntity deleteGame(@RequestBody RequestDto requestDto) {
+        try {
+            gameCreatorService.deleteGame(requestDto);
+
+            return new ResponseEntity(null, null, HttpStatus.OK);
+        } catch (TeamNotAuthorizedException e) {
+            return new ResponseEntity<>(e, null, HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    //todo: Add /deleteGame end point as admin of game
+    //todo: add feature to draft all players as admin
+    //todo: fix draft connectivity timeout issue
+    //todo: add unit tests
+    //todo: add draft restriction for player ranges
+    //todo: update game status to complete on tournament end
+
 }

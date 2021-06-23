@@ -15,8 +15,8 @@ import java.util.UUID;
 
 public class GameRepository {
 
-    private GameDao gameDao;
-    private TeamDao teamDao;
+    private final GameDao gameDao;
+    private final TeamDao teamDao;
 
     public GameRepository(GameDao gameDao, TeamDao teamDao) {
         this.gameDao = gameDao;
@@ -90,5 +90,10 @@ public class GameRepository {
 
     public List<TeamRound> getTeamRoundsByTeamId(UUID teamId) {
         return teamDao.getTeamRoundsByTeamId(teamId);
+    }
+
+    public void deleteGame(UUID gameId) {
+        gameDao.deleteGame(gameId);
+        teamDao.deleteTeamsByGameId(gameId);
     }
 }

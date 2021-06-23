@@ -75,6 +75,10 @@ public class H2TeamDaoImpl implements TeamDao {
         jdbcTemplate.batchUpdate(UPDATE_TEAM, params);
     }
 
+    public void deleteTeamsByGameId(UUID gameId) {
+
+    }
+
     public List<Team> getTeamsByUserId(UUID userId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userId", userId);

@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class DraftRepository {
 
-    private DraftDao draftDao;
+    private final DraftDao draftDao;
 
     public DraftRepository(DraftDao draftDao) {
         this.draftDao = draftDao;
@@ -69,5 +69,9 @@ public class DraftRepository {
 
     public PgaPlayer getPgaPlayerById(UUID draftId, UUID playerId) {
         return draftDao.getPgaPlayerById(draftId, playerId);
+    }
+
+    public void deleteDraft(UUID draftId) {
+        draftDao.deleteDraft(draftId);
     }
 }

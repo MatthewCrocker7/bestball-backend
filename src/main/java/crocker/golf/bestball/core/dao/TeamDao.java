@@ -14,6 +14,8 @@ public interface TeamDao {
 
     void updateTeams(List<Team> teams);
 
+    void deleteTeamsByGameId(UUID gameId);
+
     List<Team> getTeamsByUserId(UUID userId);
 
     List<Team> getTeamsByDraftId(UUID draftId);

@@ -47,6 +47,10 @@ public class H2GameDaoImpl implements GameDao {
         jdbcTemplate.update(SAVE_NEW_GAME, params);
     }
 
+    public void deleteGame(UUID gameId) {
+
+    }
+
     public Game getLatestGameByGameId(UUID gameId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("gameId", gameId);
