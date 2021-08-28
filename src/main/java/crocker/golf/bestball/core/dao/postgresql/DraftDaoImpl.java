@@ -82,6 +82,12 @@ public class DraftDaoImpl implements DraftDao {
     private final String GET_PLAYER_BY_ID  = "SELECT * FROM " + DRAFT_PGA_PLAYERS +
             " WHERE DRAFT_ID=:draftId AND PLAYER_ID=:playerId;";
 
+    private final String DELETE_DRAFT = "DELETE FROM " + DRAFTS
+            + " WHERE DRAFT_ID=:draftId; DELETE FROM " + DRAFT_SCHEDULES
+            + " WHERE DRAFT_ID=:draftId; DELETE FROM " + DRAFT_PGA_PLAYERS
+            + " WHERE DRAFT_ID=:draftId; DELETE FROM " + DRAFT_ORDER
+            + " WHERE DRAFT_ID=:draftId;";
+
     public DraftDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -186,6 +192,12 @@ public class DraftDaoImpl implements DraftDao {
         params.addValue("draftId", draftId);
         params.addValue("playerId", playerId);
         return jdbcTemplate.queryForObject(GET_PLAYER_BY_ID, params, new PgaPlayerMapper());
+    }
+
+    public void deleteDraft(UUID draftId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("draftId", draftId);
+        jdbcTemplate.update(DELETE_DRAFT, params);
     }
 
     private MapSqlParameterSource getDraftParams(Draft draft) {

@@ -15,8 +15,8 @@ import java.util.UUID;
 
 public class GameRepository {
 
-    private GameDao gameDao;
-    private TeamDao teamDao;
+    private final GameDao gameDao;
+    private final TeamDao teamDao;
 
     public GameRepository(GameDao gameDao, TeamDao teamDao) {
         this.gameDao = gameDao;

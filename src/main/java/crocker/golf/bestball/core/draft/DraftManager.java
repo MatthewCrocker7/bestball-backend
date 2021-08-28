@@ -7,12 +7,14 @@ import crocker.golf.bestball.domain.game.draft.DraftSchedule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.UUID;
+
 public class DraftManager {
 
     private static final Logger logger = LoggerFactory.getLogger(DraftScheduler.class);
 
-    private DraftScheduler draftScheduler;
-    private DraftRepository draftRepository;
+    private final DraftScheduler draftScheduler;
+    private final DraftRepository draftRepository;
 
     public DraftManager(DraftScheduler draftScheduler, DraftRepository draftRepository) {
         this.draftScheduler = draftScheduler;
@@ -20,13 +22,17 @@ public class DraftManager {
     }
 
     public void scheduleDraft(Draft draft) {
-        // persist draft DRAFT and DRAFT_SCHEDULES table
+        //todo: persist draft DRAFT and DRAFT_SCHEDULES table
         // use in try catch, on fail replay
         draftRepository.saveDraft(draft);
 
         DraftSchedule draftSchedule = getDraftSchedule(draft);
         draftRepository.saveDraftSchedule(draftSchedule);
         draftScheduler.schedule(draftSchedule);
+    }
+
+    public void deleteDraft(UUID draftId) {
+        draftRepository.deleteDraft(draftId);
     }
 
     private DraftSchedule getDraftSchedule(Draft draft) {

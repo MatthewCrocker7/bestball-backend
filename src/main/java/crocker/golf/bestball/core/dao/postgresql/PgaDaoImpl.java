@@ -18,7 +18,7 @@ public class PgaDaoImpl implements PgaDao {
 
     private static final Logger logger = LoggerFactory.getLogger(PgaDaoImpl.class);
 
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
     private final String WORLD_RANKINGS = "WORLD_RANKINGS";
     private final String SEASON_SCHEDULE = "SEASON_SCHEDULE";

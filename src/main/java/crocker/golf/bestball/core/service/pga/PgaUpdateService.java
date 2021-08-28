@@ -50,7 +50,7 @@ public class PgaUpdateService {
         //TODO: Ideally we'd update the details of all tournaments that are not complete to accomdate any draft time. For now we only update the current upcoming tourney.
         List<Tournament> tournaments = allTournaments.stream()
                 // .filter(tournament -> tournament.getTournamentState() == TournamentState.IN_PROGRESS)
-                .filter(tournament -> tournament.getTournamentId().toString().equals("0a4373fe-a2b9-4a9d-ad84-d342dea6b61a"))
+                .filter(tournament -> tournament.getTournamentId().toString().equals("bdbd8464-ba49-4f12-a5eb-2197e827167c"))
                 .sorted(Comparator.comparing(Tournament::getStartDate))
                 .collect(Collectors.toList());
 
@@ -76,7 +76,7 @@ public class PgaUpdateService {
 
             tournament.getTournamentRounds().forEach(tournamentRound -> {
                 try {
-                    if (tournamentRound.getRoundStatus() == Status.IN_PROGRESS) {
+                    if (tournamentRound.getRoundStatus() == Status.IN_PROGRESS && tournamentRound.getTournamentId().toString().equals("bdbd8464-ba49-4f12-a5eb-2197e827167c")) {
                         logger.info("Updating round {} for tournament {}", tournamentRound.getRoundNumber(), tournament.getName());
                         Future<TournamentRound> updatedRoundFuture = sportsApiService.updateTournamentRound(tournament, tournamentRound);
                         TournamentRound updatedRound = updatedRoundFuture.get();

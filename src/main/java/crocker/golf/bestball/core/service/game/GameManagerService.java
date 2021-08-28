@@ -28,11 +28,11 @@ public class GameManagerService {
 
     private static final Logger logger = LoggerFactory.getLogger(GameManagerService.class);
 
-    private GameRepository gameRepository;
+    private final GameRepository gameRepository;
     private DraftRepository draftRepository;
-    private UserRepository userRepository;
-    private PgaRepository pgaRepository;
-    private UserService userService;
+    private final UserRepository userRepository;
+    private final PgaRepository pgaRepository;
+    private final UserService userService;
 
     public GameManagerService(GameRepository gameRepository, DraftRepository draftRepository, UserRepository userRepository, PgaRepository pgaRepository, UserService userService) {
         this.gameRepository = gameRepository;

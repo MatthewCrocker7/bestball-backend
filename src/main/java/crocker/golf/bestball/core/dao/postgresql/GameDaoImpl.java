@@ -14,7 +14,7 @@ public class GameDaoImpl implements GameDao {
 
     private static final Logger logger = LoggerFactory.getLogger(GameDaoImpl.class);
 
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
     private final String GAMES = "GAMES";
     private final String SEASON_SCHEDULE = "SEASON_SCHEDULE";

@@ -88,20 +88,21 @@ public class GameController {
 
     @PostMapping("/deleteGame")
     public ResponseEntity deleteGame(@RequestBody RequestDto requestDto) {
-        logger.info("Deleting game with id {}", requestDto.getGameId());
+        try {
+            logger.info("Deleting game with id {}", requestDto.getGameId());
+            gameManagerService.deleteGame(requestDto);
 
-        gameManagerService.deleteGame(requestDto);
-
-        return new ResponseEntity<>(null, null, HttpStatus.OK);
+            return new ResponseEntity(null, null, HttpStatus.OK);
+        } catch (TeamNotAuthorizedException e) {
+            return new ResponseEntity<>(e, null, HttpStatus.UNAUTHORIZED);
+        }
     }
 
-    /*
-    {
-        email: "matthewcroc@gmail.com",
-        draftId: "123-456",
-        gameId: "123-456-789",
-        inviteEmail: "test@gmail.com"
-    }
+    //todo: Add /deleteGame end point as admin of game
+    //todo: add feature to draft all players as admin
+    //todo: fix draft connectivity timeout issue
+    //todo: add unit tests
+    //todo: add draft restriction for player ranges
+    //todo: update game status to complete on tournament end
 
-     */
 }

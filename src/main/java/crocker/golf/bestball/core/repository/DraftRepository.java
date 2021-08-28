@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class DraftRepository {
 
-    private DraftDao draftDao;
+    private final DraftDao draftDao;
 
     public DraftRepository(DraftDao draftDao) {
         this.draftDao = draftDao;

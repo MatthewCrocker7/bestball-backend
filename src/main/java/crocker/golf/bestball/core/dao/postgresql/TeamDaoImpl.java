@@ -15,8 +15,8 @@ import java.util.UUID;
 
 public class TeamDaoImpl implements TeamDao {
 
-    private NamedParameterJdbcTemplate jdbcTemplate;
-    private TeamRowMapper teamRowMapper;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final TeamRowMapper teamRowMapper;
 
     private final String TEAMS = "TEAMS";
     private final String TEAM_ROUNDS = "TEAM_ROUNDS";
