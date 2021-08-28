@@ -95,11 +95,10 @@ public class GameRepository {
     @Caching(evict = {
             @CacheEvict(value = "teamRoundsByGameId", key = "#team.getGameId()"),
             @CacheEvict(value = "gameByGameId", key = "#team.getGameId()"),
-            @CacheEvict(value = "gameByDraftId", key = "#team.tournamentId()"),
-            @CacheEvict(value = "teamsByUserId", key = "#team.tournamentId()"),
-            @CacheEvict(value = "teamsByDraftId", key = "#team.tournamentId()"),
-            @CacheEvict(value = "teamsByTournamentId", key = "#team.tournamentId()"),
-            @CacheEvict(value = "teamsByTournamentId", key = "#team.tournamentId()")
+            @CacheEvict(value = "gameByDraftId", key = "#team.getDraftId()"),
+            @CacheEvict(value = "teamsByUserId", key = "#team.getUserId()"),
+            @CacheEvict(value = "teamsByDraftId", key = "#team.getDraftId()"),
+            @CacheEvict(value = "teamsByTournamentId", key = "#team.getTournamentId()")
     })
     public void deleteGame(Team team) {
 
