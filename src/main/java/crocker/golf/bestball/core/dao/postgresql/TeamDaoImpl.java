@@ -36,6 +36,12 @@ public class TeamDaoImpl implements TeamDao {
             " PLAYER_TWO_ID=:playerTwoId, PLAYER_THREE_ID=:playerThreeId, PLAYER_FOUR_ID=:playerFourId," +
             " TO_PAR=:toPar, TOTAL_STROKES=:totalStrokes;";
 
+    private final String DELETE_TEAMS_BY_GAME_ID = "DELETE FROM " + TEAMS +
+            " WHERE GAME_ID=:gameId;";
+
+    private final String DELETE_TEAM_ROUNDS_BY_GAME_ID = "DELETE FROM " + TEAMS +
+            " WHERE GAME_ID=:gameId;";
+
     private final String GET_TEAMS_BY_USER_ID = "SELECT * FROM " + TEAMS +
             " WHERE USER_ID=:userId;";
 
@@ -84,6 +90,20 @@ public class TeamDaoImpl implements TeamDao {
     public void updateTeams(List<Team> teams) {
         MapSqlParameterSource[] params = ParamHelper.getUpdateTeamsParams(teams);
         jdbcTemplate.batchUpdate(UPDATE_TEAM, params);
+    }
+
+    public void deleteTeamsByGameId(UUID gameId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("gameId", gameId);
+
+        jdbcTemplate.update(DELETE_TEAMS_BY_GAME_ID, params);
+    }
+
+    public void deleteTeamRoundsByGameId(UUID gameId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("gameId", gameId);
+
+        jdbcTemplate.update(DELETE_TEAM_ROUNDS_BY_GAME_ID, params);
     }
 
     public List<Team> getTeamsByUserId(UUID userId) {
@@ -142,5 +162,6 @@ public class TeamDaoImpl implements TeamDao {
 
         return jdbcTemplate.query(GET_TEAM_ROUNDS_BY_TEAM_ID, params, new TeamRoundMapper());
     }
+
 
 }

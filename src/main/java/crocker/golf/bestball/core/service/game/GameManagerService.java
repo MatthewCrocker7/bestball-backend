@@ -1,11 +1,14 @@
 package crocker.golf.bestball.core.service.game;
 
+import crocker.golf.bestball.core.repository.DraftRepository;
 import crocker.golf.bestball.core.repository.GameRepository;
 import crocker.golf.bestball.core.repository.PgaRepository;
 import crocker.golf.bestball.core.repository.UserRepository;
 import crocker.golf.bestball.core.service.user.UserService;
 import crocker.golf.bestball.domain.enums.game.GameState;
 import crocker.golf.bestball.domain.enums.game.ScoreType;
+import crocker.golf.bestball.domain.enums.game.TeamRole;
+import crocker.golf.bestball.domain.exceptions.game.TeamNotAuthorizedException;
 import crocker.golf.bestball.domain.game.Game;
 import crocker.golf.bestball.domain.game.Team;
 import crocker.golf.bestball.domain.game.round.TeamRound;
@@ -26,12 +29,14 @@ public class GameManagerService {
     private static final Logger logger = LoggerFactory.getLogger(GameManagerService.class);
 
     private GameRepository gameRepository;
+    private DraftRepository draftRepository;
     private UserRepository userRepository;
     private PgaRepository pgaRepository;
     private UserService userService;
 
-    public GameManagerService(GameRepository gameRepository, UserRepository userRepository, PgaRepository pgaRepository, UserService userService) {
+    public GameManagerService(GameRepository gameRepository, DraftRepository draftRepository, UserRepository userRepository, PgaRepository pgaRepository, UserService userService) {
         this.gameRepository = gameRepository;
+        this.draftRepository = draftRepository;
         this.userRepository = userRepository;
         this.pgaRepository = pgaRepository;
         this.userService = userService;
@@ -48,6 +53,20 @@ public class GameManagerService {
         return enrichGame(game, userCredentials);
     }
 
+    public void deleteGame(RequestDto requestDto) throws TeamNotAuthorizedException {
+        UUID gameId = UUID.fromString(requestDto.getGameId());
+        UserCredentials userCredentials = userRepository.findByEmail(requestDto.getEmail());
+
+        Team team = gameRepository.getTeamByUserAndGameId(userCredentials.getUserId(), gameId);
+
+        if (team.getTeamRole() == TeamRole.CREATOR) {
+            gameRepository.deleteGame(team);
+            draftRepository.deleteDraft(team.getDraftId());
+        } else {
+            throw new TeamNotAuthorizedException("You're not authorized to delete this game");
+        }
+    }
+
     public void updateTeamScores() {
         List<Tournament> tournaments = pgaRepository.getInProgressTournaments();
         HashMap<UUID, List<Team>> batchTeams = new HashMap<>();
@@ -55,14 +74,20 @@ public class GameManagerService {
 
         tournaments.forEach(tournament -> {
             List<PlayerRound> playerRounds = pgaRepository.getPlayerRoundsByTournamentId(tournament.getTournamentId());
+
             List<Team> teams = gameRepository.getTeamsByTournamentId(tournament.getTournamentId());
 
-            //TODO: Implement swagger ui to delete bad games
-            teams = teams.stream().filter(team -> team.getGameId().equals(UUID.fromString("d4602606-3551-4e85-8b90-0d2d93b5f1f4")))
+            List<UUID> activeGames = teams.stream()
+                    .map(team -> gameRepository.getLatestGameByGameId(team.getGameId()))
+                    .filter(game -> game.getGameState() == GameState.IN_PROGRESS)
+                    .map(Game::getGameId )
+                    .collect(Collectors.toList());
+
+
+            teams = teams.stream().filter(team -> activeGames.contains(team.getGameId()))
                     .collect(Collectors.toList());
 
             teams.forEach(team -> {
-                //TODO: This if statement is a hacky way to check if the draft is complete.
                 if(team.getGolfersAsList().size() == 4) {
                     enrichTeamRounds(team, playerRounds);
 

@@ -8,6 +8,7 @@ import crocker.golf.bestball.domain.pga.PgaPlayer;
 import crocker.golf.bestball.domain.user.UserInfo;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 
 import java.util.List;
 import java.util.UUID;
@@ -69,5 +70,17 @@ public class DraftRepository {
 
     public PgaPlayer getPgaPlayerById(UUID draftId, UUID playerId) {
         return draftDao.getPgaPlayerById(draftId, playerId);
+    }
+
+    @Caching(evict = {
+            @CacheEvict(value = "draftByDraftId", key = "#draftId"),
+            @CacheEvict(value = "draftOrderByDraftId", key = "#draftId"),
+            @CacheEvict(value = "draftablePgaPlayersByDraftId", key = "#draftId")
+    })
+    public void deleteDraft(UUID draftId) {
+        draftDao.deleteDraft(draftId);
+        draftDao.deleteDraftSchedules(draftId);
+        draftDao.deleteDraftablePgaPlayers(draftId);
+        draftDao.deleteDraftOrder(draftId);
     }
 }

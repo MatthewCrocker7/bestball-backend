@@ -30,6 +30,12 @@ public class H2TeamDaoImpl implements TeamDao {
             " :draftPick, :playerOneId, :playerTwoId, :playerThreeId, :playerFourId," +
             " :toPar, :totalStrokes);";
 
+    private final String DELETE_TEAMS_BY_GAME_ID = "DELETE FROM " + TEAMS +
+            " WHERE GAME_ID=:gameId;";
+
+    private final String DELETE_TEAM_ROUNDS_BY_GAME_ID = "DELETE FROM " + TEAMS +
+            " WHERE GAME_ID=:gameId;";
+
     private final String GET_TEAMS_BY_USER_ID = "SELECT * FROM " + TEAMS +
             " WHERE USER_ID=:userId;";
 
@@ -73,6 +79,14 @@ public class H2TeamDaoImpl implements TeamDao {
     public void updateTeams(List<Team> teams) {
         MapSqlParameterSource[] params = ParamHelper.getUpdateTeamsParams(teams);
         jdbcTemplate.batchUpdate(UPDATE_TEAM, params);
+    }
+
+    public void deleteTeamsByGameId(UUID gameId) {
+
+    }
+
+    public void deleteTeamRoundsByGameId(UUID gameId) {
+
     }
 
     public List<Team> getTeamsByUserId(UUID userId) {

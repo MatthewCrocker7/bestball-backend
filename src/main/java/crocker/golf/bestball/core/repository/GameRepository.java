@@ -91,4 +91,20 @@ public class GameRepository {
     public List<TeamRound> getTeamRoundsByTeamId(UUID teamId) {
         return teamDao.getTeamRoundsByTeamId(teamId);
     }
+
+    @Caching(evict = {
+            @CacheEvict(value = "teamRoundsByGameId", key = "#team.getGameId()"),
+            @CacheEvict(value = "gameByGameId", key = "#team.getGameId()"),
+            @CacheEvict(value = "gameByDraftId", key = "#team.tournamentId()"),
+            @CacheEvict(value = "teamsByUserId", key = "#team.tournamentId()"),
+            @CacheEvict(value = "teamsByDraftId", key = "#team.tournamentId()"),
+            @CacheEvict(value = "teamsByTournamentId", key = "#team.tournamentId()"),
+            @CacheEvict(value = "teamsByTournamentId", key = "#team.tournamentId()")
+    })
+    public void deleteGame(Team team) {
+
+        gameDao.deleteGame(team.getGameId());
+        teamDao.deleteTeamsByGameId(team.getGameId());
+        teamDao.deleteTeamRoundsByGameId(team.getGameId());
+    }
 }

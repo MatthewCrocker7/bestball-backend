@@ -17,6 +17,14 @@ public interface DraftDao {
 
     void updateReleaseStatus(DraftSchedule draftSchedule);
 
+    void deleteDraft(UUID draftId);
+
+    void deleteDraftSchedules(UUID draftId);
+
+    void deleteDraftablePgaPlayers(UUID draftId);
+
+    void deleteDraftOrder(UUID draftId);
+
     Draft getLatestDraftById(UUID draftId);
 
     List<DraftSchedule> getDraftSchedulesByReleaseStatus(ReleaseStatus releaseStatus);

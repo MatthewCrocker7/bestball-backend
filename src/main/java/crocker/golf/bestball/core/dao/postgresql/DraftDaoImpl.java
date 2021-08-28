@@ -41,6 +41,18 @@ public class DraftDaoImpl implements DraftDao {
             " SET RELEASE_STATUS = :releaseStatus" +
             " WHERE DRAFT_ID = :draftId;";
 
+    private final String DELETE_DRAFT = "DELETE FROM " + DRAFTS +
+            " WHERE DRAFT_ID = :draftId;";
+
+    private final String DELETE_DRAFT_SCHEDULES = "DELETE FROM " + DRAFT_SCHEDULES +
+            " WHERE DRAFT_ID = :draftId;";
+
+    private final String DELETE_DRAFTABLE_PGA_PLAYERS = "DELETE FROM " + DRAFT_PGA_PLAYERS +
+            " WHERE DRAFT_ID = :draftId;";
+
+    private final String DELETE_DRAFT_ORDER = "DELETE FROM " + DRAFT_ORDER +
+            " WHERE DRAFT_ID = :draftId;";
+
     private final String SAVE_DRAFTABLE_PGA_PLAYERS = "INSERT INTO " + DRAFT_PGA_PLAYERS +
             " (DRAFT_ID, PLAYER_ID, PLAYER_RANK, PLAYER_NAME, DRAFTED)" +
             " VALUES(:draftId, :playerId, :playerRank, :playerName, :drafted);";
@@ -87,6 +99,34 @@ public class DraftDaoImpl implements DraftDao {
     public void updateReleaseStatus(DraftSchedule draftSchedule) {
         MapSqlParameterSource params = getDraftScheduleParams(draftSchedule);
         jdbcTemplate.update(UPDATE_RELEASE_STATUS, params);
+    }
+
+    public void deleteDraft(UUID draftId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("draftId", draftId);
+
+        jdbcTemplate.update(DELETE_DRAFT, params);
+    }
+
+    public void deleteDraftSchedules(UUID draftId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("draftId", draftId);
+
+        jdbcTemplate.update(DELETE_DRAFT_SCHEDULES, params);
+    }
+
+    public void deleteDraftablePgaPlayers(UUID draftId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("draftId", draftId);
+
+        jdbcTemplate.update(DELETE_DRAFTABLE_PGA_PLAYERS, params);
+    }
+
+    public void deleteDraftOrder(UUID draftId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("draftId", draftId);
+
+        jdbcTemplate.update(DELETE_DRAFT_ORDER, params);
     }
 
     public Draft getLatestDraftById(UUID draftId) {

@@ -85,4 +85,23 @@ public class GameController {
 
         return new ResponseEntity<>(game, null, HttpStatus.OK);
     }
+
+    @PostMapping("/deleteGame")
+    public ResponseEntity deleteGame(@RequestBody RequestDto requestDto) {
+        logger.info("Deleting game with id {}", requestDto.getGameId());
+
+        gameManagerService.deleteGame(requestDto);
+
+        return new ResponseEntity<>(null, null, HttpStatus.OK);
+    }
+
+    /*
+    {
+        email: "matthewcroc@gmail.com",
+        draftId: "123-456",
+        gameId: "123-456-789",
+        inviteEmail: "test@gmail.com"
+    }
+
+     */
 }

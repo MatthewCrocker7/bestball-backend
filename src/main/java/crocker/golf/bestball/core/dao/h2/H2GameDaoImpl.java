@@ -24,6 +24,9 @@ public class H2GameDaoImpl implements GameDao {
             " TOURNAMENT_ID, NUM_PLAYERS, BUY_IN, MONEY_POT)" +
             " VALUES(:gameId, :gameState, :gameVersion, :gameType, :draftId, :tournamentId, :numPlayers, :buyIn, :moneyPot);";
 
+    private final String DELETE_GAME = "DELETE FROM " + GAMES +
+            " WHERE GAME_ID=:gameId;";
+
     private final String GET_LATEST_GAME_BY_GAME_ID = "SELECT * FROM " + GAMES +
             " INNER JOIN " + SEASON_SCHEDULE +
             " ON " + GAMES + ".TOURNAMENT_ID = " + SEASON_SCHEDULE + ".TOURNAMENT_ID" +
@@ -45,6 +48,10 @@ public class H2GameDaoImpl implements GameDao {
     public void saveNewGame(Game game) {
         MapSqlParameterSource params = getNewGameParams(game);
         jdbcTemplate.update(SAVE_NEW_GAME, params);
+    }
+
+    public void deleteGame(UUID gameId) {
+
     }
 
     public Game getLatestGameByGameId(UUID gameId) {
