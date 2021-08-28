@@ -19,6 +19,7 @@ import crocker.golf.bestball.core.service.user.EmailService;
 import crocker.golf.bestball.core.service.user.RegistrationEventListener;
 import crocker.golf.bestball.core.service.user.UserRegistrationValidator;
 import crocker.golf.bestball.core.service.user.UserService;
+import crocker.golf.bestball.domain.game.draft.Draft;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -77,8 +78,8 @@ public class BestballConfig {
     }
 
     @Bean
-    public GameManagerService gameManagerService(GameRepository gameRepository, UserRepository userRepository, PgaRepository pgaRepository, UserService userService) {
-        return new GameManagerService(gameRepository, userRepository, pgaRepository, userService);
+    public GameManagerService gameManagerService(GameRepository gameRepository, DraftRepository draftRepository, UserRepository userRepository, PgaRepository pgaRepository, UserService userService) {
+        return new GameManagerService(gameRepository, draftRepository, userRepository, pgaRepository, userService);
     }
 
     @Bean

@@ -117,20 +117,6 @@ public class GameCreatorService {
         }
     }
 
-    public void deleteGame(RequestDto requestDto) throws TeamNotAuthorizedException {
-        String email = requestDto.getEmail();
-        UUID gameId = UUID.fromString(requestDto.getGameId());
-        UserCredentials userCredentials = userRepository.findByEmail(email);
-
-        Team team = gameRepository.getTeamByUserAndGameId(userCredentials.getUserId(), gameId);
-
-        if (team.getTeamRole() == TeamRole.CREATOR) {
-            deleteGame(team);
-        } else {
-            throw new TeamNotAuthorizedException("You're not authorized to delete this game");
-        }
-    }
-
     private void addPlayer(String inviteEmail, Team creatorTeam) {
         UserCredentials userCredentials = userRepository.findByEmail(inviteEmail);
 
@@ -178,11 +164,6 @@ public class GameCreatorService {
 
         draftManager.scheduleDraft(draft);
         return draft;
-    }
-
-    private void deleteGame(Team team) {
-        gameRepository.deleteGame(team.getGameId());
-        draftManager.deleteDraft(team.getDraftId());
     }
 
     private Tournament getTournament(GameDto gameDto) {
