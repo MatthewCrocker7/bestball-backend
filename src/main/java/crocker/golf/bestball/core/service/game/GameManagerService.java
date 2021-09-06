@@ -68,6 +68,11 @@ public class GameManagerService {
     }
 
     public void updateTeamScores() {
+        // todo: rewrite this method so that game status can be updated to complete
+        // get all active games, filter to unique tournament ids, loop through unique tournaments for updates
+        // if any tournament is completed, update same sql row from active to complete
+        // games are active after draft completion
+
         List<Tournament> tournaments = pgaRepository.getInProgressTournaments();
         HashMap<UUID, List<Team>> batchTeams = new HashMap<>();
         HashMap<UUID, List<TeamRound>> batchTeamRounds = new HashMap<>();
