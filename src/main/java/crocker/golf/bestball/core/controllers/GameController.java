@@ -98,8 +98,15 @@ public class GameController {
         }
     }
 
-    //todo: Add /deleteGame end point as admin of game
-    //todo: add feature to draft all players as admin
+    //todo: add UserTournament object
+    // list of games
+    // drafts can be scheduled at later date (add SCHEDULED STATE -> NOT_STARTED > SCHEDULED > IN_PROGRESS > COMPLETE
+    // home page of website shows tournament
+    // clickable individual games
+    // money payouts per tourney and per game
+
+
+
     //todo: fix draft connectivity timeout issue
     //todo: add unit tests
     //todo: add draft restriction for player ranges
