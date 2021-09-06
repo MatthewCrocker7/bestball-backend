@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
+import java.util.List;
 import java.util.UUID;
 
 public class GameDaoImpl implements GameDao {
@@ -41,6 +42,9 @@ public class GameDaoImpl implements GameDao {
             " (SELECT GAME_ID, MAX(GAME_VERSION) FROM " + GAMES +
             " WHERE DRAFT_ID=:draftId GROUP BY GAME_ID);";
 
+    private final String GET_IN_PROGRESS_GAMES = "SELECT * FROM " + GAMES +
+            " WHERE GAME_STATE='IN_PROGRESS';";
+
     public GameDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -68,6 +72,13 @@ public class GameDaoImpl implements GameDao {
         params.addValue("draftId", draftId);
         return jdbcTemplate.queryForObject(GET_LATEST_GAME_BY_DRAFT_ID, params, new GameRowMapper());
     }
+
+    public List<Game> getInProgressGames() {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+
+        return jdbcTemplate.query(GET_IN_PROGRESS_GAMES, params, new GameRowMapper());
+    }
+
 
     private MapSqlParameterSource getNewGameParams(Game game) {
         MapSqlParameterSource params = new MapSqlParameterSource();

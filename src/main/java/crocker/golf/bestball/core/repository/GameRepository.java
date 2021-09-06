@@ -3,6 +3,7 @@ package crocker.golf.bestball.core.repository;
 import crocker.golf.bestball.core.dao.GameDao;
 import crocker.golf.bestball.core.dao.TeamDao;
 import crocker.golf.bestball.core.dao.postgresql.TeamDaoImpl;
+import crocker.golf.bestball.domain.enums.game.GameState;
 import crocker.golf.bestball.domain.game.Game;
 import crocker.golf.bestball.domain.game.Team;
 import crocker.golf.bestball.domain.game.round.TeamRound;
@@ -12,6 +13,7 @@ import org.springframework.cache.annotation.Caching;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class GameRepository {
 
@@ -90,6 +92,10 @@ public class GameRepository {
 
     public List<TeamRound> getTeamRoundsByTeamId(UUID teamId) {
         return teamDao.getTeamRoundsByTeamId(teamId);
+    }
+
+    public List<Game> getInProgressGames() {
+        return gameDao.getInProgressGames();
     }
 
     @Caching(evict = {

@@ -3,6 +3,7 @@ package crocker.golf.bestball.core.dao;
 import crocker.golf.bestball.domain.game.Game;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface GameDao {
@@ -14,4 +15,6 @@ public interface GameDao {
     Game getLatestGameByGameId(UUID gameId);
 
     Game getLatestGameByDraftId(UUID draftId);
+
+    List<Game> getInProgressGames();
 }
