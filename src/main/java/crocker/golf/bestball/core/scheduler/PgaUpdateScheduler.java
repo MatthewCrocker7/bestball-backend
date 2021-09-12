@@ -20,6 +20,7 @@ public class PgaUpdateScheduler {
     @Async
     public void updateWorldRankings() throws Exception {
         logger.info("Updating world golf rankings on thread {}", Thread.currentThread().getName());
+        // updates current world golf rankings
         pgaUpdateService.updateWorldRankings();
     }
 
@@ -27,6 +28,7 @@ public class PgaUpdateScheduler {
     @Async
     public void updateSeasonSchedule() throws Exception {
         logger.info("Updating season schedule on thread {}", Thread.currentThread().getName());
+        // updates tournament schedule, including whether a tournament is completed or not
         pgaUpdateService.updateSeasonSchedule();
     }
 
@@ -34,6 +36,7 @@ public class PgaUpdateScheduler {
     @Async
     public void updateTournamentDetails() {
         logger.info("Updating tournament summary on thread {}", Thread.currentThread().getName());
+        // updates tournament details, including player field
         pgaUpdateService.updateTournamentDetails();
     }
 

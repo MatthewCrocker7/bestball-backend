@@ -35,7 +35,6 @@ public class InfoService {
     }
 
     private List<TeamInfo> enrichTeamInfo(List<Team> teams) {
-        //TODO: This will likely need to be optimized with join query
         return teams.stream().map(team -> TeamInfo.builder()
             .teamId(team.getTeamId())
             .draft(teamInfoDraftEnrichment(team))

@@ -47,11 +47,10 @@ public class PgaUpdateService {
 
     public void updateTournamentDetails() {
         List<Tournament> allTournaments = pgaRepository.getAllTournaments();
-        //TODO: Ideally we'd update the details of all tournaments that are not complete to accomdate any draft time. For now we only update the current upcoming tourney.
         List<Tournament> tournaments = allTournaments.stream()
-                // .filter(tournament -> tournament.getTournamentState() == TournamentState.IN_PROGRESS)
-                .filter(tournament -> tournament.getTournamentId().toString().equals("bdbd8464-ba49-4f12-a5eb-2197e827167c"))
+                .filter(tournament -> tournament.getTournamentState() == TournamentState.NOT_STARTED)
                 .sorted(Comparator.comparing(Tournament::getStartDate))
+                .limit(4)
                 .collect(Collectors.toList());
 
         tournaments.forEach(tournament -> {
