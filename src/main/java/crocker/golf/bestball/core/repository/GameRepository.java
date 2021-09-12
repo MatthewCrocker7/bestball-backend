@@ -33,6 +33,14 @@ public class GameRepository {
         gameDao.saveNewGame(game);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "gameByGameId", allEntries = true),
+            @CacheEvict(value = "gameByDraftId", allEntries = true)
+    })
+    public void updateGames(List<Game> games) {
+        gameDao.updateGames(games);
+    }
+
     @Cacheable(value = "gameByGameId", key = "#gameId")
     public Game getLatestGameByGameId(UUID gameId) { return gameDao.getLatestGameByGameId(gameId); }
 

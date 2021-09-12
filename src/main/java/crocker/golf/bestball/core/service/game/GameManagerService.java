@@ -8,6 +8,7 @@ import crocker.golf.bestball.core.service.user.UserService;
 import crocker.golf.bestball.domain.enums.game.GameState;
 import crocker.golf.bestball.domain.enums.game.ScoreType;
 import crocker.golf.bestball.domain.enums.game.TeamRole;
+import crocker.golf.bestball.domain.enums.pga.TournamentState;
 import crocker.golf.bestball.domain.exceptions.game.TeamNotAuthorizedException;
 import crocker.golf.bestball.domain.game.Game;
 import crocker.golf.bestball.domain.game.Team;
@@ -67,33 +68,33 @@ public class GameManagerService {
         }
     }
 
-    public void updateTeamScores() {
-        // todo: rewrite this method so that game status can be updated to complete
-        // get all active games, filter to unique tournament ids, loop through unique tournaments for updates
-        // if any tournament is completed, update same sql row from active to complete
-        // games are active after draft completion
+    public void updateGames() {
+        List<Game> activeGames = gameRepository.getInProgressGames();
+        logger.info("Updating scores for {} active games.", activeGames.size());
 
-        List<Tournament> tournaments = pgaRepository.getInProgressTournaments();
+        List<UUID> gameIds = activeGames.stream()
+                .map(Game::getGameId)
+                .collect(Collectors.toList());
+
+        List<UUID> tournaments = activeGames.stream()
+                .map(game -> game.getTournament().getTournamentId())
+                .distinct()
+                .collect(Collectors.toList());
+
         HashMap<UUID, List<Team>> batchTeams = new HashMap<>();
         HashMap<UUID, List<TeamRound>> batchTeamRounds = new HashMap<>();
 
-        tournaments.forEach(tournament -> {
-            List<PlayerRound> playerRounds = pgaRepository.getPlayerRoundsByTournamentId(tournament.getTournamentId());
+        logger.info("Updating game scores for {} different tournaments", tournaments.size());
+        tournaments.forEach(tournamentId -> {
 
-            List<Team> teams = gameRepository.getTeamsByTournamentId(tournament.getTournamentId());
+            List<PlayerRound> playerRounds = pgaRepository.getPlayerRoundsByTournamentId(tournamentId);
+            List<Team> teams = gameRepository.getTeamsByTournamentId(tournamentId);
 
-            List<UUID> activeGames = teams.stream()
-                    .map(team -> gameRepository.getLatestGameByGameId(team.getGameId()))
-                    .filter(game -> game.getGameState() == GameState.IN_PROGRESS)
-                    .map(Game::getGameId )
-                    .collect(Collectors.toList());
-
-
-            teams = teams.stream().filter(team -> activeGames.contains(team.getGameId()))
+            teams = teams.stream()
+                    .filter(team -> gameIds.contains(team.getGameId()))
                     .collect(Collectors.toList());
 
             teams.forEach(team -> {
-                if(team.getGolfersAsList().size() == 4) {
                     enrichTeamRounds(team, playerRounds);
 
                     if (batchTeams.containsKey(team.getGameId())) {
@@ -107,22 +108,30 @@ public class GameManagerService {
                     } else {
                         batchTeamRounds.put(team.getGameId(), team.getTeamRounds());
                     }
-                }
-
-
             });
-            logger.info("Latest team round scores calculated for tournament {}", tournament.getName());
 
-            /*
-            List<TeamRound> allTeamRounds = new ArrayList<>();
-            teams.forEach(team -> allTeamRounds.addAll(team.getTeamRounds()));
+            Tournament tournament = pgaRepository.getTournamentById(tournamentId);
 
-             */
-            batchTeams.keySet().forEach(gameId -> {
-                gameRepository.updateTeamRounds(gameId, batchTeamRounds.get(gameId));
-                gameRepository.updateTeams(batchTeams.get(gameId));
-            });
+            if (tournament.getTournamentState() == TournamentState.COMPLETE) {
+                completeGame(activeGames, tournament);
+            }
         });
+
+        batchTeams.keySet().forEach(gameId -> {
+            gameRepository.updateTeamRounds(gameId, batchTeamRounds.get(gameId));
+            gameRepository.updateTeams(batchTeams.get(gameId));
+        });
+
+    }
+
+    private void completeGame(List<Game> activeGames, Tournament tournament) {
+
+        List<Game> gamesToUpdate = activeGames.stream()
+                .filter(game -> game.getTournament().getTournamentId().equals(tournament.getTournamentId()))
+                .map(game -> game.updateGameState(GameState.COMPLETE))
+                .collect(Collectors.toList());
+
+        gameRepository.updateGames(gamesToUpdate);
     }
 
     private void enrichTeamRounds(Team team, List<PlayerRound> playerRounds) {

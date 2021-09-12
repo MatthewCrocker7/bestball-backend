@@ -1,5 +1,6 @@
 package crocker.golf.bestball.core.dao;
 
+import crocker.golf.bestball.domain.game.Game;
 import crocker.golf.bestball.domain.game.Team;
 import crocker.golf.bestball.domain.game.round.TeamRound;
 import crocker.golf.bestball.domain.pga.PgaPlayer;
@@ -160,6 +161,27 @@ public class ParamHelper {
             }
 
         }).toArray(MapSqlParameterSource[]::new);
+    }
+
+    public static MapSqlParameterSource getNewGameParams(Game game) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("gameId", game.getGameId());
+        params.addValue("gameState", game.getGameState().name());
+        params.addValue("gameVersion", game.getGameVersion());
+        params.addValue("gameType", game.getGameType().name());
+        params.addValue("draftId", game.getDraftId());
+        params.addValue("tournamentId", game.getTournament().getTournamentId());
+        params.addValue("numPlayers", game.getNumPlayers());
+        params.addValue("buyIn", game.getBuyIn());
+        params.addValue("moneyPot", game.getMoneyPot());
+
+        return params;
+    }
+
+    public static MapSqlParameterSource[] getBatchGameParams(List<Game> games) {
+        return games.stream()
+            .map(ParamHelper::getNewGameParams)
+            .toArray(MapSqlParameterSource[]::new);
     }
 
     private static byte[] convertToByteArray(Object object) throws IOException {

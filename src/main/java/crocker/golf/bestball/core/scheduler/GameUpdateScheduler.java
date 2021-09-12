@@ -19,7 +19,7 @@ public class GameUpdateScheduler {
     @Scheduled(fixedDelayString = "${golf.pga.update.rate.round}", initialDelay = 600000000)
     @Async
     public void updateTeamScores() {
-        logger.info("Updating team scores on thread {}", Thread.currentThread().getName());
-        gameManagerService.updateTeamScores();
+        logger.info("Updating all active games on thread {}", Thread.currentThread().getName());
+        gameManagerService.updateGames();
     }
 }

@@ -10,6 +10,8 @@ public interface GameDao {
 
     void saveNewGame(Game game);
 
+    void updateGames(List<Game> games);
+
     void deleteGame(UUID gameId);
 
     Game getLatestGameByGameId(UUID gameId);

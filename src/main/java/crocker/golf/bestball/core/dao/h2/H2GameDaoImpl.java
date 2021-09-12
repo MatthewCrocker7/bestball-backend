@@ -1,6 +1,7 @@
 package crocker.golf.bestball.core.dao.h2;
 
 import crocker.golf.bestball.core.dao.GameDao;
+import crocker.golf.bestball.core.dao.ParamHelper;
 import crocker.golf.bestball.core.mapper.game.GameRowMapper;
 import crocker.golf.bestball.domain.game.Game;
 import org.slf4j.Logger;
@@ -24,6 +25,10 @@ public class H2GameDaoImpl implements GameDao {
             " (GAME_ID, GAME_STATE, GAME_VERSION, GAME_TYPE, DRAFT_ID," +
             " TOURNAMENT_ID, NUM_PLAYERS, BUY_IN, MONEY_POT)" +
             " VALUES(:gameId, :gameState, :gameVersion, :gameType, :draftId, :tournamentId, :numPlayers, :buyIn, :moneyPot);";
+
+    private final String UPDATE_GAME = "UPDATE " + GAMES +
+            " SET GAME_STATE=:gameState, GAME_VERSION=:gameVersion" +
+            " WHERE GAME_ID=:gameId;";
 
     private final String DELETE_GAME = "DELETE FROM " + GAMES +
             " WHERE GAME_ID=:gameId;";
@@ -50,8 +55,14 @@ public class H2GameDaoImpl implements GameDao {
     }
 
     public void saveNewGame(Game game) {
-        MapSqlParameterSource params = getNewGameParams(game);
+        MapSqlParameterSource params = ParamHelper.getNewGameParams(game);
         jdbcTemplate.update(SAVE_NEW_GAME, params);
+    }
+
+    public void updateGames(List<Game> games) {
+        MapSqlParameterSource[] params = ParamHelper.getBatchGameParams(games);
+
+        jdbcTemplate.batchUpdate(UPDATE_GAME, params);
     }
 
     public void deleteGame(UUID gameId) {
@@ -74,20 +85,5 @@ public class H2GameDaoImpl implements GameDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
 
         return jdbcTemplate.query(GET_IN_PROGRESS_GAMES, params, new GameRowMapper());
-    }
-
-    private MapSqlParameterSource getNewGameParams(Game game) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("gameId", game.getGameId());
-        params.addValue("gameState", game.getGameState().name());
-        params.addValue("gameVersion", game.getGameVersion());
-        params.addValue("gameType", game.getGameType().name());
-        params.addValue("draftId", game.getDraftId());
-        params.addValue("tournamentId", game.getTournament().getTournamentId());
-        params.addValue("numPlayers", game.getNumPlayers());
-        params.addValue("buyIn", game.getBuyIn());
-        params.addValue("moneyPot", game.getMoneyPot());
-
-        return params;
     }
 }

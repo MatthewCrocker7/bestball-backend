@@ -29,4 +29,9 @@ public class Game {
     private BigDecimal moneyPot;
 
     private List<Team> teams;
+
+    public Game updateGameState(GameState gameState) {
+        this.gameState = gameState;
+        return this;
+    }
 }

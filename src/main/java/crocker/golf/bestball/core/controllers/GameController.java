@@ -110,6 +110,4 @@ public class GameController {
     //todo: fix draft connectivity timeout issue
     //todo: add unit tests
     //todo: add draft restriction for player ranges
-    //todo: update game status to complete on tournament end
-
 }
