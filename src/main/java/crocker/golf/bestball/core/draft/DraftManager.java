@@ -31,10 +31,6 @@ public class DraftManager {
         draftScheduler.schedule(draftSchedule);
     }
 
-    public void deleteDraft(UUID draftId) {
-        draftRepository.deleteDraft(draftId);
-    }
-
     private DraftSchedule getDraftSchedule(Draft draft) {
         return DraftSchedule.builder()
                 .draftId(draft.getDraftId())
