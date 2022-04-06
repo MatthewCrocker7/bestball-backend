@@ -16,7 +16,7 @@ public class PgaUpdateScheduler {
         this.pgaUpdateService = pgaUpdateService;
     }
 
-    @Scheduled(fixedDelayString = "${golf.pga.update.rate.rankings}", initialDelay = 200000000)
+    @Scheduled(fixedDelayString = "${golf.pga.update.rate.rankings}", initialDelay = 30000)
     @Async
     public void updateWorldRankings() throws Exception {
         logger.info("Updating world golf rankings on thread {}", Thread.currentThread().getName());
@@ -24,7 +24,7 @@ public class PgaUpdateScheduler {
         pgaUpdateService.updateWorldRankings();
     }
 
-    @Scheduled(fixedDelayString = "${golf.pga.update.rate.schedule}", initialDelay = 1000000000)
+    @Scheduled(fixedDelayString = "${golf.pga.update.rate.schedule}", initialDelay = 45000)
     @Async
     public void updateSeasonSchedule() throws Exception {
         logger.info("Updating season schedule on thread {}", Thread.currentThread().getName());
@@ -32,17 +32,18 @@ public class PgaUpdateScheduler {
         pgaUpdateService.updateSeasonSchedule();
     }
 
-    @Scheduled(fixedDelayString = "${golf.pga.update.rate.tournament}", initialDelay = 2000000000)
+    @Scheduled(fixedDelayString = "${golf.pga.update.rate.tournament}", initialDelay = 90000)
     @Async
     public void updateTournamentDetails() {
         logger.info("Updating tournament summary on thread {}", Thread.currentThread().getName());
-        // updates tournament details, including player field
+        // updates tournament details, including player field, active rounds
         pgaUpdateService.updateTournamentDetails();
     }
 
-    @Scheduled(fixedDelayString = "${golf.pga.update.rate.round}", initialDelay = 30000)
+    @Scheduled(fixedDelayString = "${golf.pga.update.rate.round}", initialDelay = 120000)
     @Async
     public void updateTournamentRound() {
+        // updates scores of active rounds for active tournaments
         logger.info("Updating tournament round on thread {}", Thread.currentThread().getName());
         pgaUpdateService.updateTournamentRound();
     }
