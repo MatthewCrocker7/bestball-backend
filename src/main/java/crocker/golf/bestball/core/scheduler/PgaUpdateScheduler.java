@@ -24,7 +24,7 @@ public class PgaUpdateScheduler {
         pgaUpdateService.updateWorldRankings();
     }
 
-    @Scheduled(fixedDelayString = "${golf.pga.update.rate.schedule}", initialDelay = 45000)
+    @Scheduled(fixedDelayString = "${golf.pga.update.rate.schedule}", initialDelay = 60000)
     @Async
     public void updateSeasonSchedule() throws Exception {
         logger.info("Updating season schedule on thread {}", Thread.currentThread().getName());
@@ -32,7 +32,7 @@ public class PgaUpdateScheduler {
         pgaUpdateService.updateSeasonSchedule();
     }
 
-    @Scheduled(fixedDelayString = "${golf.pga.update.rate.tournament}", initialDelay = 90000)
+    @Scheduled(fixedDelayString = "${golf.pga.update.rate.tournament}", initialDelay = 120000)
     @Async
     public void updateTournamentDetails() {
         logger.info("Updating tournament summary on thread {}", Thread.currentThread().getName());
@@ -40,7 +40,7 @@ public class PgaUpdateScheduler {
         pgaUpdateService.updateTournamentDetails();
     }
 
-    @Scheduled(fixedDelayString = "${golf.pga.update.rate.round}", initialDelay = 120000)
+    @Scheduled(fixedDelayString = "${golf.pga.update.rate.round}", initialDelay = 300000)
     @Async
     public void updateTournamentRound() {
         // updates scores of active rounds for active tournaments
