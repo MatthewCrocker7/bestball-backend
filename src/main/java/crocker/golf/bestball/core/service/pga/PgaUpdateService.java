@@ -48,9 +48,9 @@ public class PgaUpdateService {
     public void updateTournamentDetails() {
         List<Tournament> allTournaments = pgaRepository.getAllTournaments();
         List<Tournament> tournaments = allTournaments.stream()
-                .filter(tournament -> tournament.getTournamentState() == TournamentState.IN_PROGRESS)
+                .filter(tournament -> tournament.getTournamentState() == TournamentState.NOT_STARTED || tournament.getTournamentState() == TournamentState.IN_PROGRESS)
                 .sorted(Comparator.comparing(Tournament::getStartDate))
-                .limit(4)
+                .limit(2)
                 .collect(Collectors.toList());
 
         tournaments.forEach(tournament -> {
