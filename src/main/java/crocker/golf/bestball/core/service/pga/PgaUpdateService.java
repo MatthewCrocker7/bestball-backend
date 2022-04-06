@@ -57,8 +57,11 @@ public class PgaUpdateService {
             try {
                 Future<Tournament> futureTournamentDetails = sportsApiService.getLatestTournamentDetails(tournament);
                 Tournament tournamentDetails = futureTournamentDetails.get();
-                pgaRepository.updateTournamentDetails(tournamentDetails);
-                logger.info("Tournament details updated for {}", tournamentDetails.getName());
+
+                if (tournamentDetails != null) {
+                    pgaRepository.updateTournamentDetails(tournamentDetails);
+                    logger.info("Tournament details updated for {}", tournament.getName());
+                }
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             }
