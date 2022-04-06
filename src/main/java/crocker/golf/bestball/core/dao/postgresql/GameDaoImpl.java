@@ -49,6 +49,8 @@ public class GameDaoImpl implements GameDao {
             " WHERE DRAFT_ID=:draftId GROUP BY GAME_ID);";
 
     private final String GET_IN_PROGRESS_GAMES = "SELECT * FROM " + GAMES +
+            " INNER JOIN " + SEASON_SCHEDULE +
+            " ON " + GAMES + ".TOURNAMENT_ID = " + SEASON_SCHEDULE + ".TOURNAMENT_ID" +
             " WHERE GAME_STATE='IN_PROGRESS';";
 
     public GameDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
