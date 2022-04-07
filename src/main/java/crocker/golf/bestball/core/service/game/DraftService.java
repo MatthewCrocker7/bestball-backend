@@ -72,8 +72,17 @@ public class DraftService {
         try {
             pgaPlayer = draftRepository.getPgaPlayerById(enrichedDraft.getDraftId(), playerId);
         } catch (EmptyResultDataAccessException ex) {
-            List<PgaPlayer> tournamentField = pgaRepository.getTournamentField(enrichedDraft.getTeams().get(0).getTournamentId());
+            UUID tournamentId = enrichedDraft.getTeams().get(0).getTournamentId();
+            logger.error("Player not in top 200 world rankings. Seeking player from tournament field for tournament {}", tournamentId);
+
+            List<PgaPlayer> tournamentField = pgaRepository.getTournamentField(tournamentId);
+            logger.info("The tournament field has {} players", tournamentField.size());
+
             pgaPlayer = tournamentField.stream().filter(player -> player.getPlayerId().equals(playerId)).collect(Collectors.toList()).get(0);
+
+        } catch (Exception e) {
+            logger.error("player not found");
+            return null;
         }
 
 
