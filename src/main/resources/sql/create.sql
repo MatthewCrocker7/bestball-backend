@@ -188,23 +188,23 @@ truncate TEAM_ROUNDS;
 /*
 1. Dentyn : e7496ab2-d3b3-4601-8f7f-e66ec0a3aacd
 2. Matthew : cf8217b0-d23c-4a0d-ad96-90114b0e3ece
-3. Jonathan
-4. Donny
-5. Drew
-6. Matt
-7. Conner
-8. Zack
-9. Shayne
+3. Jonathan : 082c3dc5-8945-4de1-940b-65e488645187
+4. Donny : a838467f-b498-44e4-8a54-8c140408f31c
+5. Drew : f829ac9a-fb9a-4c00-ba3c-73208960b25e
+6. Matt : 870ccfee-ce05-42ad-96d9-9dfcf538b26a
+7. Conner : cfd9418d-7b3d-459f-9716-ae950e06b059
+8. Zack : 87a0b3d2-8401-4c96-9f9c-43da9f51292c
+9. Shayne : a797385d-cf3c-42be-9316-9ec1d9a6d657
  */
 /*
 
 
-082c3dc5-8945-4de1-940b-65e488645187
-a838467f-b498-44e4-8a54-8c140408f31c
-f829ac9a-fb9a-4c00-ba3c-73208960b25e
-870ccfee-ce05-42ad-96d9-9dfcf538b26a
-cfd9418d-7b3d-459f-9716-ae950e06b059
-87a0b3d2-8401-4c96-9f9c-43da9f51292c
-a797385d-cf3c-42be-9316-9ec1d9a6d657
+
+
+
+
+
+
+
 
  */
