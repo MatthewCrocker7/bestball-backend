@@ -17,6 +17,7 @@ import crocker.golf.bestball.domain.user.UserCredentialsDto;
 import crocker.golf.bestball.domain.user.UserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -47,7 +48,7 @@ public class DraftService {
         UserCredentials userCredentials = userRepository.findByEmail(email);
 
         Draft draft = draftRepository.getLatestDraftById(draftId);
-        
+
         return draft == null ? null : enrichDraft(draft, userCredentials);
     }
 
@@ -66,9 +67,15 @@ public class DraftService {
             throw new RuntimeException("Draft request by ineligible user");
         }
         */
+        PgaPlayer pgaPlayer;
 
+        try {
+            pgaPlayer = draftRepository.getPgaPlayerById(enrichedDraft.getDraftId(), playerId);
+        } catch (EmptyResultDataAccessException ex) {
+            List<PgaPlayer> tournamentField = pgaRepository.getTournamentField(draft.getTeams().get(0).getTournamentId());
+            pgaPlayer = tournamentField.stream().filter(player -> player.getPlayerId().equals(playerId)).collect(Collectors.toList()).get(0);
+        }
 
-        PgaPlayer pgaPlayer = draftRepository.getPgaPlayerById(enrichedDraft.getDraftId(), playerId);
 
 
         updateTeam(enrichedDraft, pgaPlayer, userCredentials);
