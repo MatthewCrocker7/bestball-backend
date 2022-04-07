@@ -23,7 +23,7 @@ public class DraftController {
     public DraftController(DraftService draftService) {
         this.draftService = draftService;
 
-       forceDraft();
+       // forceDraft();
     }
 
     @MessageMapping("/loadDraft/{draftId}")
