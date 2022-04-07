@@ -75,10 +75,9 @@ public class DraftService {
             UUID tournamentId = enrichedDraft.getTeams().get(0).getTournamentId();
             logger.error("Player not in top 200 world rankings. Seeking player from tournament field for tournament {}", tournamentId);
 
+            // to do -> all get tournament field joins on world golf rankings which is only top 200. need another updater to save ALL pga players
+            // not just top 200 fuck you tiger
             List<PgaPlayer> tournamentField = pgaRepository.getTournamentField(tournamentId);
-            logger.info("The tournament field has {} players", tournamentField.size());
-            logger.info("Trying to compare {} with field", playerId);
-            tournamentField.forEach(player -> logger.info("Player {} has id {}", player.getPlayerName(), player.getPlayerId()));
 
             pgaPlayer = tournamentField.stream().filter(player -> player.getPlayerId().equals(playerId)).collect(Collectors.toList()).get(0);
 
