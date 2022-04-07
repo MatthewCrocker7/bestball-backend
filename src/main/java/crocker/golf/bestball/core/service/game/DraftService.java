@@ -77,6 +77,8 @@ public class DraftService {
 
             List<PgaPlayer> tournamentField = pgaRepository.getTournamentField(tournamentId);
             logger.info("The tournament field has {} players", tournamentField.size());
+            logger.info("Trying to compare {} with field", playerId);
+            tournamentField.forEach(player -> logger.info("Player {} has id {}", player.getPlayerName(), player.getPlayerId()));
 
             pgaPlayer = tournamentField.stream().filter(player -> player.getPlayerId().equals(playerId)).collect(Collectors.toList()).get(0);
 
