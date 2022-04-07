@@ -12,6 +12,7 @@ import crocker.golf.bestball.domain.pga.PgaPlayer;
 import crocker.golf.bestball.domain.user.UserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
@@ -130,10 +131,14 @@ public class DraftDaoImpl implements DraftDao {
     }
 
     public Draft getLatestDraftById(UUID draftId) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("draftId", draftId);
+        try {
+            MapSqlParameterSource params = new MapSqlParameterSource();
+            params.addValue("draftId", draftId);
 
-        return jdbcTemplate.queryForObject(GET_LATEST_DRAFT_BY_ID, params, new DraftRowMapper());
+            return jdbcTemplate.queryForObject(GET_LATEST_DRAFT_BY_ID, params, new DraftRowMapper());
+        } catch (EmptyResultDataAccessException ex) {
+            return null;
+        }
     }
 
     public List<DraftSchedule> getDraftSchedulesByReleaseStatus(ReleaseStatus releaseStatus) {

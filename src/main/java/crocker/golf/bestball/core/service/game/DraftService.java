@@ -47,8 +47,8 @@ public class DraftService {
         UserCredentials userCredentials = userRepository.findByEmail(email);
 
         Draft draft = draftRepository.getLatestDraftById(draftId);
-
-        return enrichDraft(draft, userCredentials);
+        
+        return draft == null ? null : enrichDraft(draft, userCredentials);
     }
 
     public Draft draftPlayer(RequestDto requestDto, UUID playerId) {
