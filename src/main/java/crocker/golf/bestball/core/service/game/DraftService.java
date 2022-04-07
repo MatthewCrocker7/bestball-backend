@@ -72,7 +72,7 @@ public class DraftService {
         try {
             pgaPlayer = draftRepository.getPgaPlayerById(enrichedDraft.getDraftId(), playerId);
         } catch (EmptyResultDataAccessException ex) {
-            List<PgaPlayer> tournamentField = pgaRepository.getTournamentField(draft.getTeams().get(0).getTournamentId());
+            List<PgaPlayer> tournamentField = pgaRepository.getTournamentField(enrichedDraft.getTeams().get(0).getTournamentId());
             pgaPlayer = tournamentField.stream().filter(player -> player.getPlayerId().equals(playerId)).collect(Collectors.toList()).get(0);
         }
 
