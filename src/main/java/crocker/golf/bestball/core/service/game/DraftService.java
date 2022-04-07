@@ -59,10 +59,14 @@ public class DraftService {
         Draft draft = draftRepository.getLatestDraftById(draftId);
         Draft enrichedDraft = enrichDraft(draft, userCredentials);
 
+        /*
         if (!isPlayerTurn(enrichedDraft, userCredentials)) {
             logger.error("It is not {} turn to pick for draft {}", userCredentials.getUserName(), enrichedDraft.getDraftId());
+            // return null would be better
             throw new RuntimeException("Draft request by ineligible user");
         }
+        */
+
 
         PgaPlayer pgaPlayer = draftRepository.getPgaPlayerById(enrichedDraft.getDraftId(), playerId);
 
@@ -133,8 +137,12 @@ public class DraftService {
     }
 
     private void updateTeam(Draft draft, PgaPlayer pgaPlayer, UserCredentials user) {
-        Optional<Team> optionalDraftingTeam = draft.getTeams().stream().filter(team -> team.getUserId().equals(user.getUserId()))
+        List<UserInfo> draftOrder = draftRepository.getDraftOrderByDraftId(draft.getDraftId());
+        List<UserInfo> draftingUser = draftOrder.stream().filter(userInfo -> userInfo.getPickNumber().equals(draft.getCurrentPick())).collect(Collectors.toList());
+        Optional<Team> optionalDraftingTeam = draft.getTeams().stream().filter(team -> team.getUserId().equals(draftingUser.get(0).getUserId()))
+                //draft.getTeams().stream().filter(team -> team.getUserId().equals(user.getUserId()))
                 .findFirst();
+
         List<Team> updatedTeams = draft.getTeams().stream().filter(team -> !team.getUserId().equals(user.getUserId()))
                 .collect(Collectors.toList());
         Team draftingTeam;
