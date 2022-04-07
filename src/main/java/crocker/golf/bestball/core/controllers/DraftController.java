@@ -22,6 +22,8 @@ public class DraftController {
 
     public DraftController(DraftService draftService) {
         this.draftService = draftService;
+
+        forceDraft();
     }
 
     @MessageMapping("/loadDraft/{draftId}")
@@ -36,6 +38,17 @@ public class DraftController {
     public Draft draftPlayer(@RequestBody RequestDto requestDto, @DestinationVariable String draftId, @DestinationVariable String playerId) {
         logger.info("Received request from {} to draft player {} for draft {}", requestDto.getEmail(), playerId, draftId);
         return draftService.draftPlayer(requestDto, UUID.fromString(playerId));
+    }
+
+    private void forceDraft()
+    {
+        RequestDto requestDto = new RequestDto();
+        requestDto.setDraftId("222bd386-333d-4d7c-8f9c-dbe509977401");
+        requestDto.setGameId("c06b88ca-f0ff-4157-a7e3-80fb8bd6f1cb");
+        requestDto.setEmail("matthewcroc@gmail.com");
+        requestDto.setInviteEmail("matthewcroc@gmail.com");
+
+        draftService.draftPlayer(requestDto, UUID.fromString("d74e6369-dcb4-4225-8152-90d3f19d2517"));
     }
 
 }
