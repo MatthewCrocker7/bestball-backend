@@ -79,7 +79,7 @@ public class DraftExecutor {
         *
          */
 
-        // dentyn
+        // shayne
         teams.stream().filter(team -> team.getUserId().toString().equals("a797385d-cf3c-42be-9316-9ec1d9a6d657"))
                 .forEach(team -> team.setDraftPick(1));
         // zack
