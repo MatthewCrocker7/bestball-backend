@@ -78,33 +78,34 @@ public class DraftExecutor {
         }
         *
          */
+        // donny, connor, dentyn
         // donny
         teams.stream().filter(team -> team.getUserId().toString().equals("a838467f-b498-44e4-8a54-8c140408f31c"))
-                .forEach(team -> team.setDraftPick(1));
+                .forEach(team -> team.setDraftPick(8));
         // shayne
         teams.stream().filter(team -> team.getUserId().toString().equals("a797385d-cf3c-42be-9316-9ec1d9a6d657"))
-                .forEach(team -> team.setDraftPick(2));
+                .forEach(team -> team.setDraftPick(9));
         // zack
         teams.stream().filter(team -> team.getUserId().toString().equals("87a0b3d2-8401-4c96-9f9c-43da9f51292c"))
-                .forEach(team -> team.setDraftPick(3));
+                .forEach(team -> team.setDraftPick(5));
         // conner
         teams.stream().filter(team -> team.getUserId().toString().equals("cfd9418d-7b3d-459f-9716-ae950e06b059"))
-                .forEach(team -> team.setDraftPick(4));
+                .forEach(team -> team.setDraftPick(3));
         // dentyn
         teams.stream().filter(team -> team.getUserId().toString().equals("e7496ab2-d3b3-4601-8f7f-e66ec0a3aacd"))
-                .forEach(team -> team.setDraftPick(5));
+                .forEach(team -> team.setDraftPick(7));
         // matthew
         teams.stream().filter(team -> team.getUserId().toString().equals("cf8217b0-d23c-4a0d-ad96-90114b0e3ece"))
-                .forEach(team -> team.setDraftPick(6));
+                .forEach(team -> team.setDraftPick(4));
         // matt
         teams.stream().filter(team -> team.getUserId().toString().equals("870ccfee-ce05-42ad-96d9-9dfcf538b26a"))
-                .forEach(team -> team.setDraftPick(7));
+                .forEach(team -> team.setDraftPick(6));
         // drew
         teams.stream().filter(team -> team.getUserId().toString().equals("f829ac9a-fb9a-4c00-ba3c-73208960b25e"))
-                .forEach(team -> team.setDraftPick(8));
+                .forEach(team -> team.setDraftPick(1));
         // jon jon
         teams.stream().filter(team -> team.getUserId().toString().equals("082c3dc5-8945-4de1-940b-65e488645187"))
-                .forEach(team -> team.setDraftPick(9));
+                .forEach(team -> team.setDraftPick(2));
 
 
 
