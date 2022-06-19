@@ -26,7 +26,7 @@ public class PgaInfoService {
         List<Tournament> tournaments = pgaRepository.getTournamentsBySeason(TimeHelper.getCurrentSeason());
 
         return tournaments.stream()
-                .filter(tournament -> tournament.getTournamentState() == TournamentState.NOT_STARTED)
+                .filter(tournament -> tournament.getTournamentState() == TournamentState.NOT_STARTED || tournament.getTournamentState() == TournamentState.IN_PROGRESS )
                 .sorted(Comparator.comparing(Tournament::getStartDate))
                 .collect(Collectors.toList());
     }
